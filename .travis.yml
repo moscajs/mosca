@@ -1,5 +1,4 @@
 env:
- - ZMQ="git://github.com/zeromq/zeromq2-x.git"
  - ZMQ="git://github.com/zeromq/zeromq3-x.git"
 before_install:
  - sudo apt-get install uuid-dev
