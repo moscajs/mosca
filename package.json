@@ -37,12 +37,11 @@
     "zmq": "~2.2.0",
     "amqp": "~0.1.4",
     "optimist": "~0.3.5",
-    "mqttjs": "~0.1.8",
     "async_bench": "0.0.1",
-    "cucumber": "*",
     "underscore": "~1.4.4"
   },
   "dependencies": {
+    "mqtt": "~0.1.8",
     "async": "~0.2.4",
     "ascoltatori": "~0.1.6"
   }

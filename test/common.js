@@ -28,6 +28,13 @@ global.rabbitSettings = function() {
   };
 };
 
+global.mqttSettings = function() {
+  return {
+    host: "127.0.0.1",
+    port: 5883
+  }
+};
+
 var sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 
