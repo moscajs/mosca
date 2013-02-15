@@ -1,0 +1,49 @@
+{
+  "name": "mosca",
+  "version": "0.0.1",
+  "description": "The pub/sub library for node backed by Redis, AMQP (RabbitMQ), ZeroMQ, MQTT (Mosquitto) or just plain node!",
+  "main": "index.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mcollina/mosca.git"
+  },
+  "bugs": {
+    "url" : "http://github.com/mcollina/mosca/issues"
+  },
+  "keywords": [
+    "mqtt",
+    "mqtt server",
+    "publish",
+    "subscribe",
+    "pubsub",
+    "rabbitmq",
+    "zeromq",
+    "0mq",
+    "amqp",
+    "mosquitto"
+  ],
+  "author": "Matteo Collina <hello@matteocollina.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "~1.8.1",
+    "chai": "~1.3.0",
+    "sinon": "~1.4.2",
+    "sinon-chai": "~2.1.2",
+    "redis": "~0.8.1",
+    "hiredis": "~0.1.14",
+    "zmq": "~2.2.0",
+    "amqp": "~0.1.4",
+    "optimist": "~0.3.5",
+    "mqttjs": "~0.1.8",
+    "async_bench": "0.0.1",
+    "cucumber": "*",
+    "underscore": "~1.4.4"
+  },
+  "dependencies": {
+    "async": "~0.2.4",
+    "ascoltatori": "~0.1.6"
+  }
+}
