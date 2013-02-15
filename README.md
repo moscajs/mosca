@@ -16,10 +16,6 @@ This list currently includes:
 * [ZeroMQ](http://www.zeromq.org/) without a central broker, so
   Ascoltatori can also be used in a P2P fashion.
 
-> Mosca is an italian world that measn _mosquito_, and
-> [Mosquitto](http://mosquitto.org/) is a very popular Open Source
-> [MQTT](http://mqtt.org/) broker.
-
 ## Usage
 
 __Mosca__ is still under active development.
