@@ -229,4 +229,51 @@ describe(mosca, function() {
       });
     });
   });
+
+  it("should emit an event on every newly published packet", function(done) {
+    buildAndConnect(done, function(client) {
+
+      instance.on("published", function(packet) {
+        client.disconnect();
+        expect(packet.topic).to.be.equal("hello");
+        expect(packet.payload).to.be.equal("some data");
+      });
+
+      client.publish({ topic: "hello", payload: "some data" });
+    });
+  });
+
+  it("should emit an event when a new client is connected", function(done) {
+    buildClient(done, function(client) {
+
+      instance.on("clientConnected", function(arg) {
+        client.disconnect();
+        expect(arg).not.to.be.null;
+      });
+
+      client.connect({ keepalive: 3000 });
+    });
+  });
+
+  it("should emit an event when a client is disconnected", function(done) {
+    mqtt.createClient(settings.port, settings.host, function(err, client) {
+      if(err) {
+        done(err)
+        return;
+      }
+
+      instance.on('clientDisconnected', function(arg) {
+        expect(arg).not.to.be.null;
+        done();
+      });
+
+      client.on('error', done);
+
+      client.on('connack', function() {
+        client.disconnect();
+      });
+      
+      client.connect();
+    });
+  });
 });
