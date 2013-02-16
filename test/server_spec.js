@@ -181,4 +181,52 @@ describe(mosca, function() {
       client1.subscribe({ topic: "hello" });
     });
   });
+
+  it("should support unsubscribing", function(done) {
+    buildAndConnect(done, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+
+      client.on("unsuback", function(packet) {
+        client.disconnect();
+        expect(packet).to.have.property("messageId", messageId);
+      });
+
+      client.on("suback", function(packet) {
+        client.unsubscribe({
+          topic: "hello",
+          messageId: messageId
+        });
+      });
+
+      client.subscribe({
+        topic: "hello"
+      });
+    });
+  });
+
+  it("should unsubscribe for real", function(done) {
+    buildAndConnect(done, function(client) {
+
+      client.on("publish", function(packet) {
+        client.disconnect();
+        throw new Error("a message could not have been published");
+      });
+
+      client.on("unsuback", function(packet) {
+        client.disconnect();
+        client.publish({ topic: "hello", payload: "data" });
+      });
+
+      client.on("suback", function(packet) {
+        client.unsubscribe({
+          topic: "hello"
+        });
+      });
+
+      client.subscribe({
+        topic: "hello"
+      });
+    });
+  });
 });
