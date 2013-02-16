@@ -30,6 +30,17 @@ describe(mosca, function() {
     });
   }
 
+  function buildAndConnect(done, callback) {
+    buildClient(done, function(client) {
+
+      client.connect({ keepalive: 3000 });
+
+      client.on('connack', function(packet) {
+        callback(client);
+      });
+    });
+  }
+
   it("should support connecting and disconnecting", function(done) {
     buildClient(done, function(client) {
 
@@ -53,4 +64,13 @@ describe(mosca, function() {
     });
   });
 
+  it("should send a pingresp when it receives a pingreq", function(done) {
+    buildAndConnect(done, function(client) {
+      client.on("pingresp", function() {
+        client.disconnect();
+      });
+
+      client.pingreq();
+    });
+  });
 });
