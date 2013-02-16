@@ -1,5 +1,6 @@
 
 var mqtt = require("mqtt");
+var microtime = require("microtime");
 
 describe(mosca, function() {
 
@@ -64,6 +65,20 @@ describe(mosca, function() {
     });
   });
 
+  it("should close the connection after the keepAlive interval", function(done) {
+    buildClient(done, function(client) {
+      var keepalive = 1;
+      var timer = microtime.now();
+
+      client.connect({ keepalive: keepalive });
+
+      client.on("close", function() {
+        var interval = (microtime.now() - timer) / 1000000;
+        expect(interval).to.be.least(keepalive);
+      });
+    });
+  });
+
   it("should send a pingresp when it receives a pingreq", function(done) {
     buildAndConnect(done, function(client) {
       client.on("pingresp", function() {
@@ -71,6 +86,24 @@ describe(mosca, function() {
       });
 
       client.pingreq();
+    });
+  });
+
+  it("should correctly renew the keepalive window after a pingreq", function(done) {
+    buildClient(done, function(client) {
+      var keepalive = 1;
+      var timer = microtime.now();
+
+      client.connect({ keepalive: keepalive });
+
+      client.on("close", function() {
+        var interval = (microtime.now() - timer) / 1000000;
+        expect(interval).to.be.least(keepalive + keepalive / 4);
+      });
+      
+      setTimeout(function() {
+        client.pingreq();
+      }, keepalive * 1000 / 4 );
     });
   });
 });
