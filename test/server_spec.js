@@ -16,6 +16,15 @@ describe(mosca, function() {
     instance.close(done);
   });
 
+  function donner(count, done) {
+    return function() {
+      count--;
+      if(count === 0) {
+        done();
+      }
+    };
+  }
+
   function buildClient(done, callback) {
     mqtt.createClient(settings.port, settings.host, function(err, client) {
       if(err)
@@ -65,7 +74,7 @@ describe(mosca, function() {
     });
   });
 
-  it("should close the connection after the keepAlive interval", function(done) {
+  it("should close the connection after the keepalive interval", function(done) {
     buildClient(done, function(client) {
       var keepalive = 1;
       var timer = microtime.now();
@@ -74,7 +83,7 @@ describe(mosca, function() {
 
       client.on("close", function() {
         var interval = (microtime.now() - timer) / 1000000;
-        expect(interval).to.be.least(keepalive);
+        expect(interval).to.be.least(keepalive * 5/4);
       });
     });
   });
@@ -104,6 +113,72 @@ describe(mosca, function() {
       setTimeout(function() {
         client.pingreq();
       }, keepalive * 1000 / 4 );
+    });
+  });
+
+  it("should support subscribing", function(done) {
+    buildAndConnect(done, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+
+      client.on("suback", function(packet) {
+        client.disconnect();
+        expect(packet).to.have.property("messageId", messageId);
+      });
+
+      client.subscribe({ topic: "hello", messageId: messageId });
+    });
+  });
+
+  it("should support subscribing only to QoS 0", function(done) {
+    buildAndConnect(done, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+
+      client.on("suback", function(packet) {
+        client.disconnect();
+        expect(packet.granted).to.be.deep.equal([0]);
+      });
+
+      client.subscribe({ topic: "hello", messageId: messageId, qos: 1});
+    });
+  });
+
+  it("should support subscribing to multiple topics", function(done) {
+    buildAndConnect(done, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+
+      client.on("suback", function(packet) {
+        client.disconnect();
+        expect(packet.granted).to.be.deep.equal([0, 0]);
+      });
+
+      client.subscribe({
+        subscriptions: [{ topic: "hello", qos: 1 }, { topic: "hello2", qos: 0 }],
+        messageId: messageId
+      });
+    });
+  });
+
+  it("should support subscribing and publishing", function(done) {
+    var d = donner(2, done);
+    buildAndConnect(d, function(client1) {
+
+      client1.on("publish", function(packet) {
+        client1.disconnect();
+        expect(packet.topic).to.be.equal("hello");
+        expect(packet.payload).to.be.equal("some data");
+      });
+
+      client1.on("suback", function() {
+        buildAndConnect(d, function(client2) {
+          client2.publish({ topic: "hello", payload: "some data" });
+          client2.disconnect();
+        });
+      });
+
+      client1.subscribe({ topic: "hello" });
     });
   });
 });
