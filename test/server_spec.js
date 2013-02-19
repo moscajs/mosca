@@ -1,6 +1,7 @@
 
 var mqtt = require("mqtt");
 var microtime = require("microtime");
+var ascoltatori = require("ascoltatori");
 
 describe(mosca.Server, function() {
 
@@ -8,7 +9,7 @@ describe(mosca.Server, function() {
   var settings;
 
   beforeEach(function(done) {
-    settings = mqttSettings();
+    settings = moscaSettings();
     instance = new mosca.Server(settings, done);
   });
 
@@ -279,7 +280,7 @@ describe(mosca.Server, function() {
   });
 
   it("should emit a ready and closed events", function(done) {
-    var server = new mosca.Server(mqttSettings());
+    var server = new mosca.Server(moscaSettings());
     async.series([
       function (cb) {
         server.on("ready", cb);
@@ -292,5 +293,32 @@ describe(mosca.Server, function() {
         server.close();
       }
     ]);
+  });
+
+  it("should pass the backend settings to ascoltatori.build", function(done) {
+    var spy = sinon.spy(ascoltatori, "build");
+    var newSettings = moscaSettings();
+
+    newSettings.backend = {
+      type: "mqtt",
+      port: settings.port,
+      host: "127.0.0.1", 
+      mqtt: require("mqtt")
+    };
+
+    var server = new mosca.Server(newSettings);
+
+    async.series([
+      function (cb) {
+        server.on("ready", cb);
+      },
+      function (cb) {
+        expect(spy).to.have.been.calledWith(newSettings.backend);
+        cb();
+      },
+      function (cb) {
+        server.close(cb);
+      }
+    ], done);
   });
 });

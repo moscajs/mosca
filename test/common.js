@@ -28,9 +28,8 @@ global.rabbitSettings = function() {
   };
 };
 
-global.mqttSettings = function() {
+global.moscaSettings = function() {
   return {
-    host: "127.0.0.1",
     port: nextPort()
   }
 };
