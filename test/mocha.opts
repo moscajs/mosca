@@ -1,0 +1,6 @@
+--reporter dot
+--require test/common
+--ui bdd
+--growl
+--colors
+--globals s
