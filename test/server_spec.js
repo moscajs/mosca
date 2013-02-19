@@ -277,4 +277,20 @@ describe(mosca.Server, function() {
       client.connect();
     });
   });
+
+  it("should emit a ready and closed events", function(done) {
+    var server = new mosca.Server(mqttSettings());
+    async.series([
+      function (cb) {
+        server.on("ready", cb);
+      },
+      function (cb) {
+        server.on("closed", done);
+        cb();
+      },
+      function(cb) {
+        server.close();
+      }
+    ]);
+  });
 });
