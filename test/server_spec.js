@@ -233,10 +233,11 @@ describe(mosca, function() {
   it("should emit an event on every newly published packet", function(done) {
     buildAndConnect(done, function(client) {
 
-      instance.on("published", function(packet) {
-        client.disconnect();
+      instance.on("published", function(packet, serverClient) {
         expect(packet.topic).to.be.equal("hello");
         expect(packet.payload).to.be.equal("some data");
+        expect(serverClient).not.to.be.undefined;
+        client.disconnect();
       });
 
       client.publish({ topic: "hello", payload: "some data" });
@@ -246,9 +247,9 @@ describe(mosca, function() {
   it("should emit an event when a new client is connected", function(done) {
     buildClient(done, function(client) {
 
-      instance.on("clientConnected", function(arg) {
+      instance.on("clientConnected", function(serverClient) {
+        expect(serverClient).not.to.be.undefined;
         client.disconnect();
-        expect(arg).not.to.be.null;
       });
 
       client.connect({ keepalive: 3000 });
@@ -262,8 +263,8 @@ describe(mosca, function() {
         return;
       }
 
-      instance.on('clientDisconnected', function(arg) {
-        expect(arg).not.to.be.null;
+      instance.on('clientDisconnected', function(serverClient) {
+        expect(serverClient).not.to.be.undefined;
         done();
       });
 

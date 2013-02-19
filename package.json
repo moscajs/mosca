@@ -39,7 +39,8 @@
     "optimist": "~0.3.5",
     "async_bench": "0.0.1",
     "underscore": "~1.4.4",
-    "microtime": "~0.3.3"
+    "microtime": "~0.3.3",
+    "dox-foundation": "~0.4.4"
   },
   "dependencies": {
     "mqtt": "~0.1.8",
