@@ -2,7 +2,7 @@
 var mqtt = require("mqtt");
 var microtime = require("microtime");
 
-describe(mosca, function() {
+describe(mosca.Server, function() {
 
   var instance;
   var settings;
