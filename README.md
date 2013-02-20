@@ -40,7 +40,8 @@ client.
 * QoS 0 only
 * Built on top on node.js
 * As fast as it is possible
-* Usable inside ANY other node.js app
+* Usable inside ANY other node.js app, see the
+  [API](http://mcollina.github.com/mosca/docs/server.js.html).
 
 ## Contributing to Mosca
 
