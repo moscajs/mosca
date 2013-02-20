@@ -452,4 +452,49 @@ describe(mosca.Server, function() {
       }
     ]);
   });
+
+  it("should support unsubscribing a single client", function(done) {
+    var d = donner(2, done);
+
+    async.waterfall([
+      function (cb) {
+        buildAndConnect(d, function (client1) {
+          cb(null, client1);
+        });
+      },
+      function (client1, cb) {
+        var called = false;
+        client1.on("publish", function(packet) {
+          // we are expecting this
+          client1.disconnect();
+        });
+
+        client1.subscribe({ topic: "hello/#" });
+        client1.on("suback", function () {
+          cb(null, client1);
+        });
+      },
+      function (client1, cb) {
+        buildAndConnect(d, function (client3) {
+          cb(null, client1, client3);
+        });
+      },
+      function (client1, client3, cb) {
+        client3.subscribe({ topic: "hello/#" });
+        client3.on("suback", function () {
+          client3.disconnect();
+          cb(null);
+        });
+      },
+      function (cb) {
+        buildAndConnect(d, function(client2) {
+          cb(null, client2);
+        });
+      },
+      function (client2, cb) {
+        client2.publish({ topic: "hello/world", payload: "some data" });
+        client2.disconnect();
+      }
+    ]);
+  });
 });
