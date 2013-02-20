@@ -18,14 +18,16 @@ describe(mosca.Server, function() {
     var instances = [instance];
 
     if (secondInstance) {
-      instances.push(secondInstance);
+      instances = [secondInstance].concat(instances);
     }
 
     async.parallel(instances.map(function (i) {
       return function (cb) {
         i.close(cb);
       };
-    }), done);
+    }), function() {
+      done();
+    });
   });
 
   function donner(count, done) {
@@ -409,5 +411,45 @@ describe(mosca.Server, function() {
         client2.disconnect();
       }
     ]);
- });
+  });
+
+  it("should not wrap messages with \"\" in a tree-based topology", function(done) {
+    var d = donner(2, done);
+
+    async.waterfall([
+      function (cb) {
+        buildAndConnect(d, function (client1) {
+          cb(null, client1);
+        });
+      },
+      function (client1, cb) {
+        client1.on("publish", function(packet) {
+          expect(packet.payload).to.be.eql("some data");
+          client1.disconnect();
+        });
+
+        client1.subscribe({ topic: "hello/#" });
+        client1.on("suback", function () {
+          cb(null);
+        });
+      },
+      function (cb) {
+        settings.backend = {
+          port: settings.port,
+          type: "mqtt"
+        };
+        settings.port = settings.port + 1000;
+        secondInstance = new mosca.Server(settings, cb);
+      },
+      function (cb) {
+        buildAndConnect(d, function(client2) {
+          cb(null, client2);
+        });
+      },
+      function (client2, cb) {
+        client2.publish({ topic: "hello/world", payload: "some data" });
+        client2.disconnect();
+      }
+    ]);
+  });
 });
