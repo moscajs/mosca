@@ -189,8 +189,8 @@ describe(mosca.Server, function() {
       var messageId = Math.floor(65535 * Math.random());
 
       client.on("unsuback", function(packet) {
-        client.disconnect();
         expect(packet).to.have.property("messageId", messageId);
+        client.disconnect();
       });
 
       client.on("suback", function(packet) {
@@ -260,7 +260,7 @@ describe(mosca.Server, function() {
   it("should emit an event when a client is disconnected", function(done) {
     mqtt.createClient(settings.port, settings.host, function(err, client) {
       if(err) {
-        done(err)
+        done(err);
         return;
       }
 
@@ -274,7 +274,7 @@ describe(mosca.Server, function() {
       client.on('connack', function() {
         client.disconnect();
       });
-      
+
       client.connect();
     });
   });
@@ -320,5 +320,26 @@ describe(mosca.Server, function() {
         server.close(cb);
       }
     ], done);
+  });
+
+  it("should support subscribing to wildcards", function(done) {
+    var d = donner(2, done);
+    buildAndConnect(d, function(client1) {
+
+      client1.on("publish", function(packet) {
+        expect(packet.topic).to.be.equal("hello/world");
+        expect(packet.payload).to.be.equal("some data");
+        client1.disconnect();
+      });
+
+      client1.on("suback", function() {
+        buildAndConnect(d, function(client2) {
+          client2.publish({ topic: "hello/world", payload: "some data" });
+          client2.disconnect();
+        });
+      });
+
+      client1.subscribe({ topic: "hello/#" });
+    });
   });
 });
