@@ -31,7 +31,7 @@ global.rabbitSettings = function() {
 global.moscaSettings = function() {
   return {
     port: nextPort()
-  }
+  };
 };
 
 var sinonChai = require("sinon-chai");

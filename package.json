@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "The MQTT server for node.js that can be backed up by AMQP, Redis, ZeroMQ or just MQTT. That's meta!",
   "main": "index.js",
+  "bin": {
+    "mosca": "./bin/mosca"
+  },
   "scripts": {
     "test": "make test"
   },
@@ -46,6 +49,7 @@
     "mqtt": "~0.1.8",
     "async": "~0.2.4",
     "ascoltatori": "~0.2.1",
-    "debug": "~0.7.2"
+    "debug": "~0.7.2",
+    "commander": "~1.1.1"
   }
 }
