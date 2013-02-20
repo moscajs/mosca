@@ -13,9 +13,9 @@ This list currently includes:
 * [Redis](http://redis.io/), the fabulous key/value store by
   [@antirez](https://github.com/antirez).
 * [Mosquitto](http://mosquitto.org/) and all implementations of the
-  [MQTT](http://mqtt.org/) protocol.
+  [MQTT](http://mqtt.org/) protocol, including itself.
 * [ZeroMQ](http://www.zeromq.org/) without a central broker, so
-  Ascoltatori can also be used in a P2P fashion.
+  Mosca can also be used in a P2P fashion.
 
 
 __Mosca__ is still under active development, but it should work :).
