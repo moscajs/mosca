@@ -10,15 +10,37 @@ This list currently includes:
 
 * [RabbitMQ](http://www.rabbitmq.com/) and all implementations of
   the [AMQP](http://www.amqp.org/) protocol.
-* [Redis](http://redis.io/)
+* [Redis](http://redis.io/), the fabulous key/value store by
+  [@antirez](https://github.com/antirez).
 * [Mosquitto](http://mosquitto.org/) and all implementations of the
   [MQTT](http://mqtt.org/) protocol.
 * [ZeroMQ](http://www.zeromq.org/) without a central broker, so
   Ascoltatori can also be used in a P2P fashion.
 
+
+__Mosca__ is still under active development, but it should work :).
+Let me know if you plan to use __Mosca__ in production.
+
 ## Usage
 
-__Mosca__ is still under active development.
+Mosca is a node.js application, so it needs [node.js](http://nodejs.org)
+to run.
+
+```
+$: npm install mosca -g
+$: mosca -v
+```
+
+Then you can connect to it with your preferred [MQTT](http://mqtt.org)
+client.
+
+## Features
+
+* MQTT 3.0 compliant
+* QoS 0 only
+* Built on top on node.js
+* As fast as it is possible
+* Usable inside ANY other node.js app
 
 ## Contributing to Mosca
 
