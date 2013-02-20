@@ -6,6 +6,7 @@ var ascoltatori = require("ascoltatori");
 describe(mosca.Server, function() {
 
   var instance;
+  var secondInstance = null;
   var settings;
 
   beforeEach(function(done) {
@@ -14,7 +15,17 @@ describe(mosca.Server, function() {
   });
 
   afterEach(function(done) {
-    instance.close(done);
+    var instances = [instance];
+
+    if (secondInstance) {
+      instances.push(secondInstance);
+    }
+
+    async.parallel(instances.map(function (i) {
+      return function (cb) {
+        i.close(cb);
+      };
+    }), done);
   });
 
   function donner(count, done) {
@@ -28,9 +39,9 @@ describe(mosca.Server, function() {
 
   function buildClient(done, callback) {
     mqtt.createClient(settings.port, settings.host, function(err, client) {
-      if(err)
-        done(err)
-      else {
+      if(err) {
+        done(err);
+      } else {
         client.on('close', function() {
           done();
         });
@@ -342,4 +353,61 @@ describe(mosca.Server, function() {
       client1.subscribe({ topic: "hello/#" });
     });
   });
+
+  it("should support subscribing correctly to wildcards in a tree-based topology", function(done) {
+    var d = donner(3, done);
+
+    async.waterfall([
+      function (cb) {
+        settings.backend = {
+          port: settings.port,
+          type: "mqtt"
+        };
+        settings.port = settings.port + 1000;
+        secondInstance = new mosca.Server(settings, cb);
+      },
+      function (cb) {
+        buildAndConnect(d, function (client1) {
+          cb(null, client1);
+        });
+      },
+      function (client1, cb) {
+        var called = false;
+        client1.on("publish", function(packet) {
+          expect(called).to.be.eql(false);
+          called = true;
+          setTimeout(function () {
+            client1.disconnect();
+          });
+        });
+
+        client1.subscribe({ topic: "hello/#" });
+        client1.on("suback", function () {
+          cb(null);
+        });
+      },
+      function (cb) {
+        buildAndConnect(d, function (client3) {
+          cb(null, client3);
+        });
+      },
+      function (client3, cb) {
+        client3.subscribe({ topic: "hello/#" });
+        client3.on("suback", function () {
+          // we need to simulate a "stuck" subscription
+          client3.stream.end();
+          cb(null);
+        });
+      },
+      function (cb) {
+        buildAndConnect(d, function(client2) {
+          cb(null, client2);
+        });
+      },
+      function (client2, cb) {
+        client2.publish({ topic: "hello/world", payload: "some data" });
+        client2.disconnect();
+      }
+    ]);
+ });
 });
