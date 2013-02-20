@@ -72,8 +72,38 @@ client.</p>
 <li>QoS 0 only</li>
 <li>Built on top on node.js</li>
 <li>As fast as it is possible</li>
-<li>Usable inside ANY other node.js app</li>
-</ul><h2>Contributing to Mosca</h2>
+<li>Usable inside ANY other node.js app, see the
+<a href="http://mcollina.github.com/mosca/docs/server.js.html">API</a>.</li>
+</ul><h2>Configuration</h2>
+
+<p>Mosca supports some command line options:</p>
+
+<pre><code>Usage: mosca [options]
+
+  Options:
+
+    -h, --help           output usage information
+    -V, --version        output the version number
+    -p, --port &lt;n&gt;       the port to listen to
+    --parent-port &lt;n&gt;    the parent port to connect to
+    --parent-host &lt;s&gt;    the parent host to connect to
+    --parent-prefix &lt;s&gt;  the prefix to use in the parent broker
+    -c, --config &lt;c&gt;     the config file to use (override every 
+                         other options)
+    -v, --verbose        equal to DEBUG=mosca
+    --very-verbose       equal to DEBUG=mosca,ascoltatori:*
+</code></pre>
+
+<p>However you can only use a MQTT backend with the command line options.</p>
+
+<p>If you want to unleash the full power of mosca, you will need to
+use a configuration file.
+Some examples are included in this repository, one using
+<a href="https://github.com/mcollina/mosca/tree/master/examples/redis">Redis</a>,
+and one using a
+<a href="https://github.com/mcollina/mosca/tree/master/examples/mosca-tree">tree-based</a> topology of Moscas.</p>
+
+<h2>Contributing to Mosca</h2>
 
 <ul>
 <li>Check out the latest master to make sure the feature hasn't been
