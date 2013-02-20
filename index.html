@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Mosca by mcollina</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Mosca</h1>
+        <p>The MQTT server for node.js that can be backed up by AMQP, Redis, ZeroMQ or just MQTT. That's meta!</p>
+
+        <p class="view"><a href="https://github.com/mcollina/mosca">View the Project on GitHub <small>mcollina/mosca</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/mcollina/mosca/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/mcollina/mosca/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/mcollina/mosca">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Mosca</h1>
+
+<p><a href="https://travis-ci.org/mcollina/mosca"><img src="https://travis-ci.org/mcollina/mosca.png" alt="Build
+Status"></a></p>
+
+<p><strong>Mosca</strong> is a <a href="http://mqtt.org/">MQTT</a> broker that aim to be backed up
+by every publish/subscribe broker or protocol out there.
+This list currently includes:</p>
+
+<ul>
+<li>
+<a href="http://www.rabbitmq.com/">RabbitMQ</a> and all implementations of
+the <a href="http://www.amqp.org/">AMQP</a> protocol.</li>
+<li>
+<a href="http://redis.io/">Redis</a>, the fabulous key/value store by
+<a href="https://github.com/antirez">@antirez</a>.</li>
+<li>
+<a href="http://mosquitto.org/">Mosquitto</a> and all implementations of the
+<a href="http://mqtt.org/">MQTT</a> protocol.</li>
+<li>
+<a href="http://www.zeromq.org/">ZeroMQ</a> without a central broker, so
+Ascoltatori can also be used in a P2P fashion.</li>
+</ul><p><strong>Mosca</strong> is still under active development, but it should work :).
+Let me know if you plan to use <strong>Mosca</strong> in production.</p>
+
+<h2>Usage</h2>
+
+<p>Mosca is a node.js application, so it needs <a href="http://nodejs.org">node.js</a>
+to run.</p>
+
+<pre><code>$: npm install mosca -g
+$: mosca -v
+</code></pre>
+
+<p>Then you can connect to it with your preferred <a href="http://mqtt.org">MQTT</a>
+client.</p>
+
+<h2>Features</h2>
+
+<ul>
+<li>MQTT 3.0 compliant</li>
+<li>QoS 0 only</li>
+<li>Built on top on node.js</li>
+<li>As fast as it is possible</li>
+<li>Usable inside ANY other node.js app</li>
+</ul><h2>Contributing to Mosca</h2>
+
+<ul>
+<li>Check out the latest master to make sure the feature hasn't been
+implemented or the bug hasn't been fixed yet</li>
+<li>Check out the issue tracker to make sure someone already hasn't
+requested it and/or contributed it</li>
+<li>Fork the project</li>
+<li>Start a feature/bugfix branch</li>
+<li>Commit and push until you are happy with your contribution</li>
+<li>Make sure to add tests for it. This is important so I don't break it
+in a future version unintentionally.</li>
+<li>Please try not to mess with the Makefile and package.json. If you
+want to have your own version, or is otherwise necessary, that is
+fine, but please isolate to its own commit so I can cherry-pick around
+it.</li>
+</ul><h2>LICENSE - "MIT License"</h2>
+
+<p>Copyright (c) 2013 Matteo Collina, <a href="http://matteocollina.com">http://matteocollina.com</a></p>
+
+<p>Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/mcollina">mcollina</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-20777444-5");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
