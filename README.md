@@ -36,7 +36,7 @@ client.
 
 ## Features
 
-* MQTT 3.0 compliant
+* MQTT 3.1 compliant
 * QoS 0 only
 * Built on top on node.js
 * As fast as it is possible
