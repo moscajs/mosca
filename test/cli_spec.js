@@ -108,4 +108,14 @@ describe(mosca.cli, function () {
       done();
     });
   });
+
+  it("should support a config option", function (done) {
+    args.push("--config");
+    args.push("test/sample_config.js");
+    server = mosca.cli(args);
+    server.on("ready", function () {
+      expect(server.opts).to.eql(require("./sample_config"));
+      done();
+    });
+  });
 });
