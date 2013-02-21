@@ -1,6 +1,6 @@
 {
   "name": "mosca",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The MQTT server for node.js that can be backed up by AMQP, Redis, ZeroMQ or just MQTT. That's meta!",
   "main": "index.js",
   "bin": {
