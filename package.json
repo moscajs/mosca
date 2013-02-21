@@ -44,7 +44,7 @@
   "dependencies": {
     "mqtt": "~0.1.8",
     "async": "~0.2.4",
-    "ascoltatori": "~0.2.2",
+    "ascoltatori": "~0.2.3",
     "debug": "~0.7.2",
     "zmq": "~2.2.0",
     "amqp": "~0.1.4",
