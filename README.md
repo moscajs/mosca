@@ -73,6 +73,24 @@ Some examples are included in this repository, one using
 and one using a
 [tree-based](https://github.com/mcollina/mosca/tree/master/examples/mosca-tree) topology of Moscas.
 
+A configuration file is structured in the following way:
+```
+module.exports = {
+  port: 4883,
+  backend: {
+    type: "redis"
+  }
+};
+```
+
+As __Mosca__ is based on
+[Ascoltatori](http://mcollina.github.com/ascoltatori/) to integrate
+all backends, please refers to __Ascoltatori__'s documentation to set
+them up accordingly.
+The whole content of the `backend` key is passed through to the
+[ascoltatori.build](http://mcollina.github.com/ascoltatori/docs/ascoltatori.js.html#build)
+method.
+
 ## Contributing to Mosca
 
 * Check out the latest master to make sure the feature hasn't been
