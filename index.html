@@ -103,6 +103,24 @@ Some examples are included in this repository, one using
 and one using a
 <a href="https://github.com/mcollina/mosca/tree/master/examples/mosca-tree">tree-based</a> topology of Moscas.</p>
 
+<p>A configuration file is structured in the following way:</p>
+
+<pre><code>module.exports = {
+  port: 4883,
+  backend: {
+    type: "redis"
+  }
+};
+</code></pre>
+
+<p>As <strong>Mosca</strong> is based on
+<a href="http://mcollina.github.com/ascoltatori/">Ascoltatori</a> to integrate
+all backends, please refers to <strong>Ascoltatori</strong>'s documentation to set
+them up accordingly.
+The whole content of the <code>backend</code> key is passed through to the
+<a href="http://mcollina.github.com/ascoltatori/docs/ascoltatori.js.html#build">ascoltatori.build</a>
+method.</p>
+
 <h2>Contributing to Mosca</h2>
 
 <ul>
