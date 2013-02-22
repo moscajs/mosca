@@ -4,8 +4,9 @@ Mosca
 [![Build
 Status](https://travis-ci.org/mcollina/mosca.png)](https://travis-ci.org/mcollina/mosca)
 
-__Mosca__ is a [MQTT](http://mqtt.org/) broker that aims to be backed up
-by every publish/subscribe broker or protocol out there.
+__Mosca__ is a multi-transport [MQTT](http://mqtt.org/) broker.
+It aims to support every publish/subscribe
+broker or protocol out there.
 This list currently includes:
 
 * [RabbitMQ](http://www.rabbitmq.com/) and all implementations of
