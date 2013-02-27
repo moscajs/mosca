@@ -86,7 +86,7 @@ module.exports = {
 
 As __Mosca__ is based on
 [Ascoltatori](http://mcollina.github.com/ascoltatori/) to integrate
-all backends, please refers to __Ascoltatori__'s documentation to set
+all backends, please refer to __Ascoltatori__'s documentation to set
 them up accordingly.
 The whole content of the `backend` key is passed through to the
 [ascoltatori.build](http://mcollina.github.com/ascoltatori/docs/ascoltatori.js.html#build)
