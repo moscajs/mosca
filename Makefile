@@ -1,6 +1,9 @@
 test:
 	./node_modules/.bin/mocha --recursive test
 
+bail:
+	./node_modules/.bin/mocha --recursive test --bail
+
 ci:
 	./node_modules/.bin/mocha --recursive --watch test
 

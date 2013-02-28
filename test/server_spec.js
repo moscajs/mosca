@@ -9,6 +9,15 @@ describe(mosca.Server, function() {
   var secondInstance = null;
   var settings;
 
+  function buildOpts() {
+    return {
+      keepalive: 10000,
+      clientId: 'mosca_' + require("crypto").randomBytes(16).toString('hex'),
+      protocolId: 'MQIsdp',
+      protocolVersion: 3
+    };
+  }
+
   beforeEach(function(done) {
     settings = moscaSettings();
     instance = new mosca.Server(settings, done);
@@ -40,24 +49,23 @@ describe(mosca.Server, function() {
   }
 
   function buildClient(done, callback) {
-    mqtt.createClient(settings.port, settings.host, function(err, client) {
-      if(err) {
-        done(err);
-      } else {
-        client.on('close', function() {
-          done();
-        });
-        client.on('error', done);
+    var client = mqtt.createConnection(settings.port, settings.host);
 
-        callback(client);
-      }
+    client.once('error', done);
+    client.stream.once('close', function() {
+      done();
+    });
+
+    client.on("connected", function () {
+      callback(client);
     });
   }
+
 
   function buildAndConnect(done, callback) {
     buildClient(done, function(client) {
 
-      client.connect({ keepalive: 3000 });
+      client.connect(buildOpts());
 
       client.on('connack', function(packet) {
         callback(client);
@@ -68,7 +76,7 @@ describe(mosca.Server, function() {
   it("should support connecting and disconnecting", function(done) {
     buildClient(done, function(client) {
 
-      client.connect({ keepalive: 3000 });
+      client.connect(buildOpts());
 
       client.on('connack', function(packet) {
         client.disconnect();
@@ -79,7 +87,7 @@ describe(mosca.Server, function() {
   it("should send a connack packet with returnCode 0", function(done) {
     buildClient(done, function(client) {
 
-      client.connect({ keepalive: 3000 });
+      client.connect(buildOpts());
 
       client.on('connack', function(packet) {
         client.disconnect();
@@ -93,9 +101,12 @@ describe(mosca.Server, function() {
       var keepalive = 1;
       var timer = microtime.now();
 
-      client.connect({ keepalive: keepalive });
+      var opts = buildOpts();
+      opts.keepalive = keepalive;
 
-      client.on("close", function() {
+      client.connect(opts);
+
+      client.stream.on("close", function() {
         var interval = (microtime.now() - timer) / 1000000;
         expect(interval).to.be.least(keepalive * 5/4);
       });
@@ -104,6 +115,7 @@ describe(mosca.Server, function() {
 
   it("should send a pingresp when it receives a pingreq", function(done) {
     buildAndConnect(done, function(client) {
+
       client.on("pingresp", function() {
         client.disconnect();
       });
@@ -117,13 +129,16 @@ describe(mosca.Server, function() {
       var keepalive = 1;
       var timer = microtime.now();
 
-      client.connect({ keepalive: keepalive });
+      var opts = buildOpts();
+      opts.keepalive = keepalive;
 
-      client.on("close", function() {
+      client.connect(opts);
+
+      client.stream.on("close", function() {
         var interval = (microtime.now() - timer) / 1000000;
         expect(interval).to.be.least(keepalive + keepalive / 4);
       });
-      
+
       setTimeout(function() {
         client.pingreq();
       }, keepalive * 1000 / 4 );
@@ -136,11 +151,11 @@ describe(mosca.Server, function() {
       var messageId = Math.floor(65535 * Math.random());
 
       client.on("suback", function(packet) {
-        client.disconnect();
         expect(packet).to.have.property("messageId", messageId);
+        client.disconnect();
       });
 
-      client.subscribe({ topic: "hello", messageId: messageId });
+      client.subscribe({ subscriptions: [{ topic: "hello", qos: 0 }], messageId: messageId });
     });
   });
 
@@ -150,11 +165,11 @@ describe(mosca.Server, function() {
       var messageId = Math.floor(65535 * Math.random());
 
       client.on("suback", function(packet) {
-        client.disconnect();
         expect(packet.granted).to.be.deep.equal([0]);
+        client.disconnect();
       });
 
-      client.subscribe({ topic: "hello", messageId: messageId, qos: 1});
+      client.subscribe({ subscriptions: [{ topic: "hello", qos: 1 }], messageId: messageId });
     });
   });
 
@@ -179,20 +194,22 @@ describe(mosca.Server, function() {
     var d = donner(2, done);
     buildAndConnect(d, function(client1) {
 
+      var messageId = Math.floor(65535 * Math.random());
+
       client1.on("publish", function(packet) {
-        client1.disconnect();
         expect(packet.topic).to.be.equal("hello");
         expect(packet.payload).to.be.equal("some data");
+        client1.disconnect();
       });
 
       client1.on("suback", function() {
         buildAndConnect(d, function(client2) {
-          client2.publish({ topic: "hello", payload: "some data" });
+          client2.publish({ topic: "hello", payload: "some data", messageId: messageId });
           client2.disconnect();
         });
       });
 
-      client1.subscribe({ topic: "hello" });
+      client1.subscribe({ subscriptions: [{ topic: "hello", qos: 1 }], messageId: messageId });
     });
   });
 
@@ -207,15 +224,10 @@ describe(mosca.Server, function() {
       });
 
       client.on("suback", function(packet) {
-        client.unsubscribe({
-          topic: "hello",
-          messageId: messageId
-        });
+        client.unsubscribe({ unsubscriptions: ["hello"], messageId: messageId });
       });
 
-      client.subscribe({
-        topic: "hello"
-      });
+      client.subscribe({ subscriptions: [{ topic: "hello", qos: 1 }], messageId: messageId });
     });
   });
 
@@ -233,14 +245,11 @@ describe(mosca.Server, function() {
       });
 
       client.on("suback", function(packet) {
-        client.unsubscribe({
-          topic: "hello"
-        });
+        client.unsubscribe({ unsubscriptions: ["hello"], messageId: messageId });
       });
 
-      client.subscribe({
-        topic: "hello"
-      });
+      var messageId = Math.floor(65535 * Math.random());
+      client.subscribe({ subscriptions: [{ topic: "hello", qos: 1 }], messageId: messageId });
     });
   });
 
@@ -250,7 +259,7 @@ describe(mosca.Server, function() {
       instance.on("published", function(packet, serverClient) {
         expect(packet.topic).to.be.equal("hello");
         expect(packet.payload).to.be.equal("some data");
-        expect(serverClient).not.to.be.undefined;
+        expect(serverClient).not.to.be.equal(undefined);
         client.disconnect();
       });
 
@@ -262,34 +271,29 @@ describe(mosca.Server, function() {
     buildClient(done, function(client) {
 
       instance.on("clientConnected", function(serverClient) {
-        expect(serverClient).not.to.be.undefined;
+        expect(serverClient).not.to.be.equal(undefined);
         client.disconnect();
       });
 
-      client.connect({ keepalive: 3000 });
+      client.connect(buildOpts());
     });
   });
 
   it("should emit an event when a client is disconnected", function(done) {
-    mqtt.createClient(settings.port, settings.host, function(err, client) {
-      if(err) {
-        done(err);
-        return;
-      }
+    var client = mqtt.createConnection(settings.port, settings.host);
 
-      instance.on('clientDisconnected', function(serverClient) {
-        expect(serverClient).not.to.be.undefined;
-        done();
-      });
-
-      client.on('error', done);
-
-      client.on('connack', function() {
-        client.disconnect();
-      });
-
-      client.connect();
+    instance.on('clientDisconnected', function(serverClient) {
+      expect(serverClient).not.to.be.equal(undefined);
+      done();
     });
+
+    client.on('error', done);
+
+    client.on('connack', function() {
+      client.disconnect();
+    });
+
+    client.connect(buildOpts());
   });
 
   it("should emit a ready and closed events", function(done) {
@@ -352,7 +356,7 @@ describe(mosca.Server, function() {
         });
       });
 
-      client1.subscribe({ topic: "hello/#" });
+      client1.subscribe({ subscriptions: [{ topic: "hello/#", qos: 0 }], messageId: 42 });
     });
   });
 
@@ -383,7 +387,7 @@ describe(mosca.Server, function() {
           });
         });
 
-        client1.subscribe({ topic: "hello/#" });
+        client1.subscribe({ subscriptions: [{ topic: "hello/#", qos: 0 }], messageId: 42 });
         client1.on("suback", function () {
           cb(null);
         });
@@ -394,7 +398,7 @@ describe(mosca.Server, function() {
         });
       },
       function (client3, cb) {
-        client3.subscribe({ topic: "hello/#" });
+        client3.subscribe({ subscriptions: [{ topic: "hello/#", qos: 0 }], messageId: 42 });
         client3.on("suback", function () {
           // we need to simulate a "stuck" subscription
           client3.stream.end();
@@ -428,7 +432,7 @@ describe(mosca.Server, function() {
           client1.disconnect();
         });
 
-        client1.subscribe({ topic: "hello/#" });
+        client1.subscribe({ subscriptions: [{ topic: "hello/#", qos: 0 }], messageId: 42 });
         client1.on("suback", function () {
           cb(null);
         });
@@ -469,7 +473,7 @@ describe(mosca.Server, function() {
           client1.disconnect();
         });
 
-        client1.subscribe({ topic: "hello/#" });
+        client1.subscribe({ subscriptions: [{ topic: "hello/#", qos: 0 }], messageId: 42 });
         client1.on("suback", function () {
           cb(null, client1);
         });
@@ -480,7 +484,7 @@ describe(mosca.Server, function() {
         });
       },
       function (client1, client3, cb) {
-        client3.subscribe({ topic: "hello/#" });
+        client3.subscribe({ subscriptions: [{ topic: "hello/#", qos: 0 }], messageId: 42 });
         client3.on("suback", function () {
           client3.disconnect();
           cb(null);
