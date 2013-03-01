@@ -11,7 +11,7 @@ describe(mosca.Server, function() {
 
   function buildOpts() {
     return {
-      keepalive: 10000,
+      keepalive: 1000,
       clientId: 'mosca_' + require("crypto").randomBytes(16).toString('hex'),
       protocolId: 'MQIsdp',
       protocolVersion: 3
@@ -159,20 +159,6 @@ describe(mosca.Server, function() {
     });
   });
 
-  it("should support subscribing only to QoS 0", function(done) {
-    buildAndConnect(done, function(client) {
-
-      var messageId = Math.floor(65535 * Math.random());
-
-      client.on("suback", function(packet) {
-        expect(packet.granted).to.be.deep.equal([0]);
-        client.disconnect();
-      });
-
-      client.subscribe({ subscriptions: [{ topic: "hello", qos: 1 }], messageId: messageId });
-    });
-  });
-
   it("should support subscribing to multiple topics", function(done) {
     buildAndConnect(done, function(client) {
 
@@ -180,7 +166,7 @@ describe(mosca.Server, function() {
 
       client.on("suback", function(packet) {
         client.disconnect();
-        expect(packet.granted).to.be.deep.equal([0, 0]);
+        expect(packet.granted).to.be.deep.equal([1, 0]);
       });
 
       client.subscribe({
@@ -209,7 +195,7 @@ describe(mosca.Server, function() {
         });
       });
 
-      client1.subscribe({ subscriptions: [{ topic: "hello", qos: 1 }], messageId: messageId });
+      client1.subscribe({ subscriptions: [{ topic: "hello", qos: 0 }], messageId: messageId });
     });
   });
 
@@ -500,5 +486,54 @@ describe(mosca.Server, function() {
         client2.disconnect();
       }
     ]);
+  });
+
+  it("should support send a puback when publishing QoS 1 messages", function (done) {
+    buildAndConnect(done, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+
+      client.on("puback", function(packet) {
+        expect(packet).to.have.property("messageId", messageId);
+        client.disconnect();
+      });
+
+      client.publish({ topic: "hello", qos: 1, messageId: messageId });
+    });
+  });
+
+  it("should support subscribing to QoS 1", function(done) {
+    buildAndConnect(done, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+
+      client.on("suback", function(packet) {
+        expect(packet.granted).to.be.deep.equal([1]);
+        client.disconnect();
+      });
+
+      client.subscribe({ subscriptions: [{ topic: "hello", qos: 1 }], messageId: messageId });
+    });
+  });
+
+  it("should resend messages if a subscription is done with QoS 1", function(done) {
+    buildAndConnect(done, function (client) {
+
+      client.once("publish", function (packet1) {
+        // the first time we do nothing
+        process.nextTick(function () {
+          client.once("publish", function (packet2) {
+            expect(packet2).to.be.deep.equal(packet1);
+            client.disconnect();
+          });
+        });
+      });
+
+      client.on("suback", function(packet) {
+        client.publish({ topic: "hello", qos: 0, messageId: 24 });
+      });
+
+      client.subscribe({ subscriptions: [{ topic: "hello", qos: 1 }], messageId: 42 });
+    });
   });
 });
