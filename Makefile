@@ -27,4 +27,8 @@ publish-docs: docs
 	git checkout master
 	git stash apply
 
+jshint:
+	find lib -name "*.js" -print0 | xargs -0 jshint
+	find test -name "*.js" -print0 | xargs -0 jshint
+
 .PHONY: test

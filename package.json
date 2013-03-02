@@ -38,7 +38,8 @@
     "async_bench": "0.0.1",
     "underscore": "~1.4.4",
     "microtime": "~0.3.3",
-    "dox-foundation": "~0.4.4"
+    "dox-foundation": "~0.4.4",
+    "jshint": "~1.0.0"
   },
   "dependencies": {
     "mqtt": "~0.2.0",
