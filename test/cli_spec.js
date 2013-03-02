@@ -1,5 +1,5 @@
 
-describe(mosca.cli, function () {
+describe("mosca.cli", function () {
 
   var server = null,
       oldDebug = null,

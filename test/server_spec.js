@@ -3,7 +3,7 @@ var mqtt = require("mqtt");
 var microtime = require("microtime");
 var ascoltatori = require("ascoltatori");
 
-describe(mosca.Server, function() {
+describe("mosca.Server", function() {
 
   var instance;
   var secondInstance = null;
