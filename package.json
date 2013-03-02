@@ -44,7 +44,7 @@
   "dependencies": {
     "mqtt": "~0.2.0",
     "async": "~0.2.4",
-    "ascoltatori": "git://github.com/mcollina/ascoltatori.git",
+    "ascoltatori": "~0.3.1",
     "debug": "~0.7.2",
     "commander": "~1.1.1"
   },
