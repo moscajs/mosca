@@ -536,4 +536,61 @@ describe("mosca.Server", function() {
       client.subscribe({ subscriptions: [{ topic: "hello", qos: 1 }], messageId: 42 });
     });
   });
+
+  it("should support will message", function(done) {
+
+    async.waterfall([
+      function (cb) {
+        var client = mqtt.createConnection(settings.port, settings.host);
+
+        client.on("connected", function () {
+          var opts = buildOpts();
+          opts.will = {
+            topic: "/hello/died",
+            payload: "client1 died",
+            qos: 1
+          };
+
+          client.connect(opts);
+
+          client.on('connack', function(packet) {
+
+            cb(null, client);
+          });
+        });
+      },
+      function (client1, cb) {
+        client1.subscribe({ subscriptions: [{ topic: "hello/world", qos: 0 }], messageId: 42 });
+        client1.on("suback", function () {
+          cb(null, client1);
+        });
+      },
+      function (client1, cb) {
+        buildAndConnect(done, function (client3) {
+          cb(null, client1, client3);
+        });
+      },
+      function (client1, client3, cb) {
+        client3.subscribe({ subscriptions: [{ topic: "/hello/died", qos: 0 }], messageId: 42 });
+        client3.on("suback", function () {
+          cb(null, client1, client3);
+        });
+        client3.on("publish", function (packet) {
+          expect(packet.topic).to.be.eql("/hello/died");
+          expect(packet.payload).to.be.eql("client1 died");
+          client3.disconnect();
+        });
+      },
+      function (client1, client3, cb) {
+        client1.stream.end();
+        setTimeout(function () {
+          cb(null, client3);
+        }, 10);
+      },
+      function (client3, cb) {
+        client3.publish({ topic: "hello/world", payload: "ahha" });
+        cb(null);
+      }
+    ]);
+  });
 });
