@@ -33,8 +33,9 @@
 <p><a href="https://travis-ci.org/mcollina/mosca"><img src="https://travis-ci.org/mcollina/mosca.png" alt="Build
 Status"></a></p>
 
-<p><strong>Mosca</strong> is a <a href="http://mqtt.org/">MQTT</a> broker that aims to be backed up
-by every publish/subscribe broker or protocol out there.
+<p><strong>Mosca</strong> is a multi-transport <a href="http://mqtt.org/">MQTT</a> broker.
+It aims to support every publish/subscribe
+broker or protocol out there.
 This list currently includes:</p>
 
 <ul>
@@ -69,7 +70,7 @@ client.</p>
 
 <ul>
 <li>MQTT 3.1 compliant</li>
-<li>QoS 0 only</li>
+<li>QoS 0 and QoS 1, but without storage</li>
 <li>Built on top on node.js</li>
 <li>As fast as it is possible</li>
 <li>Usable inside ANY other node.js app, see the
@@ -115,7 +116,7 @@ and one using a
 
 <p>As <strong>Mosca</strong> is based on
 <a href="http://mcollina.github.com/ascoltatori/">Ascoltatori</a> to integrate
-all backends, please refers to <strong>Ascoltatori</strong>'s documentation to set
+all backends, please refer to <strong>Ascoltatori</strong>'s documentation to set
 them up accordingly.
 The whole content of the <code>backend</code> key is passed through to the
 <a href="http://mcollina.github.com/ascoltatori/docs/ascoltatori.js.html#build">ascoltatori.build</a>
