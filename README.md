@@ -1,7 +1,7 @@
 Mosca
 =====
 
-![Mosca](./mosca.png)
+![Mosca](https://raw.github.com/mcollina/mosca/master/mosca.png)
 
 [![Build
 Status](https://travis-ci.org/mcollina/mosca.png)](https://travis-ci.org/mcollina/mosca)
