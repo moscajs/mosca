@@ -593,4 +593,48 @@ describe("mosca.Server", function() {
       }
     ]);
   });
+
+  it("should support authentication (success)", function(done) {
+    instance.authenticate = function (client, username, password, callback) {
+      expect(username).to.be.eql("matteo");
+      expect(password).to.be.eql("collina");
+      callback(null, true);
+    };
+
+    buildClient(done, function(client) {
+
+      var options = buildOpts();
+      options.username = "matteo";
+      options.password = "collina";
+
+      client.connect(options);
+
+      client.on('connack', function(packet) {
+        expect(packet.returnCode).to.eql(0);
+        client.disconnect();
+      });
+    });
+  });
+
+  it("should support authentication (failure)", function(done) {
+    instance.authenticate = function (client, username, password, callback) {
+      expect(username).to.be.eql("matteo");
+      expect(password).to.be.eql("collina");
+      callback(null, false);
+    };
+
+    buildClient(done, function(client) {
+
+      var options = buildOpts();
+      options.username = "matteo";
+      options.password = "collina";
+
+      client.connect(options);
+
+      client.on('connack', function(packet) {
+        expect(packet.returnCode).to.eql(5);
+        client.disconnect();
+      });
+    });
+  });
 });
