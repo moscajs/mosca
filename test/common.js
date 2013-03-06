@@ -38,3 +38,4 @@ var sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 
 global.mosca = require("../");
+global.mosca.cli = require("../lib/cli");

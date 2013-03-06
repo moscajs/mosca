@@ -14,15 +14,25 @@ function setup(done) {
     client.subscribe("hello", { qos: program.qos }, function () {
       done(null, client);
     });
-    client.on("message", function (){
-      client.pass(null, client);
-    });
+  });
+
+  client.on("error", function (err) {
+    console.log(err);
+    if(err.errno == 'EADDRINUSE') {
+      setTimeout(function () {
+        setup(done);
+      }, 1000);
+    }
+  });
+
+  client.on("message", function (){
+    client.pass(null, client);
   });
 }
 
 function teardown(client, callback) {
+  client.on("close", callback);
   client.end();
-  setTimeout(callback, 1);
 }
 
 function bench(client, done) {
