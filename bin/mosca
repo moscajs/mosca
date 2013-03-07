@@ -1,3 +1,5 @@
-#! /usr/bin/env node
+#! /bin/sh
 
-require("../lib/cli")(process.argv);
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+NODE_OPTS=""
+node $NODE_OPTS "$DIR/mosca.js" $@
