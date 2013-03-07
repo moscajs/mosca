@@ -42,7 +42,7 @@
     "jshint": "~1.0.0"
   },
   "dependencies": {
-    "mqtt": "git://github.com/mcollina/MQTT.js.git#combined",
+    "mqtt": "git://github.com/adamvr/MQTT.js.git",
     "async": "~0.2.4",
     "ascoltatori": "~0.3.1",
     "debug": "~0.7.2",
