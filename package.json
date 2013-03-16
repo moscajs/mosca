@@ -44,12 +44,12 @@
   "dependencies": {
     "mqtt": "~0.2.4",
     "async": "~0.2.4",
-    "ascoltatori": "~0.3.1",
+    "ascoltatori": "git://github.com/mcollina/ascoltatori.git#node-0.10",
     "debug": "~0.7.2",
     "commander": "~1.1.1"
   },
   "optionalDependencies": {
-    "zmq": "~2.2.0",
+    "zmq": "~2.3.0",
     "amqp": "~0.1.4",
     "redis": "~0.8.2"
   }
