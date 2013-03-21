@@ -6,7 +6,7 @@ var ascoltatori = require("ascoltatori");
 describe("mosca.Server", function() {
 
   var instance;
-  var secondInstance = null;
+  var secondInstance;
   var settings;
 
   function buildOpts() {
@@ -21,6 +21,7 @@ describe("mosca.Server", function() {
   beforeEach(function(done) {
     settings = moscaSettings();
     instance = new mosca.Server(settings, done);
+    secondInstance = null;
   });
 
   afterEach(function(done) {
@@ -669,6 +670,35 @@ describe("mosca.Server", function() {
 
       // it exists no negation of auth, it just disconnect the client
       client.publish({ topic: "hello", payload: "world", qos: 1, messageId: 42 });
+    });
+  });
+
+  it("should support publish authorization (success)", function(done) {
+    instance.authorizeSubscribe = function (client, topic, callback) {
+      expect(topic).to.be.eql("hello");
+      callback(null, true);
+    };
+
+    buildAndConnect(done, function(client) {
+
+      client.on("suback", function(packet) {
+        client.disconnect();
+      });
+
+      client.subscribe({ subscriptions: [{ topic: "hello", qos: 0 }], messageId: 42 });
+    });
+  });
+
+  it("should support publish authorization (failure)", function(done) {
+    instance.authorizeSubscribe = function (client, topic, callback) {
+      expect(topic).to.be.eql("hello");
+      callback(null, false);
+    };
+
+    buildAndConnect(done, function(client) {
+
+      // it exists no negation of auth, it just disconnect the client
+      client.subscribe({ subscriptions: [{ topic: "hello", qos: 0 }], messageId: 42 });
     });
   });
 });
