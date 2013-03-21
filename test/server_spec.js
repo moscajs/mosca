@@ -637,4 +637,38 @@ describe("mosca.Server", function() {
       });
     });
   });
+
+  it("should support publish authorization (success)", function(done) {
+    instance.authorizePublish = function (client, topic, payload, callback) {
+      expect(topic).to.be.eql("hello");
+      expect(payload).to.be.eql("world");
+      callback(null, true);
+    };
+
+    buildAndConnect(done, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+
+      client.on("puback", function(packet) {
+        expect(packet).to.have.property("messageId", messageId);
+        client.disconnect();
+      });
+
+      client.publish({ topic: "hello", qos: 1, payload: "world", messageId: messageId });
+    });
+  });
+
+  it("should support publish authorization (failure)", function(done) {
+    instance.authorizePublish = function (client, topic, payload, callback) {
+      expect(topic).to.be.eql("hello");
+      expect(payload).to.be.eql("world");
+      callback(null, false);
+    };
+
+    buildAndConnect(done, function(client) {
+
+      // it exists no negation of auth, it just disconnect the client
+      client.publish({ topic: "hello", payload: "world", qos: 1, messageId: 42 });
+    });
+  });
 });
