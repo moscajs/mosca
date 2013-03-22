@@ -46,7 +46,8 @@
     "async": "~0.2.4",
     "ascoltatori": "~0.3.1",
     "debug": "~0.7.2",
-    "commander": "~1.1.1"
+    "commander": "~1.1.1",
+    "minimatch": "~0.2.11"
   },
   "optionalDependencies": {
     "zmq": "~2.2.0",

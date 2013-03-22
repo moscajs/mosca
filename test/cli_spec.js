@@ -1,4 +1,6 @@
 
+var async = require("async");
+
 describe("mosca.cli", function () {
 
   var server = null,
