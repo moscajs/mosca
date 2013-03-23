@@ -7,6 +7,11 @@ bail:
 ci:
 	./node_modules/.bin/mocha --recursive --watch test
 
+BEAUTIFY=./node_modules/.bin/js-beautify -r -s 2 -j
+beautify:
+	find lib -name "*.js" -print0 | xargs -0 $(BEAUTIFY)
+	find test -name "*.js" -print0 | xargs -0 $(BEAUTIFY)
+
 docs-clean:
 	rm -rf docs
 
