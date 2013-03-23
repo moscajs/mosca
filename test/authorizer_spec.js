@@ -64,10 +64,19 @@ describe("mosca.Authorizer", function () {
         done();
       });
     });
+
+    it("it should add the username to the client", function (done) {
+      authorizer.addUser("user", "pass", function () {
+        instance(client, "user", "pass", function (err, success) {
+          expect(client).to.have.property("user", "user");
+          done();
+        });
+      });
+    });
   });
 
   describe("users", function () {
-    
+
     beforeEach(function () {
       instance = authorizer;
     });
@@ -102,5 +111,145 @@ describe("mosca.Authorizer", function () {
     var users = {};
     instance = new mosca.Authorizer(users);
     expect(instance.users).to.equal(users);
+  });
+
+  describe("authorizePublish", function () {
+
+    beforeEach(function (done) {
+      client.user = "user";
+      instance = authorizer.authorizePublish;
+      authorizer.addUser("user", "pass", function () {
+        done();
+      });
+    });
+
+    it("it should authorize a publish based on the topic", function (done) {
+      instance(client, "topic", "payload", function (err, success) {
+        expect(success).to.be.true;
+        done();
+      });
+    });
+
+    it("it should authorize a publish based on a long topic", function (done) {
+      instance(client, "/long/topic", "payload", function (err, success) {
+        expect(success).to.be.true;
+        done();
+      });
+    });
+
+    it("it should not authorize a publish based on the topic", function (done) {
+      authorizer.addUser("user", "pass", "/topic", function () {
+        instance(client, "other", "payload", function (err, success) {
+          expect(success).to.be.false;
+          done();
+        });
+      });
+    });
+
+    it("it should authorize a publish based on a pattern", function (done) {
+      authorizer.addUser("user", "pass", "/topic/*", function () {
+        instance(client, "/topic/other", "payload", function (err, success) {
+          expect(success).to.be.true;
+          done();
+        });
+      });
+    });
+
+    it("it should not authorize a publish based on a pattern", function (done) {
+      authorizer.addUser("user", "pass", "/topic/*", function () {
+        instance(client, "/topic/other/buu", "payload", function (err, success) {
+          expect(success).to.be.false;
+          done();
+        });
+      });
+    });
+
+    it("it should authorize a publish based on a unlimited pattern", function (done) {
+      authorizer.addUser("user", "pass", "/topic/**", function () {
+        instance(client, "/topic/other/buu", "payload", function (err, success) {
+          expect(success).to.be.true;
+          done();
+        });
+      });
+    });
+
+    it("it should authorize a publish based on a recursive pattern", function (done) {
+      authorizer.addUser("user", "pass", "/topic/**/buu", function () {
+        instance(client, "/topic/other/long/buu", "payload", function (err, success) {
+          expect(success).to.be.true;
+          done();
+        });
+      });
+    });
+  });
+
+  describe("authorizeSubscribe", function () {
+
+    beforeEach(function (done) {
+      client.user = "user";
+      instance = authorizer.authorizeSubscribe;
+      authorizer.addUser("user", "pass", function () {
+        done();
+      });
+    });
+
+    it("it should authorize a subscribe based on the topic", function (done) {
+      instance(client, "topic", function (err, success) {
+        expect(success).to.be.true;
+        done();
+      });
+    });
+
+    it("it should authorize a publish based on a long topic", function (done) {
+      instance(client, "/long/topic", function (err, success) {
+        expect(success).to.be.true;
+        done();
+      });
+    });
+
+    it("it should not authorize a publish based on the topic", function (done) {
+      authorizer.addUser("user", "pass", "**", "/topic", function () {
+        instance(client, "other", function (err, success) {
+          expect(success).to.be.false;
+          done();
+        });
+      });
+    });
+
+    it("it should authorize a publish based on a pattern", function (done) {
+      authorizer.addUser("user", "pass", "**", "/topic/*", function () {
+        instance(client, "/topic/other", function (err, success) {
+          expect(success).to.be.true;
+          done();
+        });
+      });
+    });
+
+    it("it should not authorize a publish based on a pattern", function (done) {
+      authorizer.addUser("user", "pass", "**", "/topic/*", function () {
+        instance(client, "/topic/other/buu", function (err, success) {
+          expect(success).to.be.false;
+          done();
+        });
+      });
+    });
+
+    it("it should authorize a publish based on a unlimited pattern", function (done) {
+      authorizer.addUser("user", "pass", "**", "/topic/**", function () {
+        instance(client, "/topic/other/buu", function (err, success) {
+          expect(success).to.be.true;
+          done();
+        });
+      });
+    });
+
+    it("it should authorize a publish based on a recursive pattern", function (done) {
+      authorizer.addUser("user", "pass", "**", "/topic/**/buu", function () {
+        instance(client, "/topic/other/long/buu", function (err, success) {
+          expect(success).to.be.true;
+          done();
+        });
+      });
+    });
   });
 });
