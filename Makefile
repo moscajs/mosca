@@ -1,5 +1,5 @@
 test:
-	./node_modules/.bin/mocha --recursive test --reporter nyan
+	./node_modules/.bin/mocha --recursive test
 
 bail:
 	./node_modules/.bin/mocha --recursive test --bail --reporter spec

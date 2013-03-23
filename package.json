@@ -7,7 +7,7 @@
     "mosca": "./bin/mosca"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make bail"
   },
   "repository": {
     "type": "git",
