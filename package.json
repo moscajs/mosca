@@ -43,7 +43,7 @@
     "js-beautify": "~0.4.2"
   },
   "dependencies": {
-    "mqtt": "~0.2.4",
+    "mqtt": "git://github.com/mcollina/MQTT.js.git#stream2-fix",
     "async": "~0.2.4",
     "ascoltatori": "~0.3.1",
     "debug": "~0.7.2",

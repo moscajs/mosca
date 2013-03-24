@@ -433,7 +433,7 @@ describe("mosca.Server", function() {
           port: settings.port,
           type: "mqtt"
         };
-        settings.port = settings.port + 1000;
+        settings.port = nextPort();
         secondInstance = new mosca.Server(settings, cb);
       },
 
