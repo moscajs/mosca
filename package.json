@@ -7,7 +7,7 @@
     "mosca": "./bin/mosca"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make bail"
   },
   "repository": {
     "type": "git",
@@ -39,14 +39,16 @@
     "underscore": "~1.4.4",
     "microtime": "~0.3.3",
     "dox-foundation": "~0.4.4",
-    "jshint": "~1.0.0"
+    "jshint": "~1.0.0",
+    "js-beautify": "~0.4.2"
   },
   "dependencies": {
     "mqtt": "~0.2.6",
     "async": "~0.2.4",
     "ascoltatori": "git://github.com/mcollina/ascoltatori.git#node-0.10",
     "debug": "~0.7.2",
-    "commander": "~1.1.1"
+    "commander": "~1.1.1",
+    "minimatch": "~0.2.11"
   },
   "optionalDependencies": {
     "zmq": "~2.4.0",

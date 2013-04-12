@@ -1,7 +1,6 @@
 global.sinon = require("sinon");
 global.chai = require("chai");
 global.expect = require("chai").expect;
-global.async = require("async");
 
 global.redisSettings = function() {
   return {
@@ -9,7 +8,7 @@ global.redisSettings = function() {
   };
 };
 
-var portCounter = 40042;
+var portCounter = 30042;
 global.nextPort = function() {
   return ++portCounter;
 };
