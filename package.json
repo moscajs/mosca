@@ -42,7 +42,7 @@
     "jshint": "~1.0.0"
   },
   "dependencies": {
-    "mqtt": "~0.2.4",
+    "mqtt": "~0.2.6",
     "async": "~0.2.4",
     "ascoltatori": "git://github.com/mcollina/ascoltatori.git#node-0.10",
     "debug": "~0.7.2",
