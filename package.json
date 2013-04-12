@@ -49,7 +49,7 @@
     "commander": "~1.1.1"
   },
   "optionalDependencies": {
-    "zmq": "~2.3.0",
+    "zmq": "~2.4.0",
     "amqp": "~0.1.4",
     "redis": "~0.8.2"
   }
