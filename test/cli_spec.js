@@ -1,4 +1,6 @@
 var async = require("async");
+var tmp = require('tmp');
+var fs = require("fs");
 
 describe("mosca.cli", function() {
 
@@ -31,7 +33,9 @@ describe("mosca.cli", function() {
       function(cb) {
         parentServer.close(cb);
       }
-    ], done);
+    ], function() {
+      done();
+    });
   });
 
   it("must be a function", function() {
@@ -121,6 +125,53 @@ describe("mosca.cli", function() {
     server.on("ready", function() {
       expect(server.opts).to.eql(require("./sample_config"));
       done();
+    });
+  });
+
+  it("should add an user to an authorization file", function(done) {
+    args.push("adduser");
+    args.push("myuser");
+    args.push("mypass");
+    args.push("--credentials");
+
+    tmp.file(function (err, path, fd) {
+      if (err) {
+        done(err);
+        return;
+      }
+
+      args.push(path);
+      mosca.cli(args, function () {
+        var content = JSON.parse(fs.readFileSync(path));
+        expect(content).to.have.property("myuser");
+        done();
+      });
+    });
+  });
+
+  it("should remove an user from an authorization file", function(done) {
+    args.push("adduser");
+    args.push("myuser");
+    args.push("mypass");
+    args.push("--credentials");
+
+    tmp.file(function (err, path, fd) {
+      if (err) {
+        done(err);
+        return;
+      }
+
+      args.push(path);
+      var cloned = [].concat(args);
+      cloned[2] = "rmuser";
+
+      mosca.cli(args, function () {
+        mosca.cli(cloned, function () {
+          var content = JSON.parse(fs.readFileSync(path));
+          expect(content).not.to.have.property("myuser");
+          done();
+        });
+      });
     });
   });
 });

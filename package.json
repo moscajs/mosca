@@ -40,7 +40,8 @@
     "microtime": "~0.3.3",
     "dox-foundation": "~0.4.4",
     "jshint": "~1.0.0",
-    "js-beautify": "~0.4.2"
+    "js-beautify": "~0.4.2",
+    "tmp": "0.0.17"
   },
   "dependencies": {
     "mqtt": "git://github.com/mcollina/MQTT.js.git#stream2-fix",
