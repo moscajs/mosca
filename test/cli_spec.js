@@ -1,6 +1,7 @@
 var async = require("async");
 var tmp = require('tmp');
 var fs = require("fs");
+var mqtt = require("mqtt");
 
 describe("mosca.cli", function() {
 
@@ -172,6 +173,62 @@ describe("mosca.cli", function() {
           done();
         });
       });
+    });
+  });
+
+  it("should support authorizing an authorized client", function(done) {
+    args.push("--credentials");
+    args.push("test/credentials.json");
+    async.waterfall([
+      function(cb) {
+        server = mosca.cli(args);
+        server.on("ready", cb);
+      },
+      function(cb) {
+        var options = { username: "test", password: "test" };
+        var client = mqtt.createClient(1883, "localhost", options);
+        cb = cb.bind(null, null, client);
+        client.on("connect", cb);
+      },
+      function(client, cb) {
+        client.on("close", cb);
+        client.end();
+      }
+    ], function(err) {
+      if(err) {
+        done(err);
+        return;
+      }
+      done();
+    });
+  });
+
+  it("should support negating an unauthorized client", function(done) {
+    args.push("--credentials");
+    args.push("test/credentials.json");
+    async.waterfall([
+      function(cb) {
+        server = mosca.cli(args);
+        server.on("ready", cb);
+      },
+      function(cb) {
+        var options = { username: "bad", password: "bad" };
+        var client = mqtt.createClient(1883, "localhost", options);
+        client.on("error", cb);
+        client.on("connect", function() {
+          cb(null, client);
+        });
+      },
+      function(client, cb) {
+        client.once("close", cb);
+        client.end();
+      }
+    ], function(err) {
+      if(err) {
+        done();
+        return;
+      }
+      done(new Error("No error thrown"));
     });
   });
 });
