@@ -231,4 +231,57 @@ describe("mosca.cli", function() {
       done(new Error("No error thrown"));
     });
   });
+
+  it("should reload the config using if killed with SIGHUP", function(done) {
+    args.push("adduser");
+    args.push("myuser");
+    args.push("mypass");
+    args.push("--credentials");
+    
+    var cloned = null;
+
+    async.waterfall([
+      function(cb) {
+        tmp.file(cb);
+      },
+      function(path, fd, cb) {
+        args.push(path);
+        cloned = [].concat(args);
+        cloned[2] = "rmuser";
+
+        mosca.cli(args, cb);
+      },
+      function(cb) {
+        server = mosca.cli(["node", "mosca", "--credentials", cloned[cloned.length - 1]]);
+        server.on("ready", cb);
+      },
+      function(cb) {
+        setTimeout(function() {
+          mosca.cli(cloned, cb);
+        }, 200);
+      },
+      function(cb) {
+        process.kill(process.pid, 'SIGHUP');
+        cb();
+      },
+      function(cb) {
+        var options = { username: "myuser", password: "mypass" };
+        var client = mqtt.createClient(1883, "localhost", options);
+        client.on("error", cb);
+        client.on("connect", function() {
+          cb(null, client);
+        });
+      },
+      function(client, cb) {
+        client.once("close", cb);
+        client.end();
+      }
+    ], function(err) {
+      if(err) {
+        done();
+        return;
+      }
+      done(new Error("No error thrown"));
+    });
+  });
 });
