@@ -44,15 +44,15 @@
     "tmp": "0.0.17"
   },
   "dependencies": {
-    "mqtt": "git://github.com/mcollina/MQTT.js.git#stream2-fix",
+    "mqtt": "~0.2.6",
     "async": "~0.2.4",
-    "ascoltatori": "~0.3.1",
+    "ascoltatori": "~0.4.1",
     "debug": "~0.7.2",
     "commander": "~1.1.1",
     "minimatch": "~0.2.11"
   },
   "optionalDependencies": {
-    "zmq": "~2.2.0",
+    "zmq": "~2.4.0",
     "amqp": "~0.1.4",
     "redis": "~0.8.2"
   }
