@@ -181,14 +181,15 @@ describe("mosca.cli", function() {
     args.push("test/credentials.json");
     async.waterfall([
       function(cb) {
-        server = mosca.cli(args);
-        server.on("ready", cb);
+        server = mosca.cli(args, cb);
       },
-      function(cb) {
+      function(server, cb) {
         var options = { username: "test", password: "test" };
         var client = mqtt.createClient(1883, "localhost", options);
-        cb = cb.bind(null, null, client);
-        client.on("connect", cb);
+        client.on("error", cb);
+        client.on("connect", function() {
+          cb(null, client);
+        });
       },
       function(client, cb) {
         client.on("close", cb);
@@ -208,10 +209,9 @@ describe("mosca.cli", function() {
     args.push("test/credentials.json");
     async.waterfall([
       function(cb) {
-        server = mosca.cli(args);
-        server.on("ready", cb);
+        server = mosca.cli(args, cb);
       },
-      function(cb) {
+      function(server, cb) {
         var options = { username: "bad", password: "bad" };
         var client = mqtt.createClient(1883, "localhost", options);
         client.on("error", cb);
@@ -252,13 +252,12 @@ describe("mosca.cli", function() {
         mosca.cli(args, cb);
       },
       function(cb) {
-        server = mosca.cli(["node", "mosca", "--credentials", cloned[cloned.length - 1]]);
-        server.on("ready", cb);
+        server = mosca.cli(["node", "mosca", "--credentials", cloned[cloned.length - 1]], cb);
       },
-      function(cb) {
+      function(server, cb) {
         setTimeout(function() {
           mosca.cli(cloned, cb);
-        }, 200);
+        }, 300);
       },
       function(cb) {
         process.kill(process.pid, 'SIGHUP');
