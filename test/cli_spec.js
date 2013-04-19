@@ -283,4 +283,52 @@ describe("mosca.cli", function() {
       done(new Error("No error thrown"));
     });
   });
+
+  it("should save the credentials.json as a formatted JSON when adding", function(done) {
+    args.push("adduser");
+    args.push("myuser");
+    args.push("mypass");
+    args.push("--credentials");
+
+    tmp.file(function (err, path, fd) {
+      if (err) {
+        done(err);
+        return;
+      }
+
+      args.push(path);
+      mosca.cli(args, function () {
+        var content = fs.readFileSync(path);
+        expect(JSON.stringify(JSON.parse(content), null, 2)).to.equal(content.toString('utf8'));
+        done();
+      });
+    });
+  });
+
+  it("should save the credentials.json as a formatted JSON when removing", function(done) {
+    args.push("adduser");
+    args.push("myuser");
+    args.push("mypass");
+    args.push("--credentials");
+
+    tmp.file(function (err, path, fd) {
+      if (err) {
+        done(err);
+        return;
+      }
+
+      args.push(path);
+      var cloned = [].concat(args);
+      cloned[2] = "rmuser";
+      cloned[3] = "anotheruser";
+
+      mosca.cli(args, function () {
+        mosca.cli(cloned, function () {
+          var content = fs.readFileSync(path);
+          expect(JSON.stringify(JSON.parse(content), null, 2)).to.equal(content.toString('utf8'));
+          done();
+        });
+      });
+    });
+  });
 });
