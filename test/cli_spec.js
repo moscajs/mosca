@@ -262,7 +262,7 @@ describe("mosca.cli", function() {
       },
       function(cb) {
         process.kill(process.pid, 'SIGHUP');
-        cb();
+        process.nextTick(cb);
       },
       function(cb) {
         var options = { username: "myuser", password: "mypass" };
