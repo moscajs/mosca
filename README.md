@@ -94,6 +94,37 @@ The whole content of the `backend` key is passed through to the
 [ascoltatori.build](http://mcollina.github.com/ascoltatori/docs/ascoltatori.js.html#build)
 method.
 
+## Users
+
+__Mosca__ support user authentication through the use of a specific json
+file.
+In order to create one, you can just add an user to it:
+```
+$ mosca adduser myuser mypass --credentials ./credentials.json
+```
+
+Then, in order to start __Mosca__ with a specific set of credentials:
+```
+$ mosca --credentials ./credentials.json
+```
+
+It is also possible to remove a user:
+```
+$ mosca rmuser myuser --credentials ./credentials.json
+```
+
+The `adduser` command allows also to specify the pattern of topics that
+a given user is authorized to access, like so:
+```
+$ mosca adduser myuser mypass --credentials ./credentials.json \
+  --authorize-publish 'hello/*' --authorize-subscribe 'hello/*'
+```
+The patterns are checked and validated using
+[Minimatch](https://github.com/isaacs/minimatch).
+
+The credentials file can be automatically reladed by __Mosca__ if it
+receives a `SIGHUP`.
+
 ## Contributing to Mosca
 
 * Check out the latest master to make sure the feature hasn't been
