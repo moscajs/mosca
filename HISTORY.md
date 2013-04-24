@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.3.0
+
+* Node v0.10 support
+* User authentication and authorization.
+
 ## 0.2.0
 
 * QoS 1 (without storage) support
