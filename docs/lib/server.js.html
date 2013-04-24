@@ -17,7 +17,102 @@ code {
   div.description {margin: 14px 0; padding-top: 14px; border-top:1px solid #eee; border-bottom:1px solid #eee; }
   .tags {}
     .tags .types {color:#666}
-.ctx-type { float:right; margin-top:8px }</style></head><body><div class="row"><div class="twelve columns"><h1 class="pagetitle">Mosca</h1></div></div><div class="row"><div id="nav" class="three columns"><ul class="side-nav"><li><a href="../docs/lib/authorizer.js.html">lib/authorizer.js</a><ul><li><a href="../docs/lib/authorizer.js.html#Authorizer">Authorizer</a></li><li><a href="../docs/lib/authorizer.js.html#addUser">addUser</a></li><li><a href="../docs/lib/authorizer.js.html#rmUser">rmUser</a></li></ul></li><li><a href="../docs/lib/hasher.js.html">lib/hasher.js</a><ul><li><a href="../docs/lib/hasher.js.html#exports">exports</a></li></ul></li><li><a href="../docs/lib/server.js.html">lib/server.js</a><ul><li><a href="../docs/lib/server.js.html#Server">Server</a></li><li><a href="../docs/lib/server.js.html#authenticate">authenticate</a></li><li><a href="../docs/lib/server.js.html#authorizePublish">authorizePublish</a></li><li><a href="../docs/lib/server.js.html#authorizeSubscribe">authorizeSubscribe</a></li><li><a href="../docs/lib/server.js.html#close">close</a></li></ul></li></ul></div><div class="nine columns"></div></div><!-- Foundation JS--><script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/3.2.2/javascripts/foundation.min.js"></script><script>/**
+.ctx-type { float:right; margin-top:8px }</style></head><body><div class="row"><div class="twelve columns"><h1 class="pagetitle">Mosca</h1></div></div><div class="row"><div id="nav" class="three columns"><ul class="side-nav"><li><a href="../../docs/lib/authorizer.js.html">lib/authorizer.js</a><ul><li><a href="../../docs/lib/authorizer.js.html#Authorizer">Authorizer</a></li><li><a href="../../docs/lib/authorizer.js.html#addUser">addUser</a></li><li><a href="../../docs/lib/authorizer.js.html#rmUser">rmUser</a></li></ul></li><li><a href="../../docs/lib/hasher.js.html">lib/hasher.js</a><ul><li><a href="../../docs/lib/hasher.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/server.js.html">lib/server.js</a><ul><li><a href="../../docs/lib/server.js.html#Server">Server</a></li><li><a href="../../docs/lib/server.js.html#authenticate">authenticate</a></li><li><a href="../../docs/lib/server.js.html#authorizePublish">authorizePublish</a></li><li><a href="../../docs/lib/server.js.html#authorizeSubscribe">authorizeSubscribe</a></li><li><a href="../../docs/lib/server.js.html#close">close</a></li></ul></li></ul></div><div class="nine columns"><div class="comment"><div class="label radius ctx-type">function</div><h1 id="Server">Server</h1><h5 class="subheader">Server()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {Object} </span><span class="name">opts </span><span class="description">The option object</span></li><li><strong>@param: </strong><span class="types"> {Function} </span><span class="name">callback </span><span class="description">The ready callback</span></li></ul></div><div class="description"><p>The Mosca Server is a very simple MQTT server that<br />provides a simple event-based API to craft your own MQTT logic<br />It supports QoS 0 &amp; 1, without external storage.<br />It is backed by Ascoltatori, and it descends from<br />EventEmitter.</p>
+
+<h2>Options</h2>
+
+<ul>
+<li><code>port</code>, the port where to create the server.</li>
+<li><code>backend</code>, all the options for creating the Ascoltatore
+that will power this server.</li>
+<li><code>baseRetryTimeout</code>, the retry timeout for the exponential
+backoff algorithm (default is 1s).</li>
+</ul>
+
+<h2>Events</h2>
+
+<ul>
+<li><code>clientConnected</code>, when a client is connected;
+the client is passed as a parameter.</li>
+<li><code>clientDisconnected</code>, when a client is disconnected;
+the client is passed as a parameter.</li>
+<li><code>published</code>, when a new message is published;
+the packet and the client are passed as parameters.</li>
+</ul></div><pre><code class="language-javascript">function Server(opts, callback) {
+  EventEmitter.call(this);
+
+  this.opts = opts || {};
+  this.opts.port = this.opts.port || 1883;
+  this.opts.backend = this.opts.backend || {};
+  this.opts.baseRetryTimeout = this.opts.baseRetryTimeout || 1000;
+
+  callback = callback || function() {};
+
+  this.clients = {};
+
+  var that = this;
+
+  var serveWrap = function(client) {
+    process.nextTick(function() {
+      // disable Nagle algorithm
+      client.stream.setNoDelay(true);
+      that.serve(client);
+    });
+  };
+
+  if (this.opts.backend.json === undefined) {
+    this.opts.backend.json = false;
+  }
+
+  this.ascoltatore = ascoltatori.build(this.opts.backend);
+  this.ascoltatore.on(&quot;error&quot;, this.emit.bind(this));
+
+  that.once(&quot;ready&quot;, callback);
+
+  async.series([
+    function(cb) {
+      that.ascoltatore.on(&quot;ready&quot;, cb);
+    },
+    function(cb) {
+      that.server = mqtt.createServer(serveWrap);
+      that.server.listen(that.opts.port, cb);
+    }, function(cb) {
+      that.server.maxConnections = 100000;
+      that.emit(&quot;ready&quot;);
+      debug(&quot;started on port &quot; + that.opts.port);
+    }
+  ]);
+}
+
+module.exports = Server;
+
+Server.prototype = Object.create(EventEmitter.prototype);</code></pre></div><div class="comment"><div class="label radius ctx-type">method</div><h1 id="authenticate">authenticate</h1><h5 class="subheader">Server.prototype.authenticate()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {Object} </span><span class="name">client </span><span class="description">The MQTTConnection that is a client</span></li><li><strong>@param: </strong><span class="types"> {String} </span><span class="name">username </span><span class="description">The username</span></li><li><strong>@param: </strong><span class="types"> {String} </span><span class="name">password </span><span class="description">The password</span></li><li><strong>@param: </strong><span class="types"> {Function} </span><span class="name">callback </span><span class="description">The callback to return the verdict</span></li></ul></div><div class="description"><p>The function that will be used to authenticate users.<br />This default implementation authenticate everybody.<br />Override at will.</p></div><pre><code class="language-javascript">Server.prototype.authenticate = function(client, username, password, callback) {
+  callback(null, true);
+};</code></pre></div><div class="comment"><div class="label radius ctx-type">method</div><h1 id="authorizePublish">authorizePublish</h1><h5 class="subheader">Server.prototype.authorizePublish()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {Object} </span><span class="name">client </span><span class="description">The MQTTConnection that is a client</span></li><li><strong>@param: </strong><span class="types"> {String} </span><span class="name">topic </span><span class="description">The topic</span></li><li><strong>@param: </strong><span class="types"> {String} </span><span class="name">paylod </span><span class="description">The paylod</span></li><li><strong>@param: </strong><span class="types"> {Function} </span><span class="name">callback </span><span class="description">The callback to return the verdict</span></li></ul></div><div class="description"><p>The function that will be used to authorize clients to publish to topics.<br />This default implementation authorize everybody.<br />Override at will</p></div><pre><code class="language-javascript">Server.prototype.authorizePublish = function(client, topic, payload, callback) {
+  callback(null, true);
+};</code></pre></div><div class="comment"><div class="label radius ctx-type">method</div><h1 id="authorizeSubscribe">authorizeSubscribe</h1><h5 class="subheader">Server.prototype.authorizeSubscribe()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {Object} </span><span class="name">client </span><span class="description">The MQTTConnection that is a client</span></li><li><strong>@param: </strong><span class="types"> {String} </span><span class="name">topic </span><span class="description">The topic</span></li><li><strong>@param: </strong><span class="types"> {Function} </span><span class="name">callback </span><span class="description">The callback to return the verdict</span></li></ul></div><div class="description"><p>The function that will be used to authorize clients to subscribe to topics.<br />This default implementation authorize everybody.<br />Override at will</p></div><pre><code class="language-javascript">Server.prototype.authorizeSubscribe = function(client, topic, callback) {
+  callback(null, true);
+};</code></pre></div><div class="comment"><div class="label radius ctx-type">method</div><h1 id="close">close</h1><h5 class="subheader">Server.prototype.close()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {Function} </span><span class="name">callback </span><span class="description">The closed callback function</span></li></ul></div><div class="description"><p>Closes the server.</p></div><pre><code class="language-javascript">Server.prototype.close = function(callback) {
+  var that = this;
+
+  callback = callback || function() {};
+
+  async.parallel(Object.keys(that.clients).map(function(id) {
+    return function(cb) {
+      that.closeConn(that.clients[id], cb);
+    };
+  }), function() {
+    that.once(&quot;closed&quot;, callback);
+    try {
+      that.server.close(function() {
+        debug(&quot;closed&quot;);
+        that.emit(&quot;closed&quot;);
+      });
+    } catch (exception) {
+      callback(exception);
+    }
+  });
+};</code></pre></div></div></div><!-- Foundation JS--><script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/3.2.2/javascripts/foundation.min.js"></script><script>/**
  * Prism: Lightweight, robust, elegant syntax highlighting
  * MIT license http://www.opensource.org/licenses/mit-license.php/
  * @author Lea Verou http://lea.verou.me

@@ -17,7 +17,56 @@ code {
   div.description {margin: 14px 0; padding-top: 14px; border-top:1px solid #eee; border-bottom:1px solid #eee; }
   .tags {}
     .tags .types {color:#666}
-.ctx-type { float:right; margin-top:8px }</style></head><body><div class="row"><div class="twelve columns"><h1 class="pagetitle">Mosca</h1></div></div><div class="row"><div id="nav" class="three columns"><ul class="side-nav"><li><a href="../docs/lib/authorizer.js.html">lib/authorizer.js</a><ul><li><a href="../docs/lib/authorizer.js.html#Authorizer">Authorizer</a></li><li><a href="../docs/lib/authorizer.js.html#addUser">addUser</a></li><li><a href="../docs/lib/authorizer.js.html#rmUser">rmUser</a></li></ul></li><li><a href="../docs/lib/hasher.js.html">lib/hasher.js</a><ul><li><a href="../docs/lib/hasher.js.html#exports">exports</a></li></ul></li><li><a href="../docs/lib/server.js.html">lib/server.js</a><ul><li><a href="../docs/lib/server.js.html#Server">Server</a></li><li><a href="../docs/lib/server.js.html#authenticate">authenticate</a></li><li><a href="../docs/lib/server.js.html#authorizePublish">authorizePublish</a></li><li><a href="../docs/lib/server.js.html#authorizeSubscribe">authorizeSubscribe</a></li><li><a href="../docs/lib/server.js.html#close">close</a></li></ul></li></ul></div><div class="nine columns"></div></div><!-- Foundation JS--><script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/3.2.2/javascripts/foundation.min.js"></script><script>/**
+.ctx-type { float:right; margin-top:8px }</style></head><body><div class="row"><div class="twelve columns"><h1 class="pagetitle">Mosca</h1></div></div><div class="row"><div id="nav" class="three columns"><ul class="side-nav"><li><a href="../../docs/lib/authorizer.js.html">lib/authorizer.js</a><ul><li><a href="../../docs/lib/authorizer.js.html#Authorizer">Authorizer</a></li><li><a href="../../docs/lib/authorizer.js.html#addUser">addUser</a></li><li><a href="../../docs/lib/authorizer.js.html#rmUser">rmUser</a></li></ul></li><li><a href="../../docs/lib/cli.js.html">lib/cli.js</a><ul><li><a href="../../docs/lib/cli.js.html#loadAuthorizer">loadAuthorizer</a></li><li><a href="../../docs/lib/cli.js.html#start">start</a></li><li><a href="../../docs/lib/cli.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/hasher.js.html">lib/hasher.js</a><ul><li><a href="../../docs/lib/hasher.js.html#exports">exports</a></li><li><a href="../../docs/lib/hasher.js.html#genPass">genPass</a></li><li><a href="../../docs/lib/hasher.js.html#genSalt">genSalt</a></li><li><a href="../../docs/lib/hasher.js.html#genHash">genHash</a></li></ul></li><li><a href="../../docs/lib/server.js.html">lib/server.js</a><ul><li><a href="../../docs/lib/server.js.html#Server">Server</a></li><li><a href="../../docs/lib/server.js.html#next">next</a></li><li><a href="../../docs/lib/server.js.html#authenticate">authenticate</a></li><li><a href="../../docs/lib/server.js.html#authorizePublish">authorizePublish</a></li><li><a href="../../docs/lib/server.js.html#authorizeSubscribe">authorizeSubscribe</a></li><li><a href="../../docs/lib/server.js.html#close">close</a></li><li><a href="../../docs/lib/server.js.html#serve">serve</a></li><li><a href="../../docs/lib/server.js.html#closeConn">closeConn</a></li></ul></li></ul></div><div class="nine columns"><div class="comment"><div class="label radius ctx-type">function</div><h1 id="Authorizer">Authorizer</h1><h5 class="subheader">Authorizer()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {Object} </span><span class="name">users </span><span class="description">The user hash, as created by this class</span></li><li><strong>@: </strong><span class="string">(optional)</span></li></ul></div><div class="description"><p>mosca.Authorizer's responsibility is to give an implementation<br />of mosca.Server callback of authorizations, against a JSON file.</p></div><pre><code class="language-javascript">function Authorizer(users) {
+  this.users = users || {};
+}
+module.exports = Authorizer;</code></pre></div><div class="comment"><div class="tags"><ul class="no-bullet"></ul></div><div class="description"><p>It returns the authenticate function to plug into mosca.Server.</p></div><pre><code class="language-javascript">Authorizer.prototype.__defineGetter__(&quot;authenticate&quot;, function() {
+  var that = this;
+  return function(client, user, pass, cb) {
+    that._authenticate(client, user, pass, cb);
+  };
+});</code></pre></div><div class="comment"><div class="tags"><ul class="no-bullet"></ul></div><div class="description"><p>It returns the authorizePublish function to plug into mosca.Server.</p></div><pre><code class="language-javascript">Authorizer.prototype.__defineGetter__(&quot;authorizePublish&quot;, function() {
+  var that = this;
+  return function(client, topic, payload, cb) {
+    cb(null, minimatch(topic, that.users[client.user].authorizePublish));
+  };
+});</code></pre></div><div class="comment"><div class="tags"><ul class="no-bullet"></ul></div><div class="description"><p>It returns the authorizeSubscribe function to plug into mosca.Server.</p></div><pre><code class="language-javascript">Authorizer.prototype.__defineGetter__(&quot;authorizeSubscribe&quot;, function() {
+  var that = this;
+  return function(client, topic, cb) {
+    cb(null, minimatch(topic, that.users[client.user].authorizeSubscribe));
+  };
+});</code></pre></div><div class="comment"><div class="label radius ctx-type">method</div><h1 id="addUser">addUser</h1><h5 class="subheader">Authorizer.prototype.addUser()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {String} </span><span class="name">user </span><span class="description">The username</span></li><li><strong>@param: </strong><span class="types"> {String} </span><span class="name">pass </span><span class="description">The password</span></li><li><strong>@param: </strong><span class="types"> {String} </span><span class="name">authorizePublish </span><span class="description">The authorizePublish pattern</span></li><li><strong>@: </strong><span class="string">(optional)</span></li><li><strong>@param: </strong><span class="types"> {String} </span><span class="name">authorizeSubscribe </span><span class="description">The authorizeSubscribe pattern</span></li><li><strong>@: </strong><span class="string">(optional)</span></li><li><strong>@param: </strong><span class="types"> {Function} </span><span class="name">cb </span><span class="description">The callback that will be called after the</span></li><li><strong>@: </strong><span class="string">insertion.</span></li></ul></div><div class="description"><p>An utility function to add an user.</p></div><pre><code class="language-javascript">Authorizer.prototype.addUser = function(user, pass, authorizePublish,
+                                        authorizeSubscribe, cb) {
+  var that = this;
+
+  if (typeof authorizePublish === &quot;function&quot;) {
+    cb = authorizePublish;
+    authorizePublish = &quot;**&quot;;
+    authorizeSubscribe = &quot;**&quot;;
+  } else if (typeof authorizeSubscribe == &quot;function&quot;) {
+    cb = authorizeSubscribe;
+    authorizeSubscribe = &quot;**&quot;;
+  }
+
+  hasher({
+    password: pass
+  }, function(err, pass, salt, hash) {
+    if (!err) {
+      that.users[user] = {
+        salt: salt,
+        hash: hash,
+        authorizePublish: authorizePublish,
+        authorizeSubscribe: authorizeSubscribe
+      };
+    }
+    cb(err);
+  });
+  return this;
+};</code></pre></div><div class="comment"><div class="label radius ctx-type">method</div><h1 id="rmUser">rmUser</h1><h5 class="subheader">Authorizer.prototype.rmUser()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {String} </span><span class="name">user </span><span class="description">The username</span></li><li><strong>@param: </strong><span class="types"> {String} </span><span class="name">pass </span><span class="description">The password</span></li><li><strong>@param: </strong><span class="types"> {Function} </span><span class="name">cb </span><span class="description">The callback that will be called after the</span></li><li><strong>@: </strong><span class="string">deletion.</span></li></ul></div><div class="description"><p>An utility function to delete a user.</p></div><pre><code class="language-javascript">Authorizer.prototype.rmUser = function(user, cb) {
+  delete this.users[user];
+  cb();
+  return this;
+};</code></pre></div></div></div><!-- Foundation JS--><script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/3.2.2/javascripts/foundation.min.js"></script><script>/**
  * Prism: Lightweight, robust, elegant syntax highlighting
  * MIT license http://www.opensource.org/licenses/mit-license.php/
  * @author Lea Verou http://lea.verou.me

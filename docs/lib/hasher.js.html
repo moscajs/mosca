@@ -17,7 +17,50 @@ code {
   div.description {margin: 14px 0; padding-top: 14px; border-top:1px solid #eee; border-bottom:1px solid #eee; }
   .tags {}
     .tags .types {color:#666}
-.ctx-type { float:right; margin-top:8px }</style></head><body><div class="row"><div class="twelve columns"><h1 class="pagetitle">Mosca</h1></div></div><div class="row"><div id="nav" class="three columns"><ul class="side-nav"><li><a href="../docs/lib/authorizer.js.html">lib/authorizer.js</a><ul><li><a href="../docs/lib/authorizer.js.html#Authorizer">Authorizer</a></li><li><a href="../docs/lib/authorizer.js.html#addUser">addUser</a></li><li><a href="../docs/lib/authorizer.js.html#rmUser">rmUser</a></li></ul></li><li><a href="../docs/lib/hasher.js.html">lib/hasher.js</a><ul><li><a href="../docs/lib/hasher.js.html#exports">exports</a></li></ul></li><li><a href="../docs/lib/server.js.html">lib/server.js</a><ul><li><a href="../docs/lib/server.js.html#Server">Server</a></li><li><a href="../docs/lib/server.js.html#authenticate">authenticate</a></li><li><a href="../docs/lib/server.js.html#authorizePublish">authorizePublish</a></li><li><a href="../docs/lib/server.js.html#authorizeSubscribe">authorizeSubscribe</a></li><li><a href="../docs/lib/server.js.html#close">close</a></li></ul></li></ul></div><div class="nine columns"></div></div><!-- Foundation JS--><script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/3.2.2/javascripts/foundation.min.js"></script><script>/**
+.ctx-type { float:right; margin-top:8px }</style></head><body><div class="row"><div class="twelve columns"><h1 class="pagetitle">Mosca</h1></div></div><div class="row"><div id="nav" class="three columns"><ul class="side-nav"><li><a href="../../docs/lib/authorizer.js.html">lib/authorizer.js</a><ul><li><a href="../../docs/lib/authorizer.js.html#Authorizer">Authorizer</a></li><li><a href="../../docs/lib/authorizer.js.html#addUser">addUser</a></li><li><a href="../../docs/lib/authorizer.js.html#rmUser">rmUser</a></li></ul></li><li><a href="../../docs/lib/hasher.js.html">lib/hasher.js</a><ul><li><a href="../../docs/lib/hasher.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/server.js.html">lib/server.js</a><ul><li><a href="../../docs/lib/server.js.html#Server">Server</a></li><li><a href="../../docs/lib/server.js.html#next">next</a></li><li><a href="../../docs/lib/server.js.html#authenticate">authenticate</a></li><li><a href="../../docs/lib/server.js.html#authorizePublish">authorizePublish</a></li><li><a href="../../docs/lib/server.js.html#authorizeSubscribe">authorizeSubscribe</a></li><li><a href="../../docs/lib/server.js.html#close">close</a></li><li><a href="../../docs/lib/server.js.html#serve">serve</a></li><li><a href="../../docs/lib/server.js.html#closeConn">closeConn</a></li></ul></li></ul></div><div class="nine columns"><div class="comment"><div class="label radius ctx-type">method</div><h1 id="exports">exports</h1><h5 class="subheader">module.exports()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {Object} </span><span class="name">opts </span><span class="description">The options (optional)</span></li><li><strong>@param: </strong><span class="types"> {Function} </span><span class="name">callback </span></li></ul></div><div class="description"><p>Hash a password, using a hash and the pbkd2<br />crypto module.</p>
+
+<h2>Options</h2>
+
+<ul>
+<li><code>password</code>, the password to hash.</li>
+<li><p><code>salt</code>, the salt to use, as a base64 string.</p>
+
+<p>If the <code>password</code> is left undefined, a new<br />10-bytes password will be generated, and converted<br />to base64.</p>
+
+<p>If the <code>salt</code> is left undefined, a new salt is generated.</p>
+
+<p>The callback will be called with the following arguments:</p>
+
+<ul><li>the error, if something when wrong.</li>
+<li>the password.</li>
+<li>the salt, encoded in base64.</li>
+<li>the hash, encoded in base64.</li></ul></li>
+</ul></div><pre><code class="language-javascript">module.exports = function hasher() {
+
+  var args = Array.prototype.slice.call(arguments, 0);
+  var callback = args.pop();
+  var opts = args.pop() || {};
+
+  var queue = [];
+
+  if (typeof opts.password !== 'string') {
+    queue.push(genPass);
+  }
+
+  if (typeof opts.salt !== 'string') {
+    queue.push(genSalt);
+  } else {
+    opts.salt = new Buffer(opts.salt, 'base64');
+  }
+
+  queue.push(genHash);
+
+  queue = queue.map(function(f) {
+    return async.apply(f, opts);
+  });
+
+  async.waterfall(queue, callback);
+};</code></pre></div></div></div><!-- Foundation JS--><script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/3.2.2/javascripts/foundation.min.js"></script><script>/**
  * Prism: Lightweight, robust, elegant syntax highlighting
  * MIT license http://www.opensource.org/licenses/mit-license.php/
  * @author Lea Verou http://lea.verou.me
