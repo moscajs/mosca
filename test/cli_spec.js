@@ -138,6 +138,52 @@ describe("mosca.cli", function() {
     });
   });
 
+  it("should add an user specifying the authorizePublish pattern", function(done) {
+    args.push("adduser");
+    args.push("myuser");
+    args.push("mypass");
+    args.push("--authorize-publish");
+    args.push("hello/**/*");
+    args.push("--credentials");
+
+    tmp.file(function (err, path, fd) {
+      if (err) {
+        done(err);
+        return;
+      }
+
+      args.push(path);
+      mosca.cli(args, function () {
+        var content = JSON.parse(fs.readFileSync(path));
+        expect(content.myuser).to.have.property("authorizePublish", "hello/**/*");
+        done();
+      });
+    });
+  });
+
+  it("should add an user specifying the authorizeSubscribe pattern", function(done) {
+    args.push("adduser");
+    args.push("myuser");
+    args.push("mypass");
+    args.push("--authorize-subscribe");
+    args.push("hello/**/*");
+    args.push("--credentials");
+
+    tmp.file(function (err, path, fd) {
+      if (err) {
+        done(err);
+        return;
+      }
+
+      args.push(path);
+      mosca.cli(args, function () {
+        var content = JSON.parse(fs.readFileSync(path));
+        expect(content.myuser).to.have.property("authorizeSubscribe", "hello/**/*");
+        done();
+      });
+    });
+  });
+
   it("should remove an user from an authorization file", function(done) {
     args.push("adduser");
     args.push("myuser");
