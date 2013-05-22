@@ -691,7 +691,7 @@ describe("mosca.Server", function() {
       client.on("suback", function(packet) {
         client.publish({
           topic: "hello",
-          qos: 0,
+          qos: 1,
           messageId: 24
         });
       });
@@ -699,6 +699,64 @@ describe("mosca.Server", function() {
       var subscriptions = [{
           topic: "hello",
           qos: 1
+        }
+      ];
+
+      client.subscribe({
+        subscriptions: subscriptions,
+        messageId: 42
+      });
+    });
+  });
+
+  it("should receive published messageId", function(done) {
+    buildAndConnect(done, function(client) {
+
+      client.once("publish", function(packet) {
+        expect(packet.messageId).to.be.equal(24);
+        client.disconnect();
+      });
+
+      client.on("suback", function(packet) {
+        client.publish({
+          topic: "hello",
+          qos: 1,
+          messageId: 24
+        });
+      });
+
+      var subscriptions = [{
+          topic: "hello",
+          qos: 1
+        }
+      ];
+
+      client.subscribe({
+        subscriptions: subscriptions,
+        messageId: 42
+      });
+    });
+  });
+
+  it("should receive all messages at QoS 0 if a subscription is done with QoS 0", function(done) {
+    buildAndConnect(done, function(client) {
+
+      client.once("publish", function(packet) {
+        expect(packet.qos).to.be.equal(0);
+        client.disconnect();
+      });
+
+      client.on("suback", function(packet) {
+        client.publish({
+          topic: "hello",
+          qos: 1,
+          messageId: 24
+        });
+      });
+
+      var subscriptions = [{
+          topic: "hello",
+          qos: 0
         }
       ];
 
