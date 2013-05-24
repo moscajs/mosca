@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.4.0
+
+* Pass the QoS level to the parent MQTT server
+  (https://github.com/mcollina/mosca/pull/26), thanks to
+  [@davedoesdev](https://github.com/davedoesdev).
+
 ## 0.3.0
 
 * Node v0.10 support
