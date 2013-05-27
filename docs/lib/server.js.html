@@ -102,15 +102,17 @@ Server.prototype = Object.create(EventEmitter.prototype);</code></pre></div><div
       that.closeConn(that.clients[id], cb);
     };
   }), function() {
-    that.once(&quot;closed&quot;, callback);
-    try {
-      that.server.close(function() {
-        debug(&quot;closed&quot;);
-        that.emit(&quot;closed&quot;);
-      });
-    } catch (exception) {
-      callback(exception);
-    }
+    that.ascoltatore.close(function () {
+      that.once(&quot;closed&quot;, callback);
+      try {
+        that.server.close(function() {
+          debug(&quot;closed&quot;);
+          that.emit(&quot;closed&quot;);
+        });
+      } catch (exception) {
+        callback(exception);
+      }
+    });
   });
 };</code></pre></div></div></div><!-- Foundation JS--><script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/3.2.2/javascripts/foundation.min.js"></script><script>/**
  * Prism: Lightweight, robust, elegant syntax highlighting
