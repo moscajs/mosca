@@ -44,7 +44,7 @@ client.
 * Built on top on node.js
 * As fast as it is possible
 * Usable inside ANY other node.js app, see the
-  [API](http://mcollina.github.com/mosca/docs/server.js.html).
+  [API](http://mcollina.github.com/mosca/docs/lib/server.js.html).
 
 ## Configuration
 
