@@ -796,6 +796,33 @@ describe("mosca.Server", function() {
     });
   });
 
+  it("QoS 1 wildcard subscriptions should receive QoS 1 messages at QoS 1", function (done) {
+    buildAndConnect(done, function (client) {
+      client.on("publish", function(packet) {
+        expect(packet.qos).to.be.equal(1);
+        client.disconnect();
+      });
+
+      client.on("suback", function(packet) {
+        client.publish({
+          topic: "hello/foo",
+          qos: 1,
+          messageId: 24
+        });
+      });
+
+      var subscriptions = [{
+        topic: "hello/#",
+        qos: 1
+      }];
+
+      client.subscribe({
+        subscriptions: subscriptions,
+        messageId: 42
+      });
+    });
+  });
+
   it("should support will message", function(done) {
 
     async.waterfall([
