@@ -852,28 +852,14 @@ describe("mosca.Server", function() {
           messageId: 42
         });
         client3.on("suback", function() {
-          cb(null, client1, client3);
+          client1.stream.end();
+          cb(null);
         });
         client3.on("publish", function(packet) {
           expect(packet.topic).to.be.eql("/hello/died");
           expect(packet.payload).to.be.eql("client1 died");
           client3.disconnect();
         });
-      },
-
-      function(client1, client3, cb) {
-        client1.stream.end();
-        setTimeout(function() {
-          cb(null, client3);
-        }, 10);
-      },
-
-      function(client3, cb) {
-        client3.publish({
-          topic: "hello/world",
-          payload: "ahha"
-        });
-        cb(null);
       }
     ]);
   });
