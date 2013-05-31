@@ -1,6 +1,10 @@
 History
 =======
 
+## 0.4.1
+
+* Fixed the NPM script.
+
 ## 0.4.0
 
 * Pass the QoS level to the parent MQTT server
