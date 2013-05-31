@@ -796,6 +796,33 @@ describe("mosca.Server", function() {
     });
   });
 
+  it("QoS 1 wildcard subscriptions should receive QoS 1 messages at QoS 1", function (done) {
+    buildAndConnect(done, function (client) {
+      client.on("publish", function(packet) {
+        expect(packet.qos).to.be.equal(1);
+        client.disconnect();
+      });
+
+      client.on("suback", function(packet) {
+        client.publish({
+          topic: "hello/foo",
+          qos: 1,
+          messageId: 24
+        });
+      });
+
+      var subscriptions = [{
+        topic: "hello/#",
+        qos: 1
+      }];
+
+      client.subscribe({
+        subscriptions: subscriptions,
+        messageId: 42
+      });
+    });
+  });
+
   it("should support will message", function(done) {
 
     async.waterfall([
@@ -852,28 +879,14 @@ describe("mosca.Server", function() {
           messageId: 42
         });
         client3.on("suback", function() {
-          cb(null, client1, client3);
+          client1.stream.end();
+          cb(null);
         });
         client3.on("publish", function(packet) {
           expect(packet.topic).to.be.eql("/hello/died");
           expect(packet.payload).to.be.eql("client1 died");
           client3.disconnect();
         });
-      },
-
-      function(client1, client3, cb) {
-        client1.stream.end();
-        setTimeout(function() {
-          cb(null, client3);
-        }, 10);
-      },
-
-      function(client3, cb) {
-        client3.publish({
-          topic: "hello/world",
-          payload: "ahha"
-        });
-        cb(null);
       }
     ]);
   });
