@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.4.2
+
+* Not passing the options to subscribe anymore
+  [@davedoesdev](https://github.com/davedoesdev).
+* Updated Ascoltatori to 0.6.0.
+
 ## 0.4.1
 
 * Fixed the NPM script.
