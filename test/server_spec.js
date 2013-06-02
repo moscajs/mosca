@@ -891,6 +891,43 @@ describe("mosca.Server", function() {
     ]);
   });
 
+  it("should pass username to backend when publishing", function(done) {
+    instance.authenticate = function(client, username, password, callback) {
+      expect(username).to.be.eql("matteo");
+      expect(password).to.be.eql("collina");
+      client.user = username;
+      callback(null, true);
+    };
+
+    buildClient(done, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+
+      instance.ascoltatore.subscribe("hello", function (topic, message, options) {
+        expect(options).to.have.property("messageId", messageId);
+        expect(options).to.have.property("user", "matteo");
+        client.disconnect();
+      });
+
+      var options = buildOpts();
+      options.username = "matteo";
+      options.password = "collina";
+
+      client.connect(options);
+
+      client.on('connack', function(packet) {
+        expect(packet.returnCode).to.eql(0);
+
+        client.publish({
+          topic: "hello",
+          qos: 1,
+          payload: "world",
+          messageId: messageId
+        });
+      });
+    });
+  });
+
   it("should support authentication (success)", function(done) {
     instance.authenticate = function(client, username, password, callback) {
       expect(username).to.be.eql("matteo");
