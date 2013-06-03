@@ -709,35 +709,6 @@ describe("mosca.Server", function() {
     });
   });
 
-  it("should receive published messageId", function(done) {
-    buildAndConnect(done, function(client) {
-
-      client.once("publish", function(packet) {
-        expect(packet.messageId).to.be.equal(24);
-        client.disconnect();
-      });
-
-      client.on("suback", function(packet) {
-        client.publish({
-          topic: "hello",
-          qos: 1,
-          messageId: 24
-        });
-      });
-
-      var subscriptions = [{
-          topic: "hello",
-          qos: 1
-        }
-      ];
-
-      client.subscribe({
-        subscriptions: subscriptions,
-        messageId: 42
-      });
-    });
-  });
-
   it("should receive all messages at QoS 0 if a subscription is done with QoS 0", function(done) {
     buildAndConnect(done, function(client) {
 
@@ -889,6 +860,43 @@ describe("mosca.Server", function() {
         });
       }
     ]);
+  });
+
+  it("should pass mosca options to backend when publishing", function(done) {
+    instance.authenticate = function(client, username, password, callback) {
+      expect(username).to.be.eql("matteo");
+      expect(password).to.be.eql("collina");
+      client.user = username;
+      callback(null, true);
+    };
+
+    buildClient(done, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+
+      instance.ascoltatore.subscribe("hello", function (topic, message, options) {
+        expect(options.mosca.packet).to.have.property("messageId", messageId);
+        expect(options.mosca.client).to.have.property("user", "matteo");
+        client.disconnect();
+      });
+
+      var options = buildOpts();
+      options.username = "matteo";
+      options.password = "collina";
+
+      client.connect(options);
+
+      client.on('connack', function(packet) {
+        expect(packet.returnCode).to.eql(0);
+
+        client.publish({
+          topic: "hello",
+          qos: 1,
+          payload: "world",
+          messageId: messageId
+        });
+      });
+    });
   });
 
   it("should support authentication (success)", function(done) {
