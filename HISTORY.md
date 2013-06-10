@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.4.3
+
+* Passing the MQTT packet details to Ascoltatori
+  [#30](https://github.com/mcollina/mosca/pull/30) by
+  [@davedoesdev](https://github.com/davedoesdev).
+
 ## 0.4.2
 
 * Not passing the options to subscribe anymore
