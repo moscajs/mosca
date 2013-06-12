@@ -49,17 +49,30 @@ describe("mosca.cli", function() {
     });
   });
 
-  it("should support a verbose option", function(done) {
+  it("should create a bunyan logger", function(done) {
     args.push("-v");
     startServer(done, function(server) {
-      expect(process.env.DEBUG).to.be.equal("mosca");
+      expect(server.logger).to.exist;
     });
   });
 
-  it("should support a very verbose option", function(done) {
+  it("should set the logging level to 40", function(done) {
+    startServer(done, function(server) {
+      expect(server.logger.level()).to.equal(40);
+    });
+  });
+
+  it("should support a verbose option by setting the bunyan level to 30", function(done) {
+    args.push("-v");
+    startServer(done, function(server) {
+      expect(server.logger.level()).to.equal(30);
+    });
+  });
+
+  it("should support a very verbose option by setting the bunyan level to 20", function(done) {
     args.push("--very-verbose");
     startServer(done, function(server) {
-      expect(process.env.DEBUG).to.be.equal("mosca,ascoltatori:*");
+      expect(server.logger.level()).to.equal(20);
     });
   });
 
