@@ -30,7 +30,7 @@ global.rabbitSettings = function() {
 var bunyan = require("bunyan");
 global.moscaSettings = function() {
   var logger = bunyan.createLogger({
-      name: "moscaTests"
+    name: "moscaTests"
   });
 
   logger.level(60);

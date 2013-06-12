@@ -241,11 +241,11 @@ describe("mosca.cli", function() {
         });
       },
       function(client, cb) {
-        client.on("close", cb);
+        client.once("close", cb);
         client.end();
       }
     ], function(err) {
-      if(err) {
+      if(err instanceof Error) {
         done(err);
         return;
       }
