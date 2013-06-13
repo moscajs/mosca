@@ -30,8 +30,8 @@ Mosca is a node.js application, so it needs [node.js](http://nodejs.org)
 to run.
 
 ```
-$: npm install mosca -g
-$: mosca -v
+$: npm install mosca bunyan -g
+$: mosca -v | bunyan
 ```
 
 Then you can connect to it with your preferred [MQTT](http://mqtt.org)
@@ -63,8 +63,8 @@ Usage: mosca [options]
     --parent-prefix <s>  the prefix to use in the parent broker
     -c, --config <c>     the config file to use (override every 
                          other options)
-    -v, --verbose        equal to DEBUG=mosca
-    --very-verbose       equal to DEBUG=mosca,ascoltatori:*
+    -v, --verbose        set the bunyan log to INFO
+    --very-verbose       set the bunyan log to DEBUG
 ```
 
 However you can only use a MQTT backend with the command line options.
