@@ -2,7 +2,7 @@ test:
 	./node_modules/.bin/mocha --recursive test
 
 bail:
-	./node_modules/.bin/mocha --recursive test --bail --reporter spec
+	./node_modules/.bin/mocha --recursive test --bail --reporter spec | ./node_modules/.bin/bunyan
 
 ci:
 	./node_modules/.bin/mocha --recursive --watch test

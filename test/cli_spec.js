@@ -11,15 +11,12 @@ describe("mosca.cli", function() {
 
   beforeEach(function(done) {
     args = ["node", "mosca"];
-    oldDebug = process.env.DEBUG;
     servers = [new mosca.Server({
       port: 3833
     }, done)];
   });
 
   afterEach(function(done) {
-    process.env.DEBUG = oldDebug;
-
     async.parallel(servers.map(function(s) {
       return function(cb) {
         s.close(cb);
@@ -30,7 +27,7 @@ describe("mosca.cli", function() {
   });
 
   var startServer = function(done, callback) {
-    mosca.cli(args, function(err, server) {
+    return mosca.cli(args, function(err, server) {
       if (server) {
         servers.unshift(server);
         callback(server);
@@ -49,18 +46,43 @@ describe("mosca.cli", function() {
     });
   });
 
-  it("should support a verbose option", function(done) {
+  it("should create a bunyan logger", function(done) {
     args.push("-v");
+    var s = startServer(done, function(server) {
+      expect(server.logger).to.exist;
+    });
+
+    if (s.logger) {
+      s.logger.streams.pop();
+    }
+  });
+
+  it("should set the logging level to 40", function(done) {
     startServer(done, function(server) {
-      expect(process.env.DEBUG).to.be.equal("mosca");
+      expect(server.logger.level()).to.equal(40);
     });
   });
 
-  it("should support a very verbose option", function(done) {
-    args.push("--very-verbose");
-    startServer(done, function(server) {
-      expect(process.env.DEBUG).to.be.equal("mosca,ascoltatori:*");
+  it("should support a verbose option by setting the bunyan level to 30", function(done) {
+    args.push("-v");
+    var s = startServer(done, function(server) {
+      expect(server.logger.level()).to.equal(30);
     });
+
+    if (s.logger) {
+      s.logger.streams.pop();
+    }
+  });
+
+  it("should support a very verbose option by setting the bunyan level to 20", function(done) {
+    args.push("--very-verbose");
+    var s = startServer(done, function(server) {
+      expect(server.logger.level()).to.equal(20);
+    });
+
+    if (s.logger) {
+      s.logger.streams.pop();
+    }
   });
 
   it("should support a port flag", function(done) {
@@ -228,11 +250,11 @@ describe("mosca.cli", function() {
         });
       },
       function(client, cb) {
-        client.on("close", cb);
+        client.once("close", cb);
         client.end();
       }
     ], function(err) {
-      if(err) {
+      if(err instanceof Error) {
         done(err);
         return;
       }
@@ -300,26 +322,23 @@ describe("mosca.cli", function() {
       },
       function(cb) {
         process.kill(process.pid, 'SIGHUP');
-        process.nextTick(cb);
+        setTimeout(cb, 50);
       },
       function(cb) {
         var options = { username: "myuser", password: "mypass" };
         var client = mqtt.createClient(1883, "localhost", options);
-        client.on("error", cb);
-        client.on("connect", function() {
-          cb(null, client);
+        client.once("error", cb);
+        client.once("connect", function() {
+          client.once("close", cb);
+          client.end();
         });
-      },
-      function(client, cb) {
-        client.once("close", cb);
-        client.end();
       }
     ], function(err) {
       if(err) {
         done();
         return;
       }
-      done(new Error("No error thrown"));
+      done(new Error("should have errored"));
     });
   });
 
