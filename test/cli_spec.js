@@ -27,7 +27,7 @@ describe("mosca.cli", function() {
   });
 
   var startServer = function(done, callback) {
-    mosca.cli(args, function(err, server) {
+    return mosca.cli(args, function(err, server) {
       if (server) {
         servers.unshift(server);
         callback(server);
@@ -48,9 +48,13 @@ describe("mosca.cli", function() {
 
   it("should create a bunyan logger", function(done) {
     args.push("-v");
-    startServer(done, function(server) {
+    var s = startServer(done, function(server) {
       expect(server.logger).to.exist;
     });
+
+    if (s.logger) {
+      s.logger.streams.pop();
+    }
   });
 
   it("should set the logging level to 40", function(done) {
@@ -61,16 +65,24 @@ describe("mosca.cli", function() {
 
   it("should support a verbose option by setting the bunyan level to 30", function(done) {
     args.push("-v");
-    startServer(done, function(server) {
+    var s = startServer(done, function(server) {
       expect(server.logger.level()).to.equal(30);
     });
+
+    if (s.logger) {
+      s.logger.streams.pop();
+    }
   });
 
   it("should support a very verbose option by setting the bunyan level to 20", function(done) {
     args.push("--very-verbose");
-    startServer(done, function(server) {
+    var s = startServer(done, function(server) {
       expect(server.logger.level()).to.equal(20);
     });
+
+    if (s.logger) {
+      s.logger.streams.pop();
+    }
   });
 
   it("should support a port flag", function(done) {
