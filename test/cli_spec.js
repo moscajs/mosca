@@ -310,26 +310,23 @@ describe("mosca.cli", function() {
       },
       function(cb) {
         process.kill(process.pid, 'SIGHUP');
-        cb();
+        setTimeout(cb, 50);
       },
       function(cb) {
         var options = { username: "myuser", password: "mypass" };
         var client = mqtt.createClient(1883, "localhost", options);
         client.once("error", cb);
-        client.on("connect", function() {
-          cb(null, client);
+        client.once("connect", function() {
+          client.once("close", cb);
+          client.end();
         });
-      },
-      function(client, cb) {
-        client.once("close", cb);
-        client.end();
       }
     ], function(err) {
       if(err) {
-        done(err);
+        done();
         return;
       }
-      done();
+      done(new Error("should have errored"));
     });
   });
 
