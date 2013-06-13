@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.5.0
+
+* Bunyan support for logging.
+* Updated minimum MQTT.js version to 0.2.10.
+
 ## 0.4.3
 
 * Passing the MQTT packet details to Ascoltatori
