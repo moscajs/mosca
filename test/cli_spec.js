@@ -11,15 +11,12 @@ describe("mosca.cli", function() {
 
   beforeEach(function(done) {
     args = ["node", "mosca"];
-    oldDebug = process.env.DEBUG;
     servers = [new mosca.Server({
       port: 3833
     }, done)];
   });
 
   afterEach(function(done) {
-    process.env.DEBUG = oldDebug;
-
     async.parallel(servers.map(function(s) {
       return function(cb) {
         s.close(cb);
@@ -313,12 +310,12 @@ describe("mosca.cli", function() {
       },
       function(cb) {
         process.kill(process.pid, 'SIGHUP');
-        process.nextTick(cb);
+        cb();
       },
       function(cb) {
         var options = { username: "myuser", password: "mypass" };
         var client = mqtt.createClient(1883, "localhost", options);
-        client.on("error", cb);
+        client.once("error", cb);
         client.on("connect", function() {
           cb(null, client);
         });
@@ -329,10 +326,10 @@ describe("mosca.cli", function() {
       }
     ], function(err) {
       if(err) {
-        done();
+        done(err);
         return;
       }
-      done(new Error("No error thrown"));
+      done();
     });
   });
 
