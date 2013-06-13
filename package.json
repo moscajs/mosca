@@ -44,7 +44,7 @@
     "tmp": "0.0.17"
   },
   "dependencies": {
-    "mqtt": "~0.2.6",
+    "mqtt": "~0.2.10",
     "async": "~0.2.4",
     "ascoltatori": "~0.6.0",
     "debug": "~0.7.2",
