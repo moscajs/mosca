@@ -1,6 +1,7 @@
 "use strict";
 
 var async = require("async");
+var EventEmitter = require("events").EventEmitter;
 
 module.exports = function(create) {
 
@@ -92,5 +93,52 @@ module.exports = function(create) {
         });
       }
     ], done);
+  });
+
+  it("should wire itself up to the 'published' event of a Server", function(done) {
+    var em = new EventEmitter();
+    var packet1 = {
+      topic: "hello/1",
+      qos: 0,
+      payload: "world",
+      messageId: 42,
+      retain: true
+    };
+
+    instance.wire(em);
+
+    em.emit("published", packet1);
+
+    instance.lookupRetained(packet1.topic, function(err, results) {
+      expect(results).to.eql([packet1]);
+      done();
+    });
+  });
+
+  it("should wire itself up to the 'subscribed' event of a Server", function(done) {
+    var em = new EventEmitter();
+    var packet1 = {
+      topic: "hello/1",
+      qos: 0,
+      payload: "world",
+      messageId: 42,
+      retain: true
+    };
+
+    var client = { 
+      forward: function(topic, payload, options, pattern) {
+        expect(topic).to.eql(packet1.topic);
+        expect(payload).to.eql(packet1.payload);
+        expect(options).to.eql(packet1);
+        expect(pattern).to.eql("hello/#");
+        done();
+      }
+    };
+
+    instance.wire(em);
+
+    instance.storeRetained(packet1, function() {
+      em.emit("subscribed", "hello/#", client);
+    });
   });
 };

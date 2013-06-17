@@ -1035,6 +1035,9 @@ describe("mosca.Server", function() {
   });
 
   it("should support retained messages", function(done) {
+    var pers = new mosca.persistance.Memory();
+
+    pers.wire(instance);
 
     async.waterfall([
 

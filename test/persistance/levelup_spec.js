@@ -4,7 +4,7 @@ var abstract = require("./abstract");
 var LevelUp = require("../../").persistance.LevelUp;
 var tmp = require("tmp");
 
-describe("mosca.persitance.LevelUp", function() {
+describe("mosca.persistance.LevelUp", function() {
   abstract(function(cb) {
     tmp.dir(function (err, path) {
       if (err) {
