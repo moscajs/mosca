@@ -1033,4 +1033,62 @@ describe("mosca.Server", function() {
       });
     });
   });
+
+  it("should support retained messages", function(done) {
+
+    async.waterfall([
+
+      function(cb) {
+        var client = mqtt.createConnection(settings.port, settings.host);
+
+        client.on("connected", function() {
+          var opts = buildOpts();
+
+          client.connect(opts);
+
+          client.on('connack', function(packet) {
+
+            cb(null, client);
+          });
+        });
+      },
+
+      function(client, cb) {
+        client.publish({
+          topic: "hello",
+          qos: 0,
+          payload: "world",
+          messageId: 42,
+          retain: true
+        });
+        client.on("close", cb);
+        client.stream.end();
+      },
+
+      function(cb) {
+        buildAndConnect(done, function(client) {
+          cb(null, client);
+        });
+      },
+
+      function(client, cb) {
+        var subscriptions = [{
+            topic: "hello",
+            qos: 0
+          }
+        ];
+
+        client.subscribe({
+          subscriptions: subscriptions,
+          messageId: 42
+        });
+
+        client.on("publish", function(packet) {
+          expect(packet.topic).to.be.eql("hello");
+          expect(packet.payload).to.be.eql("world");
+          client.disconnect();
+        });
+      }
+    ]);
+  });
 });
