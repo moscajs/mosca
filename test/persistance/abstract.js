@@ -5,21 +5,21 @@ var EventEmitter = require("events").EventEmitter;
 
 module.exports = function(create) {
 
-  var instance = null;
-
   beforeEach(function(done) {
+    var that = this;
     create(function(err, result) {
       if (err) {
         return done(err);
       }
 
-      instance = result;
+      that.instance = result;
       done();
     });
   });
 
   afterEach(function(done) {
-    instance.close(done);
+    this.instance.close(done);
+    this.instance = null;
   });
 
   it("should store retain messages", function(done) {
@@ -30,11 +30,11 @@ module.exports = function(create) {
       messageId: 42,
       retain: true
     };
-    instance.storeRetained(packet, done);
+    this.instance.storeRetained(packet, done);
   });
 
   it("should lookup retain messages and not matching", function(done) {
-    instance.lookupRetained("hello", function(err, results) {
+    this.instance.lookupRetained("hello", function(err, results) {
       expect(results).to.eql([]);
       done();
     });
@@ -48,6 +48,8 @@ module.exports = function(create) {
       messageId: 42,
       retain: true
     };
+
+    var instance = this.instance;
 
     async.series([
       function(cb) {
@@ -79,6 +81,8 @@ module.exports = function(create) {
       retain: true
     };
 
+    var instance = this.instance;
+
     async.series([
       function(cb) {
         instance.storeRetained(packet1, cb);
@@ -97,6 +101,7 @@ module.exports = function(create) {
 
   it("should wire itself up to the 'published' event of a Server", function(done) {
     var em = new EventEmitter();
+    var instance = this.instance;
     var packet1 = {
       topic: "hello/1",
       qos: 0,
@@ -109,14 +114,17 @@ module.exports = function(create) {
 
     em.emit("published", packet1);
 
-    instance.lookupRetained(packet1.topic, function(err, results) {
-      expect(results).to.eql([packet1]);
-      done();
-    });
+    setTimeout(function() {
+      instance.lookupRetained(packet1.topic, function(err, results) {
+        expect(results).to.eql([packet1]);
+        done();
+      });
+    }, 20); // 20ms will suffice 
   });
 
   it("should wire itself up to the 'subscribed' event of a Server", function(done) {
     var em = new EventEmitter();
+    var instance = this.instance;
     var packet1 = {
       topic: "hello/1",
       qos: 0,
@@ -137,8 +145,10 @@ module.exports = function(create) {
 
     instance.wire(em);
 
-    instance.storeRetained(packet1, function() {
-      em.emit("subscribed", "hello/#", client);
-    });
+    setTimeout(function() {
+      instance.storeRetained(packet1, function() {
+        em.emit("subscribed", "hello/#", client);
+      });
+    }, 20); // 20ms will suffice 
   });
 };
