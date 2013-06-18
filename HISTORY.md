@@ -1,6 +1,10 @@
 History
 =======
 
+## 0.6.0
+
+* Extracted a MoscaClient.
+
 ## 0.5.0
 
 * Bunyan support for logging.

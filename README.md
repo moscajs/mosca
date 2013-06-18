@@ -19,7 +19,8 @@ This list currently includes:
   [MQTT](http://mqtt.org/) protocol, including itself.
 * [ZeroMQ](http://www.zeromq.org/) without a central broker, so
   Mosca can also be used in a P2P fashion.
-
+* [MongoDB](http://www.mongodb.org/), the documental NoSQL that is
+  revolutioning how web apps are built.
 
 __Mosca__ is still under active development, but it should work :).
 Let me know if you plan to use __Mosca__ in production.
