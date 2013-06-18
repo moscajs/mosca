@@ -311,4 +311,157 @@ module.exports = function(create) {
       }, 20); // 20ms will suffice 
     });
   });
+
+  describe("offline packets", function() {
+    var client = { 
+      id: "my client id - 42",
+      clean: false,
+      subscriptions: {
+        hello: 1
+      }
+    };
+
+    var packet = {
+      topic: "hello",
+      qos: 0,
+      payload: "world",
+      messageId: 42
+    };
+
+    beforeEach(function(done) {
+      this.instance.storeSubscriptions(client, done);
+    });
+
+    it("should store an offline packet", function(done) {
+      this.instance.storeOfflinePacket(packet, done)
+    });
+
+    it("should not stream any offline packet", function(done) {
+      this.instance.streamOfflinePackets(client, function(err, packet) {
+        done(new Error("this should never be called"));
+      });
+      done();
+    });
+
+    it("should store and stream an offline packet", function(done) {
+      var instance = this.instance;
+      instance.storeOfflinePacket(packet, function() {
+        instance.streamOfflinePackets(client, function(err, p) {
+          expect(p).to.eql(packet);
+          done();
+        });
+      })
+    });
+
+    it("should delete the offline packets once streamed", function(done) {
+      var instance = this.instance;
+      instance.storeOfflinePacket(packet, function() {
+        instance.streamOfflinePackets(client, function(err, p) {
+          instance.streamOfflinePackets(client, function(err, p2) {
+            done(new Error("this should never be called"));
+          });
+          done();
+        });
+      })
+    });
+
+    it("should clean up the offline packets store if a clean client connects", function(done) {
+      var instance = this.instance;
+      var client = {
+        id: "my client id - 42",
+        clean: false,
+        subscriptions: {
+          hello: 1
+        }
+      };
+
+      instance.storeOfflinePacket(packet, function() {
+        client.clean = true;
+        instance.lookupSubscriptions(client, function(err, results) {
+          client.clean = false;
+          instance.streamOfflinePackets(client, function(err, p) {
+            done(new Error("this should never be called"));
+          });
+          done();
+        });
+      });
+    });
+
+    it("should not store any offline packet for a clean client", function(done) {
+      var instance = this.instance;
+      var client = {
+        id: "my client id - 42",
+        clean: false,
+        subscriptions: {
+          hello: 1
+        }
+      };
+
+      client.clean = true;
+      instance.lookupSubscriptions(client, function(err, results) {
+        instance.storeOfflinePacket(packet, function() {
+          client.clean = false;
+          instance.streamOfflinePackets(client, function(err, p) {
+            done(new Error("this should never be called"));
+          });
+          done();
+        });
+      });
+    });
+
+    it("should not stream any offline packet to a clean client", function(done) {
+      var instance = this.instance;
+      var client = {
+        id: "my client id - 42",
+        clean: false,
+        subscriptions: {
+          hello: 1
+        }
+      };
+
+      instance.storeOfflinePacket(packet, function() {
+        client.clean = true;
+        instance.streamOfflinePackets(client, function(err, p) {
+          done(new Error("this should never be called"));
+        });
+        done();
+      });
+    });
+
+    it("should wire itself up to the 'published' event of a Server", function(done) {
+      var em = new EventEmitter();
+      var instance = this.instance;
+
+      instance.wire(em);
+      em.emit("published", packet);
+
+      setTimeout(function() {
+        instance.streamOfflinePackets(client, function(err, p1) {
+          expect(p1).to.eql(packet);
+          done();
+        });
+      }, 20); // 20ms will suffice 
+    });
+
+    it("should wire itself up to the 'clientConnected' event of a Server", function(done) {
+      var em = new EventEmitter();
+      var instance = this.instance;
+
+      instance.wire(em);
+
+      client.forward = function(topic, payload, options, pattern) {
+        expect(topic).to.eql(packet.topic);
+        expect(payload).to.eql(packet.payload);
+        expect(options).to.eql(packet);
+        expect(pattern).to.eql("hello");
+        done();
+      };
+
+      client.handleAuthorizeSubscribe = function() {};
+
+      instance.storeOfflinePacket(packet, function() {
+        em.emit("clientConnected", client);
+      });
+    });
+  });
 };

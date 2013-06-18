@@ -57,7 +57,8 @@
     "levelup": "~0.10.0",
     "level-sublevel": "~4.7.0",
     "tmp": "0.0.20",
-    "leveldown": "~0.6.1"
+    "leveldown": "~0.6.1",
+    "level-range": "0.0.0"
   },
   "optionalDependencies": {
     "zmq": "~2.4.0",

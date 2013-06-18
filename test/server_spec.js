@@ -1101,7 +1101,7 @@ describe("mosca.Server", function() {
     ]);
   });
 
-  it.skip("should support unclean clients", function(done) {
+  it("should support unclean clients", function(done) {
     var pers = new mosca.persistance.Memory();
     var opts = buildOpts();
 
