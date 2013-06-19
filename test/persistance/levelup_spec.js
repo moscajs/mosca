@@ -5,13 +5,13 @@ var LevelUp = require("../../").persistance.LevelUp;
 var tmp = require("tmp");
 
 describe("mosca.persistance.LevelUp", function() {
-  abstract(function(cb) {
+  abstract(function(opts, cb) {
     tmp.dir(function (err, path) {
       if (err) {
         return cb(err);
       }
 
-      cb(null, new LevelUp(path));
+      cb(null, new LevelUp(path, opts));
     });
   });
 });

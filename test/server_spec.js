@@ -1131,6 +1131,11 @@ describe("mosca.Server", function() {
       },
 
       function(cb) {
+        // some time to let the write settle
+        setTimeout(cb, 5);
+      },
+
+      function(cb) {
         buildAndConnect(cb, function(client) {
           client.publish({
             topic: "hello",
@@ -1181,6 +1186,11 @@ describe("mosca.Server", function() {
             client.stream.end();
           });
         });
+      },
+
+      function(cb) {
+        // some time to let the write settle
+        setTimeout(cb, 5);
       },
 
       function(cb) {

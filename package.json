@@ -58,7 +58,8 @@
     "level-sublevel": "~4.7.0",
     "tmp": "0.0.20",
     "leveldown": "~0.6.1",
-    "level-range": "0.0.0"
+    "level-range": "0.0.0",
+    "level-ttl": "git://github.com/rvagg/node-level-ttl"
   },
   "optionalDependencies": {
     "zmq": "~2.4.0",

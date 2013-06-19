@@ -4,10 +4,17 @@ var async = require("async");
 var EventEmitter = require("events").EventEmitter;
 
 module.exports = function(create) {
+  var opts = { 
+    ttl: {
+      checkFrequency: 500,
+      subscriptions: 500,
+      packets: 500
+    }
+  };
 
   beforeEach(function(done) {
     var that = this;
-    create(function(err, result) {
+    create(opts, function(err, result) {
       if (err) {
         return done(err);
       }
@@ -18,8 +25,11 @@ module.exports = function(create) {
   });
 
   afterEach(function(done) {
-    this.instance.close(done);
-    this.instance = null;
+    var that = this;
+    setTimeout(function() {
+      that.instance.close(done);
+      that.instance = null;
+    }, 1);
   });
 
   describe("retained messages", function() {
@@ -310,6 +320,26 @@ module.exports = function(create) {
         });
       }, 20); // 20ms will suffice 
     });
+
+    it("should clean up the subscription store after a TTL", function(done) {
+      var instance = this.instance;
+      var client = {
+        id: "my client id - 42",
+        clean: false,
+        subscriptions: {
+          hello: 1
+        }
+      };
+
+      instance.storeSubscriptions(client, function() {
+        setTimeout(function() {
+          instance.lookupSubscriptions(client, function(err, results) {
+            expect(results).to.eql({});
+            done();
+          });
+        }, opts.ttl.checkFrequency * 3);
+      });
+    });
   });
 
   describe("offline packets", function() {
@@ -333,7 +363,7 @@ module.exports = function(create) {
     });
 
     it("should store an offline packet", function(done) {
-      this.instance.storeOfflinePacket(packet, done)
+      this.instance.storeOfflinePacket(packet, done);
     });
 
     it("should not stream any offline packet", function(done) {
@@ -350,7 +380,7 @@ module.exports = function(create) {
           expect(p).to.eql(packet);
           done();
         });
-      })
+      });
     });
 
     it("should delete the offline packets once streamed", function(done) {
@@ -362,7 +392,7 @@ module.exports = function(create) {
           });
           done();
         });
-      })
+      });
     });
 
     it("should clean up the offline packets store if a clean client connects", function(done) {
