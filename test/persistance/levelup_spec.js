@@ -23,4 +23,7 @@ describe("mosca.persistance.LevelUp", function() {
       cb(null, new LevelUp(path, opts), opts);
     });
   });
+
+
+  // TODO test the persistance of two databases
 });

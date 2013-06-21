@@ -489,4 +489,35 @@ module.exports = function(create) {
       });
     });
   });
+
+  describe("offline packets pattern", function() {
+    var client = { 
+      id: "my client id - 42",
+      clean: false,
+      subscriptions: {
+        "hello/#": 1
+      }
+    };
+
+    var packet = {
+      topic: "hello/42",
+      qos: 0,
+      payload: "world",
+      messageId: 42
+    };
+
+    beforeEach(function(done) {
+      this.instance.storeSubscriptions(client, done);
+    });
+
+    it("should store and stream an offline packet", function(done) {
+      var instance = this.instance;
+      instance.storeOfflinePacket(packet, function() {
+        instance.streamOfflinePackets(client, function(err, p) {
+          expect(p).to.eql(packet);
+          done();
+        });
+      });
+    });
+  });
 };

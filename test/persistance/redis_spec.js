@@ -23,4 +23,7 @@ describe("mosca.persistance.Redis", function() {
     client.flushdb(cb);
     client.quit();
   });
+
+  // TODO test the persistance of two concurrent clients
+  // TODO test the persistance across two runs
 });
