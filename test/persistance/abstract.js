@@ -4,22 +4,16 @@ var async = require("async");
 var EventEmitter = require("events").EventEmitter;
 
 module.exports = function(create) {
-  var opts = { 
-    ttl: {
-      checkFrequency: 500,
-      subscriptions: 500,
-      packets: 500
-    }
-  };
 
   beforeEach(function(done) {
     var that = this;
-    create(opts, function(err, result) {
+    create(function(err, result, opts) {
       if (err) {
         return done(err);
       }
 
       that.instance = result;
+      that.opts = opts;
       done();
     });
   });
@@ -323,6 +317,7 @@ module.exports = function(create) {
 
     it("should clean up the subscription store after a TTL", function(done) {
       var instance = this.instance;
+      var that = this;
       var client = {
         id: "my client id - 42",
         clean: false,
@@ -337,7 +332,7 @@ module.exports = function(create) {
             expect(results).to.eql({});
             done();
           });
-        }, opts.ttl.checkFrequency * 3);
+        }, that.opts.ttl.checkFrequency + 500);
       });
     });
   });
