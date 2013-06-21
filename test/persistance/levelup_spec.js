@@ -38,7 +38,7 @@ describe("mosca.persistance.LevelUp", function() {
       };
 
       var packet = {
-        topic: "hello",
+        topic: "hello/42",
         qos: 0,
         payload: "world",
         messageId: 42
