@@ -7,7 +7,7 @@ module.exports = function(create) {
 
   beforeEach(function(done) {
     var that = this;
-    create(function(err, result, opts) {
+    create.call(this, function(err, result, opts) {
       if (err) {
         return done(err);
       }
