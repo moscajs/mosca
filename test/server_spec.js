@@ -1116,7 +1116,7 @@ describe("mosca.Server", function() {
         buildAndConnect(cb, opts, function(client) {
           var subscriptions = [{
             topic: "hello",
-            qos: 0
+            qos: 1
           }];
 
           client.subscribe({
@@ -1174,7 +1174,7 @@ describe("mosca.Server", function() {
         buildAndConnect(cb, opts, function(client) {
           var subscriptions = [{
             topic: "hello",
-            qos: 0
+            qos: 1
           }];
 
           client.subscribe({

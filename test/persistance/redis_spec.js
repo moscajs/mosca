@@ -35,7 +35,9 @@ describe("mosca.persistance.Redis", function() {
         id: "my client id - 42",
         clean: false,
         subscriptions: {
-          "hello/#": 1
+          "hello/#": {
+            qos: 1
+          }
         }
       };
 
@@ -68,7 +70,9 @@ describe("mosca.persistance.Redis", function() {
         id: "my client id - 42",
         clean: false,
         subscriptions: {
-          "hello/#": 1
+          "hello/#": {
+            qos: 1
+          }
         }
       };
 

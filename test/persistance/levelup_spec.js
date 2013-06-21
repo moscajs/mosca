@@ -33,7 +33,9 @@ describe("mosca.persistance.LevelUp", function() {
         id: "my client id - 42",
         clean: false,
         subscriptions: {
-          "hello/#": 1
+          "hello/#": {
+            qos: 1
+          }
         }
       };
 

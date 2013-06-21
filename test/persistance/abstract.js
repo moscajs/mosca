@@ -167,7 +167,9 @@ module.exports = function(create) {
         id: "my client id - 42",
         clean: false,
         subscriptions: {
-          hello: 1
+          hello: {
+            qos: 1
+          }
         }
       };
       this.instance.storeSubscriptions(client, done);
@@ -178,7 +180,9 @@ module.exports = function(create) {
         id: "my client id - 42",
         clean: false,
         subscriptions: {
-          hello: 1
+          hello: {
+            qos: 1
+          }
         }
       };
       this.instance.lookupSubscriptions(client, function(err, results) {
@@ -193,7 +197,9 @@ module.exports = function(create) {
         id: "my client id - 42",
         clean: false,
         subscriptions: {
-          hello: 1
+          hello: {
+            qos: 1
+          }
         }
       };
 
@@ -211,7 +217,9 @@ module.exports = function(create) {
         id: "my client id - 42",
         clean: true,
         subscriptions: {
-          hello: 1
+          hello: {
+            qos: 1
+          }
         }
       };
 
@@ -230,7 +238,9 @@ module.exports = function(create) {
         id: "my client id - 42",
         clean: false,
         subscriptions: {
-          hello: 1
+          hello: {
+            qos: 1
+          }
         }
       };
 
@@ -249,7 +259,9 @@ module.exports = function(create) {
         id: "my client id - 42",
         clean: false,
         subscriptions: {
-          hello: 1
+          hello: {
+            qos: 1
+          }
         }
       };
 
@@ -273,7 +285,9 @@ module.exports = function(create) {
         id: "my client id - 42",
         clean: false,
         subscriptions: {
-          hello: 1
+          hello: {
+            qos: 1
+          }
         },
         handleAuthorizeSubscribe: function(err, success, subscription, callback) {
           expect(success).to.eql(true);
@@ -300,7 +314,9 @@ module.exports = function(create) {
         id: "my client id - 42",
         clean: false,
         subscriptions: {
-          hello: 1
+          hello: {
+            qos: 1
+          }
         }
       };
 
@@ -322,7 +338,9 @@ module.exports = function(create) {
         id: "my client id - 42",
         clean: false,
         subscriptions: {
-          hello: 1
+          hello: {
+            qos: 1
+          }
         }
       };
 
@@ -335,6 +353,26 @@ module.exports = function(create) {
         }, that.opts.ttl.checkFrequency + 500);
       });
     });
+
+    it("should not store a QoS 0 subscription", function(done) {
+      var instance = this.instance;
+      var client = {
+        id: "my client id - 42",
+        clean: false,
+        subscriptions: {
+          hello: {
+            qos: 0
+          }
+        }
+      };
+
+      instance.storeSubscriptions(client, function() {
+        instance.lookupSubscriptions(client, function(err, results) {
+          expect(results).to.eql({});
+          done();
+        });
+      });
+    });
   });
 
   describe("offline packets", function() {
@@ -342,7 +380,9 @@ module.exports = function(create) {
       id: "my client id - 42",
       clean: false,
       subscriptions: {
-        hello: 1
+        hello: {
+          qos: 1
+        }
       }
     };
 
@@ -396,7 +436,9 @@ module.exports = function(create) {
         id: "my client id - 42",
         clean: false,
         subscriptions: {
-          hello: 1
+          hello: {
+            qos: 1
+          }
         }
       };
 
@@ -440,7 +482,9 @@ module.exports = function(create) {
         id: "my client id - 42",
         clean: false,
         subscriptions: {
-          hello: 1
+          hello: {
+            qos: 1
+          }
         }
       };
 
@@ -495,7 +539,9 @@ module.exports = function(create) {
       id: "my client id - 42",
       clean: false,
       subscriptions: {
-        "hello/#": 1
+        "hello/#": {
+          qos: 1
+        }
       }
     };
 
