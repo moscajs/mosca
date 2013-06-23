@@ -47,22 +47,21 @@
   "dependencies": {
     "mqtt": "~0.2.10",
     "async": "~0.2.4",
-    "ascoltatori": "~0.6.0",
+    "ascoltatori": "~0.7.0",
     "debug": "~0.7.2",
     "commander": "~1.1.1",
     "minimatch": "~0.2.11",
     "bunyan": "~0.21.3",
     "memdown": "~0.2.0",
-    "level": "~0.10.0",
     "levelup": "~0.10.0",
     "level-sublevel": "~4.7.0",
     "tmp": "0.0.20",
-    "leveldown": "~0.6.1",
     "level-range": "0.0.0",
     "level-ttl": "~0.2.0",
-    "qlobber": "~0.1.1"
+    "qlobber": "~0.3.0"
   },
   "optionalDependencies": {
+    "leveldown": "~0.6.1",
     "zmq": "~2.4.0",
     "amqp": "~0.1.4",
     "redis": "~0.8.2"
