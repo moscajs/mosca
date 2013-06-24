@@ -9,6 +9,7 @@
     "beforeEach": false,
     "describe": false,
     "mosca": false,
-    "expect": false
+    "expect": false,
+    "before": false
   }
 }
