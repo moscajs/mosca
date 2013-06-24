@@ -21,6 +21,7 @@ describe("mosca.persistance.Redis", function() {
   afterEach(function(cb) {
     if (this.secondInstance) {
       this.secondInstance.close();
+      this.secondInstance = null;
     }
 
     var client = redis.createClient();

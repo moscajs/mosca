@@ -4,11 +4,13 @@ var abstract = require("./abstract");
 var Mongo = require("../../").persistance.Mongo;
 var redis = require("redis");
 var MongoClient = require('mongodb').MongoClient;
+var async = require("async");
 
 describe("mosca.persistance.Mongo", function() {
 
   var opts = { 
     url: "mongodb://localhost:27017/moscatests",
+    autoClose: false,
     ttl: {
       checkFrequency: 1000,
       subscriptions: 1000,
@@ -16,24 +18,35 @@ describe("mosca.persistance.Mongo", function() {
     }
   };
 
-  abstract(function(cb) {
-    new Mongo(opts, function(err, mongo) {
-      cb(err, mongo, opts);
+  before(function(done) {
+    // Connect to the db
+    MongoClient.connect(opts.url, { safe: true }, function(err, db) {
+      opts.connection = db;
+      done(err);
     });
   });
 
-  afterEach(function(cb) {
-    if (this.secondInstance) {
-      this.secondInstance.close();
-    }
-
-    // Connect to the db
-    MongoClient.connect(opts.url, function(err, db) {
-      if (err) {
-        return cb(err);
+  beforeEach(function(done) {
+    async.parallel([
+      function(cb) {
+        opts.connection.collection("subscriptions").drop(cb);
+      },
+      function(cb) {
+        opts.connection.collection("packets").drop(cb);
+      },
+      function(cb) {
+        opts.connection.collection("retained").drop(cb);
       }
+    ], done);
+  });
 
-      db.dropDatabase(cb);
+  afterEach(function() {
+    this.secondInstance = null;
+  });
+
+  abstract(function(cb) {
+    new Mongo(opts, function(err, mongo) {
+      cb(err, mongo, opts);
     });
   });
 
