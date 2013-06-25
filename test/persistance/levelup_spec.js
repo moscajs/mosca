@@ -23,7 +23,8 @@ describe("mosca.persistance.LevelUp", function() {
       }
 
       that.path = path;
-      cb(null, new LevelUp(path, opts), opts);
+      opts.path = path;
+      cb(null, new LevelUp(opts), opts);
     });
   });
 
@@ -50,7 +51,7 @@ describe("mosca.persistance.LevelUp", function() {
 
       this.instance.storeSubscriptions(client, function() {
         that.instance.close(function() {
-          that.instance = new LevelUp(that.path, opts);
+          that.instance = new LevelUp(opts);
           setTimeout(function() {
             that.instance.storeOfflinePacket(packet, function() {
               that.instance.streamOfflinePackets(client, function(err, p) {

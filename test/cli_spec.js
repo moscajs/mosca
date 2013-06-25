@@ -389,4 +389,28 @@ describe("mosca.cli", function() {
       });
     });
   });
+
+  it("should create a memory persistance object", function(done) {
+    var s = startServer(done, function(server) {
+      expect(server.persistance).to.be.instanceOf(mosca.persistance.Memory);
+    });
+  });
+
+  it("should create a leveldb with the --db flag", function(done) {
+
+    tmp.dir(function (err, path, fd) {
+      if (err) {
+        done(err);
+        return;
+      }
+
+      args.push("--db");
+      args.push(path);
+
+      startServer(done, function(server) {
+        expect(server.persistance).to.be.instanceOf(mosca.persistance.LevelUp);
+        expect(server.persistance.options.path).to.eql(path);
+      });
+    });
+  });
 });
