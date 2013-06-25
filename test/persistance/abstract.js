@@ -566,4 +566,65 @@ module.exports = function(create) {
       });
     });
   });
+
+  describe("inflight packets", function() {
+    var packet = {
+      topic: "hello",
+      qos: 0,
+      payload: "world",
+      messageId: 42
+    };
+    var client = { 
+      id: "my client id - 42",
+      clean: false,
+      subscriptions: {
+        hello: {
+          qos: 1
+        }
+      },
+      inflight: {
+        42: { packet: packet }
+      }
+    };
+
+    it("should store one inflight packet", function(done) {
+      this.instance.storeInflightPackets(client, done);
+    });
+
+    it("should store and stream an inflight packet", function(done) {
+      var instance = this.instance;
+      instance.storeInflightPackets(client, function() {
+        instance.streamOfflinePackets(client, function(err, p) {
+          expect(p).to.eql(packet);
+          done();
+        });
+      });
+    });
+
+    it("should delete the offline packets once streamed", function(done) {
+      var instance = this.instance;
+      instance.storeInflightPackets(client, function() {
+        instance.streamOfflinePackets(client, function(err, p) {
+          instance.streamOfflinePackets(client, function(err, p2) {
+            done(new Error("this should never be called"));
+          });
+          done();
+        });
+      });
+    });
+
+    it("should wire itself up to the 'clientDisconnecting' event of a Server", function(done) {
+      var em = new EventEmitter();
+      var instance = this.instance;
+      instance.wire(em);
+
+      em.emit("clientDisconnecting", client);
+
+      setTimeout(function() {
+        instance.streamOfflinePackets(client, function(err, packet) {
+          done();
+        });
+      }, 20); // 20ms will suffice 
+    });
+  });
 };
