@@ -137,19 +137,19 @@ The patterns are checked and validated using
 The credentials file can be automatically reladed by __Mosca__ if it
 receives a `SIGHUP`.
 
-## Persistance
+## Persistence
 
 The MQTT specification requires a persistent storage for offline QoS 1
 subscription that has been done by an unclean client.
 __Mosca__ offers several persitance options:
 
-* [Memory](http://mcollina.github.com/mosca/docs/lib/persistance/memory.js.html),
-* [LevelUp](http://mcollina.github.com/mosca/docs/lib/persistance/levelup.js.html),
-* [Redis](http://mcollina.github.com/mosca/docs/lib/persistance/redis.js.html),
-* [MongoDB](http://mcollina.github.com/mosca/docs/lib/persistance/mongo.js.html),
+* [Memory](http://mcollina.github.com/mosca/docs/lib/persistence/memory.js.html),
+* [LevelUp](http://mcollina.github.com/mosca/docs/lib/persistence/levelup.js.html),
+* [Redis](http://mcollina.github.com/mosca/docs/lib/persistence/redis.js.html),
+* [MongoDB](http://mcollina.github.com/mosca/docs/lib/persistence/mongo.js.html),
 
 All of them can be configured from the configuration file, under the
-`persistance` key. The only exception is LevelUp, which can be specified
+`persistence` key. The only exception is LevelUp, which can be specified
 by using the `--db` option from the command line.
 
 ## Contributing to Mosca

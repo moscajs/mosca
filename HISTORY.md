@@ -1,6 +1,10 @@
 History
 =======
 
+## 0.7.2
+
+* More README fixes.
+
 ## 0.7.1
 
 * Typo fix, from persistance to persistence.
