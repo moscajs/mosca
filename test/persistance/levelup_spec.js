@@ -33,6 +33,7 @@ describe("mosca.persistance.LevelUp", function() {
       var client = { 
         id: "my client id - 42",
         clean: false,
+        logger: moscaSettings().logger,
         subscriptions: {
           "hello/#": {
             qos: 1

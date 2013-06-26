@@ -140,6 +140,7 @@ module.exports = function(create) {
       };
 
       var client = { 
+        logger: moscaSettings().logger,
         forward: function(topic, payload, options, pattern) {
           expect(topic).to.eql(packet1.topic);
           expect(payload).to.eql(packet1.payload);
@@ -166,6 +167,7 @@ module.exports = function(create) {
       var client = {
         id: "my client id - 42",
         clean: false,
+        logger: moscaSettings().logger,
         subscriptions: {
           hello: {
             qos: 1
@@ -179,6 +181,7 @@ module.exports = function(create) {
       var client = {
         id: "my client id - 42",
         clean: false,
+        logger: moscaSettings().logger,
         subscriptions: {
           hello: {
             qos: 1
@@ -196,6 +199,7 @@ module.exports = function(create) {
       var client = {
         id: "my client id - 42",
         clean: false,
+        logger: moscaSettings().logger,
         subscriptions: {
           hello: {
             qos: 1
@@ -216,6 +220,7 @@ module.exports = function(create) {
       var client = {
         id: "my client id - 42",
         clean: true,
+        logger: moscaSettings().logger,
         subscriptions: {
           hello: {
             qos: 1
@@ -237,6 +242,7 @@ module.exports = function(create) {
       var client = {
         id: "my client id - 42",
         clean: false,
+        logger: moscaSettings().logger,
         subscriptions: {
           hello: {
             qos: 1
@@ -258,6 +264,7 @@ module.exports = function(create) {
       var client = {
         id: "my client id - 42",
         clean: false,
+        logger: moscaSettings().logger,
         subscriptions: {
           hello: {
             qos: 1
@@ -284,6 +291,7 @@ module.exports = function(create) {
       var client = { 
         id: "my client id - 42",
         clean: false,
+        logger: moscaSettings().logger,
         subscriptions: {
           hello: {
             qos: 1
@@ -313,6 +321,7 @@ module.exports = function(create) {
       var client = { 
         id: "my client id - 42",
         clean: false,
+        logger: moscaSettings().logger,
         subscriptions: {
           hello: {
             qos: 1
@@ -337,6 +346,7 @@ module.exports = function(create) {
       var client = {
         id: "my client id - 42",
         clean: false,
+        logger: moscaSettings().logger,
         subscriptions: {
           hello: {
             qos: 1
@@ -359,6 +369,7 @@ module.exports = function(create) {
       var client = {
         id: "my client id - 42",
         clean: false,
+        logger: moscaSettings().logger,
         subscriptions: {
           hello: {
             qos: 0
@@ -379,6 +390,7 @@ module.exports = function(create) {
     var client = { 
       id: "my client id - 42",
       clean: false,
+      logger: moscaSettings().logger,
       subscriptions: {
         hello: {
           qos: 1
@@ -435,6 +447,7 @@ module.exports = function(create) {
       var client = {
         id: "my client id - 42",
         clean: false,
+        logger: moscaSettings().logger,
         subscriptions: {
           hello: {
             qos: 1
@@ -459,6 +472,7 @@ module.exports = function(create) {
       var client = {
         id: "my client id - 42",
         clean: false,
+        logger: moscaSettings().logger,
         subscriptions: {
           hello: 1
         }
@@ -481,6 +495,7 @@ module.exports = function(create) {
       var client = {
         id: "my client id - 42",
         clean: false,
+        logger: moscaSettings().logger,
         subscriptions: {
           hello: {
             qos: 1
@@ -538,6 +553,7 @@ module.exports = function(create) {
     var client = { 
       id: "my client id - 42",
       clean: false,
+      logger: moscaSettings().logger,
       subscriptions: {
         "hello/#": {
           qos: 1
@@ -577,6 +593,7 @@ module.exports = function(create) {
     var client = { 
       id: "my client id - 42",
       clean: false,
+      logger: moscaSettings().logger,
       subscriptions: {
         hello: {
           qos: 1

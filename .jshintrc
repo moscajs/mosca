@@ -10,6 +10,7 @@
     "describe": false,
     "mosca": false,
     "expect": false,
-    "before": false
+    "before": false,
+    "moscaSettings": false
   }
 }
