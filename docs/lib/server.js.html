@@ -17,7 +17,7 @@ code {
   div.description {margin: 14px 0; padding-top: 14px; border-top:1px solid #eee; border-bottom:1px solid #eee; }
   .tags {}
     .tags .types {color:#666}
-.ctx-type { float:right; margin-top:8px }</style></head><body><div class="row"><div class="twelve columns"><h1 class="pagetitle">Mosca</h1></div></div><div class="row"><div id="nav" class="three columns"><ul class="side-nav"><li><a href="../../docs/lib/authorizer.js.html">lib/authorizer.js</a><ul><li><a href="../../docs/lib/authorizer.js.html#Authorizer">Authorizer</a></li><li><a href="../../docs/lib/authorizer.js.html#addUser">addUser</a></li><li><a href="../../docs/lib/authorizer.js.html#rmUser">rmUser</a></li></ul></li><li><a href="../../docs/lib/hasher.js.html">lib/hasher.js</a><ul><li><a href="../../docs/lib/hasher.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/server.js.html">lib/server.js</a><ul><li><a href="../../docs/lib/server.js.html#Server">Server</a></li><li><a href="../../docs/lib/server.js.html#authenticate">authenticate</a></li><li><a href="../../docs/lib/server.js.html#authorizePublish">authorizePublish</a></li><li><a href="../../docs/lib/server.js.html#authorizeSubscribe">authorizeSubscribe</a></li><li><a href="../../docs/lib/server.js.html#close">close</a></li></ul></li></ul></div><div class="nine columns"><div class="comment"><div class="label radius ctx-type">function</div><h1 id="Server">Server</h1><h5 class="subheader">Server()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {Object} </span><span class="name">opts </span><span class="description">The option object</span></li><li><strong>@param: </strong><span class="types"> {Function} </span><span class="name">callback </span><span class="description">The ready callback</span></li></ul></div><div class="description"><p>The Mosca Server is a very simple MQTT server that<br />provides a simple event-based API to craft your own MQTT logic<br />It supports QoS 0 &amp; 1, without external storage.<br />It is backed by Ascoltatori, and it descends from<br />EventEmitter.</p>
+.ctx-type { float:right; margin-top:8px }</style></head><body><div class="row"><div class="twelve columns"><h1 class="pagetitle">Mosca</h1></div></div><div class="row"><div id="nav" class="three columns"><ul class="side-nav"><li><a href="../../docs/lib/authorizer.js.html">lib/authorizer.js</a><ul><li><a href="../../docs/lib/authorizer.js.html#Authorizer">Authorizer</a></li><li><a href="../../docs/lib/authorizer.js.html#addUser">addUser</a></li><li><a href="../../docs/lib/authorizer.js.html#rmUser">rmUser</a></li></ul></li><li><a href="../../docs/lib/client.js.html">lib/client.js</a><ul><li><a href="../../docs/lib/client.js.html#Client">Client</a></li><li><a href="../../docs/lib/client.js.html#close">close</a></li></ul></li><li><a href="../../docs/lib/hasher.js.html">lib/hasher.js</a><ul><li><a href="../../docs/lib/hasher.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/abstract.js.html">lib/persistence/abstract.js</a><ul><li><a href="../../docs/lib/persistence/abstract.js.html#AbstractPersistence">AbstractPersistence</a></li><li><a href="../../docs/lib/persistence/abstract.js.html#wire">wire</a></li><li><a href="../../docs/lib/persistence/abstract.js.html#close">close</a></li><li><a href="../../docs/lib/persistence/abstract.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/index.js.html">lib/persistence/index.js</a><ul></ul></li><li><a href="../../docs/lib/persistence/levelup.js.html">lib/persistence/levelup.js</a><ul><li><a href="../../docs/lib/persistence/levelup.js.html#LevelUpPersistence">LevelUpPersistence</a></li><li><a href="../../docs/lib/persistence/levelup.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/memory.js.html">lib/persistence/memory.js</a><ul><li><a href="../../docs/lib/persistence/memory.js.html#MemoryPersistence">MemoryPersistence</a></li><li><a href="../../docs/lib/persistence/memory.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/mongo.js.html">lib/persistence/mongo.js</a><ul><li><a href="../../docs/lib/persistence/mongo.js.html#MongoPersistence">MongoPersistence</a></li><li><a href="../../docs/lib/persistence/mongo.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/redis.js.html">lib/persistence/redis.js</a><ul><li><a href="../../docs/lib/persistence/redis.js.html#RedisPersistence">RedisPersistence</a></li><li><a href="../../docs/lib/persistence/redis.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/utils.js.html">lib/persistence/utils.js</a><ul><li><a href="../../docs/lib/persistence/utils.js.html#_topicPatterns">_topicPatterns</a></li><li><a href="../../docs/lib/persistence/utils.js.html#topicPatterns">topicPatterns</a></li></ul></li><li><a href="../../docs/lib/server.js.html">lib/server.js</a><ul><li><a href="../../docs/lib/server.js.html#Server">Server</a></li><li><a href="../../docs/lib/server.js.html#authenticate">authenticate</a></li><li><a href="../../docs/lib/server.js.html#authorizePublish">authorizePublish</a></li><li><a href="../../docs/lib/server.js.html#authorizeSubscribe">authorizeSubscribe</a></li><li><a href="../../docs/lib/server.js.html#close">close</a></li></ul></li></ul></div><div class="nine columns"><div class="comment"><div class="label radius ctx-type">function</div><h1 id="Server">Server</h1><h5 class="subheader">Server()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {Object} </span><span class="name">opts </span><span class="description">The option object</span></li><li><strong>@param: </strong><span class="types"> {Function} </span><span class="name">callback </span><span class="description">The ready callback</span></li></ul></div><div class="description"><p>The Mosca Server is a very simple MQTT server that<br />provides a simple event-based API to craft your own MQTT logic<br />It supports QoS 0 &amp; 1, without external storage.<br />It is backed by Ascoltatori, and it descends from<br />EventEmitter.</p>
 
 <h2>Options</h2>
 
@@ -27,6 +27,10 @@ code {
 that will power this server.</li>
 <li><code>baseRetryTimeout</code>, the retry timeout for the exponential
 backoff algorithm (default is 1s).</li>
+<li><code>logger</code>, the options for Bunyan.</li>
+<li><code>persitance</code>, the options for the persistence.
+A sub-key <code>factory</code> is used to specify what persitance
+to use.</li>
 </ul>
 
 <h2>Events</h2>
@@ -34,10 +38,14 @@ backoff algorithm (default is 1s).</li>
 <ul>
 <li><code>clientConnected</code>, when a client is connected;
 the client is passed as a parameter.</li>
+<li><code>clientDisconnecting</code>, when a client is being disconnected;
+the client is passed as a parameter.</li>
 <li><code>clientDisconnected</code>, when a client is disconnected;
 the client is passed as a parameter.</li>
 <li><code>published</code>, when a new message is published;
 the packet and the client are passed as parameters.</li>
+<li><code>subscribed</code>, when a new client is subscribed to a pattern;
+the pattern and the client are passed as parameters.</li>
 </ul></div><pre><code class="language-javascript">function Server(opts, callback) {
   EventEmitter.call(this);
 
@@ -45,19 +53,29 @@ the packet and the client are passed as parameters.</li>
   this.opts.port = this.opts.port || 1883;
   this.opts.backend = this.opts.backend || {};
   this.opts.baseRetryTimeout = this.opts.baseRetryTimeout || 1000;
+  this.opts.logger = this.opts.logger || {};
+  this.opts.logger.name = this.opts.logger.name || &quot;mosca&quot;;
+  this.opts.logger.level = this.opts.logger.level || 40;
+  this.opts.logger.serializers = {
+    client: clientSerializer,
+    packet: packetSerializer
+  };
+
+  if (this.opts.persistence &amp;&amp; this.opts.persistence.factory) {
+    this.opts.persistence.factory(this.opts.persistence).wire(this);
+  }
 
   callback = callback || function() {};
 
   this.clients = {};
+  this.logger = bunyan.createLogger(this.opts.logger);
 
   var that = this;
 
-  var serveWrap = function(client) {
-    process.nextTick(function() {
-      // disable Nagle algorithm
-      client.stream.setNoDelay(true);
-      that.serve(client);
-    });
+  var serveWrap = function(connection) {
+    // disable Nagle algorithm
+    connection.stream.setNoDelay(true);
+    new Client(connection, that);
   };
 
   if (this.opts.backend.json === undefined) {
@@ -79,9 +97,17 @@ the packet and the client are passed as parameters.</li>
     }, function(cb) {
       that.server.maxConnections = 100000;
       that.emit(&quot;ready&quot;);
-      debug(&quot;started on port &quot; + that.opts.port);
+      that.logger.info({ port: that.opts.port }, &quot;server started&quot;);
     }
   ]);
+
+  that.on(&quot;clientConnected&quot;, function(client) {
+    that.clients[client.id] = client;
+  });
+
+  that.on(&quot;clientDisconnected&quot;, function(client) {
+    delete that.clients[client.id];
+  });
 }
 
 module.exports = Server;
@@ -99,14 +125,14 @@ Server.prototype = Object.create(EventEmitter.prototype);</code></pre></div><div
 
   async.parallel(Object.keys(that.clients).map(function(id) {
     return function(cb) {
-      that.closeConn(that.clients[id], cb);
+      that.clients[id].close(cb);
     };
   }), function() {
     that.ascoltatore.close(function () {
       that.once(&quot;closed&quot;, callback);
       try {
         that.server.close(function() {
-          debug(&quot;closed&quot;);
+          that.logger.info(&quot;closed&quot;);
           that.emit(&quot;closed&quot;);
         });
       } catch (exception) {
@@ -114,7 +140,37 @@ Server.prototype = Object.create(EventEmitter.prototype);</code></pre></div><div
       }
     });
   });
-};</code></pre></div></div></div><!-- Foundation JS--><script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/3.2.2/javascripts/foundation.min.js"></script><script>/**
+};
+
+function clientSerializer(client) {
+  return client.id;
+}
+
+function packetSerializer(packet) {
+  var result = {};
+
+  if (packet.messageId) {
+    result.messageId = packet.messageId;
+  }
+
+  if (packet.topic) {
+    result.topic = packet.topic;
+  }
+
+  if (packet.qos) {
+    result.qos = packet.qos;
+  }
+
+  if (packet.unsubscriptions) {
+    result.unsubscriptions = packet.unsubscriptions;
+  }
+
+  if (packet.subscriptions) {
+    result.subscriptions = packet.subscriptions;
+  }
+
+  return result;
+}</code></pre></div></div></div><!-- Foundation JS--><script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/3.2.2/javascripts/foundation.min.js"></script><script>/**
  * Prism: Lightweight, robust, elegant syntax highlighting
  * MIT license http://www.opensource.org/licenses/mit-license.php/
  * @author Lea Verou http://lea.verou.me
