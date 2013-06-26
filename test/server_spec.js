@@ -63,10 +63,16 @@ describe("mosca.Server", function() {
   }
 
 
-  function buildAndConnect(done, callback) {
+  function buildAndConnect(done, opts, callback) {
+
+    if (typeof opts === "function") {
+      callback = opts;
+      opts = buildOpts();
+    }
+
     buildClient(done, function(client) {
 
-      client.connect(buildOpts());
+      client.connect(opts);
 
       client.on('connack', function(packet) {
         callback(client);
@@ -1032,5 +1038,177 @@ describe("mosca.Server", function() {
         messageId: 42
       });
     });
+  });
+
+  it("should support retained messages", function(done) {
+    var pers = new mosca.persistance.Memory();
+
+    pers.wire(instance);
+
+    async.waterfall([
+
+      function(cb) {
+        var client = mqtt.createConnection(settings.port, settings.host);
+
+        client.on("connected", function() {
+          var opts = buildOpts();
+
+          client.connect(opts);
+
+          client.on('connack', function(packet) {
+
+            cb(null, client);
+          });
+        });
+      },
+
+      function(client, cb) {
+        client.publish({
+          topic: "hello",
+          qos: 0,
+          payload: "world",
+          messageId: 42,
+          retain: true
+        });
+        client.on("close", cb);
+        client.stream.end();
+      },
+
+      function(cb) {
+        buildAndConnect(done, function(client) {
+          cb(null, client);
+        });
+      },
+
+      function(client, cb) {
+        var subscriptions = [{
+            topic: "hello",
+            qos: 0
+          }
+        ];
+
+        client.subscribe({
+          subscriptions: subscriptions,
+          messageId: 42
+        });
+
+        client.on("publish", function(packet) {
+          expect(packet.topic).to.be.eql("hello");
+          expect(packet.payload).to.be.eql("world");
+          client.disconnect();
+        });
+      }
+    ]);
+  });
+
+  it("should support unclean clients", function(done) {
+    var pers = new mosca.persistance.Memory();
+    var opts = buildOpts();
+
+    opts.clientId = "mosca-unclean-clients-test";
+    opts.clean = false;
+
+    pers.wire(instance);
+
+    async.series([
+
+      function(cb) {
+        buildAndConnect(cb, opts, function(client) {
+          var subscriptions = [{
+            topic: "hello",
+            qos: 1
+          }];
+
+          client.subscribe({
+            subscriptions: subscriptions,
+            messageId: 42
+          });
+
+          client.on("suback", function() {
+            client.stream.end();
+          });
+        });
+      },
+
+      function(cb) {
+        // some time to let the write settle
+        setTimeout(cb, 5);
+      },
+
+      function(cb) {
+        buildAndConnect(cb, function(client) {
+          client.publish({
+            topic: "hello",
+            qos: 0,
+            payload: "world",
+            messageId: 42
+          });
+          client.stream.end();
+        });
+      },
+
+      function(cb) {
+        buildAndConnect(cb, opts, function(client) {
+          client.on("publish", function(packet) {
+            expect(packet.topic).to.be.eql("hello");
+            expect(packet.payload).to.be.eql("world");
+            client.disconnect();
+          });
+        });
+      }
+    ], done);
+  });
+
+  it("should restore subscriptions for uncleaned clients", function(done) {
+    var pers = new mosca.persistance.Memory();
+    var opts = buildOpts();
+
+    opts.clientId = "mosca-unclean-clients-test";
+    opts.clean = false;
+
+    pers.wire(instance);
+
+    async.series([
+
+      function(cb) {
+        buildAndConnect(cb, opts, function(client) {
+          var subscriptions = [{
+            topic: "hello",
+            qos: 1
+          }];
+
+          client.subscribe({
+            subscriptions: subscriptions,
+            messageId: 42
+          });
+
+          client.on("suback", function() {
+            client.stream.end();
+          });
+        });
+      },
+
+      function(cb) {
+        // some time to let the write settle
+        setTimeout(cb, 5);
+      },
+
+      function(cb) {
+        buildAndConnect(cb, opts, function(client) {
+          client.publish({
+            topic: "hello",
+            qos: 0,
+            payload: "world",
+            messageId: 42
+          });
+
+          client.on("publish", function(packet) {
+            expect(packet.topic).to.be.eql("hello");
+            expect(packet.payload).to.be.eql("world");
+            client.disconnect();
+          });
+        });
+      }
+    ], done);
   });
 });

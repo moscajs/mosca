@@ -8,7 +8,7 @@ var mqtt = require("mqtt");
 
 function setup(done) {
 
-  var client = mqtt.createClient(1883, "localhost", { clean: true });
+  var client = mqtt.createClient(1883, "localhost", { clean: program.clean });
 
   client.on("connect", function () { 
     client.subscribe("hello", { qos: program.qos }, function () {
@@ -41,6 +41,7 @@ function bench(client, done) {
 }
 
 program
+  .option("--clean", "use clean clients")
   .option("--header", "add header")
   .option("-r, --runs <n>", "the number of runs to execute", parseInt, 10)
   .option("-q, --qos <n>", "the QoS level (0, 1, 2)", parseInt, 0)

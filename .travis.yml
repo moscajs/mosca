@@ -17,3 +17,4 @@ node_js:
 services:
   - rabbitmq
   - redis-server
+  - mongodb
