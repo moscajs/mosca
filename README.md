@@ -41,7 +41,9 @@ client.
 ## Features
 
 * MQTT 3.1 compliant
-* QoS 0 and QoS 1, but without storage
+* QoS 0 and QoS 1
+* Various storage options for QoS 1 offline packets,
+  and subscriptions.
 * Built on top on node.js
 * As fast as it is possible
 * Usable inside ANY other node.js app, see the
@@ -52,20 +54,29 @@ client.
 Mosca supports some command line options:
 
 ```
-Usage: mosca [options]
+  Usage: mosca [options] [command]
+
+  Commands:
+
+    adduser <user> <pass>  Add a user to the given credentials file
+    rmuser <user>          Removes a user from the given credentials file
+    start                  start the server (optional)
 
   Options:
 
-    -h, --help           output usage information
-    -V, --version        output the version number
-    -p, --port <n>       the port to listen to
-    --parent-port <n>    the parent port to connect to
-    --parent-host <s>    the parent host to connect to
-    --parent-prefix <s>  the prefix to use in the parent broker
-    -c, --config <c>     the config file to use (override every 
-                         other options)
-    -v, --verbose        set the bunyan log to INFO
-    --very-verbose       set the bunyan log to DEBUG
+    -h, --help                       output usage information
+    -V, --version                    output the version number
+    -p, --port <n>                   the port to listen to
+    --parent-port <n>                the parent port to connect to
+    --parent-host <s>                the parent host to connect to
+    --parent-prefix <s>              the prefix to use in the parent broker
+    --credentials <file>             the file containing the credentials
+    --authorize-publish <pattern>    the pattern for publishing to topics for the added user
+    --authorize-subscribe <pattern>  the pattern for subscribing to topics for the added user
+    -c, --config <c>                 the config file to use (override every other option)
+    -d, --db <path>                  the path were to store the database
+    -v, --verbose                    set the bunyan log to INFO
+    --very-verbose                   set the bunyan log to DEBUG
 ```
 
 However you can only use a MQTT backend with the command line options.
@@ -125,6 +136,21 @@ The patterns are checked and validated using
 
 The credentials file can be automatically reladed by __Mosca__ if it
 receives a `SIGHUP`.
+
+## Persistance
+
+The MQTT specification requires a persistent storage for offline QoS 1
+subscription that has been done by an unclean client.
+__Mosca__ offers several persitance options:
+
+* [Memory](http://mcollina.github.com/mosca/docs/lib/persistance/memory.js.html),
+* [LevelUp](http://mcollina.github.com/mosca/docs/lib/persistance/levelup.js.html),
+* [Redis](http://mcollina.github.com/mosca/docs/lib/persistance/redis.js.html),
+* [MongoDB](http://mcollina.github.com/mosca/docs/lib/persistance/mongo.js.html),
+
+All of them can be configured from the configuration file, under the
+`persistance` key. The only exception is LevelUp, which can be specified
+by using the `--db` option from the command line.
 
 ## Contributing to Mosca
 
