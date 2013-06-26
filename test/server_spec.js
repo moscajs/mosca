@@ -1041,7 +1041,7 @@ describe("mosca.Server", function() {
   });
 
   it("should support retained messages", function(done) {
-    var pers = new mosca.persistance.Memory();
+    var pers = new mosca.persistence.Memory();
 
     pers.wire(instance);
 
@@ -1102,7 +1102,7 @@ describe("mosca.Server", function() {
   });
 
   it("should support unclean clients", function(done) {
-    var pers = new mosca.persistance.Memory();
+    var pers = new mosca.persistence.Memory();
     var opts = buildOpts();
 
     opts.clientId = "mosca-unclean-clients-test";
@@ -1160,7 +1160,7 @@ describe("mosca.Server", function() {
   });
 
   it("should restore subscriptions for uncleaned clients", function(done) {
-    var pers = new mosca.persistance.Memory();
+    var pers = new mosca.persistence.Memory();
     var opts = buildOpts();
 
     opts.clientId = "mosca-unclean-clients-test";

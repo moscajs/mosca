@@ -1,9 +1,9 @@
 "use strict";
 
 var abstract = require("./abstract");
-var Memory = require("../../").persistance.Memory;
+var Memory = require("../../").persistence.Memory;
 
-describe("mosca.persistance.Memory", function() {
+describe("mosca.persistence.Memory", function() {
 
   var opts = { 
     ttl: {

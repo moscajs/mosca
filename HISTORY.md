@@ -1,6 +1,10 @@
 History
 =======
 
+## 0.7.1
+
+* Typo fix, from persistance to persistence.
+
 ## 0.7.0
 
 * Added persistance support

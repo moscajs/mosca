@@ -1,16 +1,12 @@
 "use strict";
 
 var abstract = require("./abstract");
-var Mongo = require("../../").persistance.Mongo;
+var Redis= require("../../").persistence.Redis;
 var redis = require("redis");
-var MongoClient = require('mongodb').MongoClient;
-var async = require("async");
 
-describe("mosca.persistance.Mongo", function() {
+describe("mosca.persistence.Redis", function() {
 
   var opts = { 
-    url: "mongodb://localhost:27017/moscatests",
-    autoClose: false,
     ttl: {
       checkFrequency: 1000,
       subscriptions: 1000,
@@ -18,36 +14,19 @@ describe("mosca.persistance.Mongo", function() {
     }
   };
 
-  before(function(done) {
-    // Connect to the db
-    MongoClient.connect(opts.url, { safe: true }, function(err, db) {
-      opts.connection = db;
-      done(err);
-    });
-  });
-
-  beforeEach(function(done) {
-    async.parallel([
-      function(cb) {
-        opts.connection.collection("subscriptions").drop(cb);
-      },
-      function(cb) {
-        opts.connection.collection("packets").drop(cb);
-      },
-      function(cb) {
-        opts.connection.collection("retained").drop(cb);
-      }
-    ], done);
-  });
-
-  afterEach(function() {
-    this.secondInstance = null;
-  });
-
   abstract(function(cb) {
-    new Mongo(opts, function(err, mongo) {
-      cb(err, mongo, opts);
-    });
+    cb(null, new Redis(opts), opts);
+  });
+
+  afterEach(function(cb) {
+    if (this.secondInstance) {
+      this.secondInstance.close();
+      this.secondInstance = null;
+    }
+
+    var client = redis.createClient();
+    client.flushdb(cb);
+    client.quit();
   });
 
   describe("two clients", function() {
@@ -74,7 +53,7 @@ describe("mosca.persistance.Mongo", function() {
 
       this.instance.storeSubscriptions(client, function() {
         that.instance.close(function() {
-          that.instance = new Mongo(opts);
+          that.instance = new Redis(opts);
           setTimeout(function() {
             that.instance.storeOfflinePacket(packet, function() {
               that.instance.streamOfflinePackets(client, function(err, p) {
@@ -106,7 +85,7 @@ describe("mosca.persistance.Mongo", function() {
       };
 
       var that = this;
-      that.secondInstance = new Mongo(opts);
+      that.secondInstance = new Redis(opts);
 
       setTimeout(function() {
         that.instance.storeSubscriptions(client, function() {

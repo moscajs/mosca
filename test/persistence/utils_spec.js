@@ -1,11 +1,11 @@
 "use strict";
 
 var abstract = require("./abstract");
-var utilities = require("../../lib/persistance/utils");
+var utilities = require("../../lib/persistence/utils");
 var topicPatterns = utilities.topicPatterns;
 var async = require("async");
 
-describe("persistance utilities", function() {
+describe("persistence utilities", function() {
 
   describe("topicPatterns", function() {
 

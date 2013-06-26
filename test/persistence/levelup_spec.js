@@ -1,11 +1,11 @@
 "use strict";
 
 var abstract = require("./abstract");
-var LevelUp = require("../../").persistance.LevelUp;
+var LevelUp = require("../../").persistence.LevelUp;
 var tmp = require("tmp");
 var async = require("async");
 
-describe("mosca.persistance.LevelUp", function() {
+describe("mosca.persistence.LevelUp", function() {
 
   var opts = { 
     ttl: {

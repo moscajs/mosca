@@ -390,9 +390,9 @@ describe("mosca.cli", function() {
     });
   });
 
-  it("should create a memory persistance object", function(done) {
+  it("should create a memory persistence object", function(done) {
     var s = startServer(done, function(server) {
-      expect(server.persistance).to.be.instanceOf(mosca.persistance.Memory);
+      expect(server.persistence).to.be.instanceOf(mosca.persistence.Memory);
     });
   });
 
@@ -408,8 +408,8 @@ describe("mosca.cli", function() {
       args.push(path);
 
       startServer(done, function(server) {
-        expect(server.persistance).to.be.instanceOf(mosca.persistance.LevelUp);
-        expect(server.persistance.options.path).to.eql(path);
+        expect(server.persistence).to.be.instanceOf(mosca.persistence.LevelUp);
+        expect(server.persistence.options.path).to.eql(path);
       });
     });
   });
