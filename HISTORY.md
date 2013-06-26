@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.7.0
+
+* Added persistance support
+  [#36](https://github.com/mcollina/mosca/pull/36).
+* Updated Ascoltatori to 0.7.0.
+
 ## 0.6.0
 
 * Extracted a MoscaClient.
