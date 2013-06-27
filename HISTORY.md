@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.7.3
+
+* Fixed MongoDB persistance tests on Travis.
+* Fixed spurious errors in Redis persistance.
+
 ## 0.7.2
 
 * More README fixes.
