@@ -334,7 +334,7 @@ describe("mosca.Server", function() {
   it("should emit an event when a client is disconnected", function(done) {
     var client = mqtt.createConnection(settings.port, settings.host);
 
-    instance.on('clientDisconnected', function(serverClient) {
+    instance.once('clientDisconnected', function(serverClient) {
       expect(serverClient).not.to.be.equal(undefined);
       done();
     });
