@@ -125,7 +125,7 @@ module.exports = function(create) {
           expect(results).to.eql([packet1]);
           done();
         });
-      }, 20); // 20ms will suffice 
+      }, 100); // 100ms will suffice 
     });
 
     it("should wire itself up to the 'subscribed' event of a Server", function(done) {
@@ -156,7 +156,7 @@ module.exports = function(create) {
         instance.storeRetained(packet1, function() {
           em.emit("subscribed", "hello/#", client);
         });
-      }, 20); // 20ms will suffice 
+      }, 100); // 100ms will suffice 
     });
 
   });
@@ -311,7 +311,7 @@ module.exports = function(create) {
         instance.storeSubscriptions(client, function() {
           em.emit("clientConnected", client);
         });
-      }, 20); // 20ms will suffice 
+      }, 100); // 100ms will suffice 
     });
 
     it("should wire itself up to the 'clientDisconnecting' event of a Server", function(done) {
@@ -337,7 +337,7 @@ module.exports = function(create) {
           expect(results).to.eql(client.subscriptions);
           done();
         });
-      }, 20); // 20ms will suffice 
+      }, 100); // 100ms will suffice 
     });
 
     it("should clean up the subscription store after a TTL", function(done) {
@@ -524,7 +524,7 @@ module.exports = function(create) {
           expect(p1).to.eql(packet);
           done();
         });
-      }, 20); // 20ms will suffice 
+      }, 100); // 100ms will suffice 
     });
 
     it("should wire itself up to the 'clientConnected' event of a Server", function(done) {
@@ -641,7 +641,7 @@ module.exports = function(create) {
         instance.streamOfflinePackets(client, function(err, packet) {
           done();
         });
-      }, 20); // 20ms will suffice 
+      }, 100); // 100ms will suffice 
     });
   });
 };
