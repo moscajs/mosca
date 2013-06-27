@@ -27,17 +27,13 @@ describe("mosca.persistence.Mongo", function() {
   });
 
   beforeEach(function(done) {
-    async.parallel([
-      function(cb) {
-        opts.connection.collection("subscriptions").drop(cb);
-      },
-      function(cb) {
-        opts.connection.collection("packets").drop(cb);
-      },
-      function(cb) {
-        opts.connection.collection("retained").drop(cb);
-      }
-    ], done);
+    opts.connection.collections(function(err, collections) {
+      async.each(collections, function(coll, cb) {
+        coll.drop(function() {
+          cb();
+        });
+      }, done);
+    });
   });
 
   afterEach(function() {
