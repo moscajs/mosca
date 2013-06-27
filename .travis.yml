@@ -1,15 +1,3 @@
-env:
- - ZMQ="git://github.com/zeromq/zeromq3-x.git"
-before_install:
- - sudo apt-get install uuid-dev
- - git clone --depth 1 $ZMQ zmqlib
- - cd zmqlib
- - ./autogen.sh
- - ./configure
- - make
- - sudo make install
- - sudo /sbin/ldconfig
- - cd ..
 language: node_js
 node_js:
   - 0.8
