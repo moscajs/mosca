@@ -35,7 +35,7 @@
     "chai": "~1.7.1",
     "sinon": "~1.4.2",
     "sinon-chai": "~2.1.2",
-    "async_bench": "0.0.1",
+    "async_bench": "0.2.1",
     "underscore": "~1.4.4",
     "microtime": "~0.3.3",
     "dox-foundation": "~0.4.4",

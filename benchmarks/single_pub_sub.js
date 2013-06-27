@@ -45,6 +45,7 @@ program
   .option("--header", "add header")
   .option("-r, --runs <n>", "the number of runs to execute", parseInt, 10)
   .option("-q, --qos <n>", "the QoS level (0, 1, 2)", parseInt, 0)
+  .option("-n, --no-stat", "print only the samples, no stats")
   .parse(process.argv);
 
 function toCSV() {
@@ -60,15 +61,20 @@ runner({
   setup: setup,
   bench: bench,
   teardown: teardown,
-  complete: function (err, results) {
+  complete: function (err, results, samples) {
     if (err) {
       console.log(err);
       return;
-    } else {
+    } else if(program.stat) {
       if(program.header) {
         console.log(toCSV("mean", "standard deviation", "median", "mode", "runs"));
       }
       console.log(toCSV(results.mean, results.stdDev, results.median, results.mode, program.runs));
+    } else {
+      console.log("sample");
+      samples.forEach(function(e) {
+        console.log(e);
+      });
     }
     setTimeout(function() {
       process.exit(0);
