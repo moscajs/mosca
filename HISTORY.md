@@ -1,6 +1,10 @@
 History
 =======
 
+## 0.8.0
+
+* Updated Ascoltatori to 0.8.0.
+
 ## 0.7.3
 
 * Fixed MongoDB persistance tests on Travis.
