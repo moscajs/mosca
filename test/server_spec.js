@@ -275,11 +275,11 @@ describe("mosca.Server", function() {
       });
 
       client.on("unsuback", function(packet) {
-        client.disconnect();
         client.publish({
           topic: "hello",
           payload: "data" 
         });
+        client.disconnect();
       });
 
       client.on("suback", function(packet) {
@@ -301,6 +301,43 @@ describe("mosca.Server", function() {
       });
     });
   });
+
+  it("should unsubscribe from topics with multiple wildcards", function(done) {
+    buildAndConnect(done, function(client) {
+
+      client.on("publish", function(packet) {
+        client.disconnect();
+        throw new Error("a message could not have been published");
+      });
+
+      client.on("unsuback", function(packet) {
+        client.publish({
+          topic: "hello/foo/there/bar",
+          payload: "data" 
+        });
+        client.disconnect();
+      });
+
+      client.on("suback", function(packet) {
+        client.unsubscribe({
+          unsubscriptions: ["hello/#/there/#"],
+          messageId: messageId
+        });
+      });
+
+      var messageId = Math.floor(65535 * Math.random());
+      var subscriptions = [{
+          topic: "hello/#/there/#",
+          qos: 1
+        }
+      ];
+      client.subscribe({
+        subscriptions: subscriptions,
+        messageId: messageId
+      });
+    });
+  });
+
 
   it("should emit an event on every newly published packet", function(done) {
     buildAndConnect(done, function(client) {
@@ -419,6 +456,38 @@ describe("mosca.Server", function() {
 
       var subscriptions = [{
           topic: "hello/#",
+          qos: 0
+        }
+      ];
+      client1.subscribe({
+        subscriptions: subscriptions,
+        messageId: 42
+      });
+    });
+  });
+
+  it("should support subscribing to topics with multiple wildcards", function(done) {
+    var d = donner(2, done);
+    buildAndConnect(d, function(client1) {
+
+      client1.on("publish", function(packet) {
+        expect(packet.topic).to.be.equal("hello/foo/world/bar");
+        expect(packet.payload).to.be.equal("some data");
+        client1.disconnect();
+      });
+
+      client1.on("suback", function() {
+        buildAndConnect(d, function(client2) {
+          client2.publish({
+            topic: "hello/foo/world/bar",
+            payload: "some data"
+          });
+          client2.disconnect();
+        });
+      });
+
+      var subscriptions = [{
+          topic: "hello/#/world/#",
           qos: 0
         }
       ];
