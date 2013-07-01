@@ -106,7 +106,7 @@ module.exports = function(create) {
     });
 
     it("should wire itself up to the 'published' event of a Server", function(done) {
-      var em = new EventEmitter();
+      var server = new EventEmitter();
       var instance = this.instance;
       var packet1 = {
         topic: "hello/1",
@@ -116,20 +116,17 @@ module.exports = function(create) {
         retain: true
       };
 
-      instance.wire(em);
-
-      em.emit("published", packet1);
-
-      setTimeout(function() {
+      instance.wire(server);
+      server.storePacket(packet1, function() {
         instance.lookupRetained(packet1.topic, function(err, results) {
           expect(results).to.eql([packet1]);
           done();
         });
-      }, 100); // 100ms will suffice 
+      });
     });
 
     it("should wire itself up to the 'subscribed' event of a Server", function(done) {
-      var em = new EventEmitter();
+      var server = new EventEmitter();
       var instance = this.instance;
       var packet1 = {
         topic: "hello/1",
@@ -150,15 +147,12 @@ module.exports = function(create) {
         }
       };
 
-      instance.wire(em);
+      instance.wire(server);
 
-      setTimeout(function() {
-        instance.storeRetained(packet1, function() {
-          em.emit("subscribed", "hello/#", client);
-        });
-      }, 100); // 100ms will suffice 
+      instance.storeRetained(packet1, function() {
+        server.forwardRetained("hello/#", client);
+      });
     });
-
   });
 
   describe("subscriptions", function() {
@@ -285,7 +279,7 @@ module.exports = function(create) {
     });
 
     it("should wire itself up to the 'clientConnected' event of a Server", function(done) {
-      var em = new EventEmitter();
+      var server = new EventEmitter();
       var instance = this.instance;
 
       var client = { 
@@ -305,17 +299,15 @@ module.exports = function(create) {
         }
       };
 
-      instance.wire(em);
+      instance.wire(server);
 
-      setTimeout(function() {
-        instance.storeSubscriptions(client, function() {
-          em.emit("clientConnected", client);
-        });
-      }, 100); // 100ms will suffice 
+      instance.storeSubscriptions(client, function() {
+        server.restoreClient(client);
+      });
     });
 
     it("should wire itself up to the 'clientDisconnecting' event of a Server", function(done) {
-      var em = new EventEmitter();
+      var server = new EventEmitter();
       var instance = this.instance;
 
       var client = { 
@@ -329,15 +321,13 @@ module.exports = function(create) {
         }
       };
 
-      instance.wire(em);
-      em.emit("clientDisconnecting", client);
-
-      setTimeout(function() {
+      instance.wire(server);
+      server.persistClient(client, function() {
         instance.lookupSubscriptions(client, function(err, results) {
           expect(results).to.eql(client.subscriptions);
           done();
         });
-      }, 100); // 100ms will suffice 
+      });
     });
 
     it("should clean up the subscription store after a TTL", function(done) {
@@ -513,25 +503,23 @@ module.exports = function(create) {
     });
 
     it("should wire itself up to the 'published' event of a Server", function(done) {
-      var em = new EventEmitter();
+      var server = new EventEmitter();
       var instance = this.instance;
 
-      instance.wire(em);
-      em.emit("published", packet);
-
-      setTimeout(function() {
+      instance.wire(server);
+      server.storePacket(packet, function() {
         instance.streamOfflinePackets(client, function(err, p1) {
           expect(p1).to.eql(packet);
           done();
         });
-      }, 100); // 100ms will suffice 
+      });
     });
 
     it("should wire itself up to the 'clientConnected' event of a Server", function(done) {
-      var em = new EventEmitter();
+      var server = new EventEmitter();
       var instance = this.instance;
 
-      instance.wire(em);
+      instance.wire(server);
 
       client.forward = function(topic, payload, options, pattern) {
         expect(topic).to.eql(packet.topic);
@@ -544,7 +532,7 @@ module.exports = function(create) {
       client.handleAuthorizeSubscribe = function() {};
 
       instance.storeOfflinePacket(packet, function() {
-        em.emit("clientConnected", client);
+        server.restoreClient(client);
       });
     });
   });
@@ -631,17 +619,15 @@ module.exports = function(create) {
     });
 
     it("should wire itself up to the 'clientDisconnecting' event of a Server", function(done) {
-      var em = new EventEmitter();
+      var server = new EventEmitter();
       var instance = this.instance;
-      instance.wire(em);
+      instance.wire(server);
 
-      em.emit("clientDisconnecting", client);
-
-      setTimeout(function() {
+      server.persistClient(client, function() {
         instance.streamOfflinePackets(client, function(err, packet) {
           done();
         });
-      }, 100); // 100ms will suffice 
+      });
     });
   });
 };
