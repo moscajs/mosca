@@ -59,7 +59,8 @@
     "level-range": "0.0.0",
     "level-ttl": "~0.2.0",
     "qlobber": "~0.3.0",
-    "lru-cache": "~2.3.0"
+    "lru-cache": "~2.3.0",
+    "node-uuid": "~1.4.0"
   },
   "optionalDependencies": {
     "leveldown": "~0.6.1",
