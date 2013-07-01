@@ -105,7 +105,7 @@ module.exports = function(create) {
       ], done);
     });
 
-    it("should wire itself up to the 'published' event of a Server", function(done) {
+    it("should wire itself up to storePacket method of a Server", function(done) {
       var server = new EventEmitter();
       var instance = this.instance;
       var packet1 = {
@@ -125,7 +125,7 @@ module.exports = function(create) {
       });
     });
 
-    it("should wire itself up to the 'subscribed' event of a Server", function(done) {
+    it("should wire itself up to the forwardRetained method of a Server", function(done) {
       var server = new EventEmitter();
       var instance = this.instance;
       var packet1 = {
@@ -278,7 +278,7 @@ module.exports = function(create) {
       });
     });
 
-    it("should wire itself up to the 'clientConnected' event of a Server", function(done) {
+    it("should wire itself up to the restoreClient method of a Server", function(done) {
       var server = new EventEmitter();
       var instance = this.instance;
 
@@ -306,7 +306,7 @@ module.exports = function(create) {
       });
     });
 
-    it("should wire itself up to the 'clientDisconnecting' event of a Server", function(done) {
+    it("should wire itself up to the persistClient method of a Server", function(done) {
       var server = new EventEmitter();
       var instance = this.instance;
 
@@ -502,7 +502,7 @@ module.exports = function(create) {
       });
     });
 
-    it("should wire itself up to the 'published' event of a Server", function(done) {
+    it("should wire itself up to the storePacket method of a Server", function(done) {
       var server = new EventEmitter();
       var instance = this.instance;
 
@@ -618,7 +618,7 @@ module.exports = function(create) {
       });
     });
 
-    it("should wire itself up to the 'clientDisconnecting' event of a Server", function(done) {
+    it("should wire itself up to the persistClient method of a Server", function(done) {
       var server = new EventEmitter();
       var instance = this.instance;
       instance.wire(server);
