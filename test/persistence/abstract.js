@@ -515,7 +515,7 @@ module.exports = function(create) {
       });
     });
 
-    it("should wire itself up to the 'clientConnected' event of a Server", function(done) {
+    it("should wire itself up to the restoreClient method of a Server", function(done) {
       var server = new EventEmitter();
       var instance = this.instance;
 
@@ -529,7 +529,7 @@ module.exports = function(create) {
         done();
       };
 
-      client.handleAuthorizeSubscribe = function() {};
+      client.handleAuthorizeSubscribe = function(a, b, c, cb) { cb(); };
 
       instance.storeOfflinePacket(packet, function() {
         server.restoreClient(client);
