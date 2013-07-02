@@ -52,15 +52,14 @@ describe("mosca.persistence.LevelUp", function() {
 
       this.instance.storeSubscriptions(client, function() {
         that.instance.close(function() {
-          that.instance = new LevelUp(opts);
-          setTimeout(function() {
-            that.instance.storeOfflinePacket(packet, function() {
-              that.instance.streamOfflinePackets(client, function(err, p) {
+          new LevelUp(opts, function(err, newdb) {
+            newdb.storeOfflinePacket(packet, function() {
+              newdb.streamOfflinePackets(client, function(err, p) {
                 expect(p).to.eql(packet);
                 done();
               });
             });
-          }, 10);
+          });
         });
       });
     });

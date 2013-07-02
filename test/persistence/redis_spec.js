@@ -15,18 +15,27 @@ describe("mosca.persistence.Redis", function() {
   };
 
   abstract(function(cb) {
-    cb(null, new Redis(opts), opts);
+    new Redis(opts, function(err, instance) {
+      cb(null, instance, opts);
+    });
   });
 
   afterEach(function(cb) {
-    if (this.secondInstance) {
-      this.secondInstance.close();
-      this.secondInstance = null;
-    }
+    var flush = function() {
+      var client = redis.createClient();
+      client.on("ready", function() {
+        client.flushdb(function() {
+          client.quit(cb);
+        });
+      });
+    };
 
-    var client = redis.createClient();
-    client.flushdb(cb);
-    client.quit();
+    if (this.secondInstance) {
+      this.secondInstance.close(flush);
+      this.secondInstance = null;
+    } else {
+      flush();
+    }
   });
 
   describe("two clients", function() {
@@ -53,15 +62,14 @@ describe("mosca.persistence.Redis", function() {
 
       this.instance.storeSubscriptions(client, function() {
         that.instance.close(function() {
-          that.instance = new Redis(opts);
-          setTimeout(function() {
-            that.instance.storeOfflinePacket(packet, function() {
-              that.instance.streamOfflinePackets(client, function(err, p) {
+          that.instance = new Redis(opts, function(err, second) {
+            second.storeOfflinePacket(packet, function() {
+              second.streamOfflinePackets(client, function(err, p) {
                 expect(p).to.eql(packet);
                 done();
               });
             });
-          }, 10);
+          });
         });
       });
     });
@@ -85,9 +93,7 @@ describe("mosca.persistence.Redis", function() {
       };
 
       var that = this;
-      that.secondInstance = new Redis(opts);
-
-      setTimeout(function() {
+      that.secondInstance = new Redis(opts, function() {
         that.instance.storeSubscriptions(client, function() {
           setTimeout(function() {
             that.secondInstance.storeOfflinePacket(packet, function() {
@@ -96,9 +102,9 @@ describe("mosca.persistence.Redis", function() {
                 done();
               });
             });
-          }, 10);
+          }, 20);
         });
-      }, 10);
+      });
     });
   });
 });
