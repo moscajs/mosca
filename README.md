@@ -146,7 +146,7 @@ __Mosca__ offers several persitance options:
 * [Memory](http://mcollina.github.com/mosca/docs/lib/persistence/memory.js.html),
 * [LevelUp](http://mcollina.github.com/mosca/docs/lib/persistence/levelup.js.html),
 * [Redis](http://mcollina.github.com/mosca/docs/lib/persistence/redis.js.html),
-* [MongoDB](http://mcollina.github.com/mosca/docs/lib/persistence/mongo.js.html),
+* [MongoDB](http://mcollina.github.com/mosca/docs/lib/persistence/mongo.js.html)
 
 All of them can be configured from the configuration file, under the
 `persistence` key. The only exception is LevelUp, which can be specified

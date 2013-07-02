@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.8.1
+
+* Refactored the Server-Persistence wiring interface
+  to solve some spurious test failures.
+
 ## 0.8.0
 
 * Updated Ascoltatori to 0.8.0.
