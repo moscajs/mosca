@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.8.2
+
+* Passing the correct Client object to `authorizePublish`,
+  [#43](https://github.com/mcollina/mosca/pull/43).
+
 ## 0.8.1
 
 * Refactored the Server-Persistence wiring interface
