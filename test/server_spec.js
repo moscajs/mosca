@@ -1062,7 +1062,35 @@ describe("mosca.Server", function() {
     });
   });
 
-  it("should support publish authorization (success)", function(done) {
+  it("should share the authenticated client during the publish authorization", function(done) {
+    instance.authenticate = function(client, username, password, callback) {
+      client.shared = 'message';
+      callback(null, true);
+    };
+
+    instance.authorizePublish = function(client, topic, payload, callback) {
+      expect(client).to.have.property("shared", "message");
+      callback(null, true);
+    };
+
+    buildAndConnect(done, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+
+      client.on("puback", function(packet) {
+        client.disconnect();
+      });
+
+      client.publish({
+        topic: "hello",
+        qos: 1,
+        payload: "world",
+        messageId: messageId
+      });
+    });
+  });
+
+  it("should support subscribe authorization (success)", function(done) {
     instance.authorizeSubscribe = function(client, topic, callback) {
       expect(topic).to.be.eql("hello");
       callback(null, true);
@@ -1087,7 +1115,7 @@ describe("mosca.Server", function() {
     });
   });
 
-  it("should support publish authorization (failure)", function(done) {
+  it("should support subscribe authorization (failure)", function(done) {
     instance.authorizeSubscribe = function(client, topic, callback) {
       expect(topic).to.be.eql("hello");
       callback(null, false);
@@ -1102,6 +1130,36 @@ describe("mosca.Server", function() {
       ];
 
       // it exists no negation of auth, it just disconnect the client
+      client.subscribe({
+        subscriptions: subscriptions,
+        messageId: 42
+      });
+    });
+  });
+
+  it("should share the authenticated client during the subscribe authorization", function(done) {
+    instance.authenticate = function(client, username, password, callback) {
+      client.shared = "message";
+      callback(null, true);
+    };
+
+    instance.authorizeSubscribe = function(client, topic, callback) {
+      expect(client).to.have.property("shared", "message");
+      callback(null, true);
+    };
+
+    buildAndConnect(done, function(client) {
+
+      client.on("suback", function(packet) {
+        client.disconnect();
+      });
+
+      var subscriptions = [{
+          topic: "hello",
+          qos: 0
+        }
+      ];
+
       client.subscribe({
         subscriptions: subscriptions,
         messageId: 42
