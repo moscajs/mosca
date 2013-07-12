@@ -62,7 +62,6 @@ describe("mosca.Server", function() {
     });
   }
 
-
   function buildAndConnect(done, opts, callback) {
 
     if (typeof opts === "function") {
@@ -1337,5 +1336,54 @@ describe("mosca.Server", function() {
         });
       }
     ], done);
+  });
+
+  describe.only("pattern matching", function() {
+
+    var buildTest = function(subscribed, published) {
+      it("should support forwarding to " + subscribed + " when publishing " + published, function(done) {
+        var d = donner(2, done);
+        buildAndConnect(d, function(client1) {
+
+          var messageId = Math.floor(65535 * Math.random());
+          var subscriptions = [{
+              topic: subscribed,
+              qos: 0
+            }
+          ];
+
+          client1.on("publish", function(packet) {
+            expect(packet.topic).to.be.equal(published);
+            expect(packet.payload).to.be.equal("some data");
+            client1.disconnect();
+          });
+
+          client1.on("suback", function() {
+            buildAndConnect(d, function(client2) {
+              client2.publish({
+                topic: published,
+                payload: "some data",
+                messageId: messageId
+              });
+              client2.disconnect();
+            });
+          });
+
+          client1.subscribe({
+            subscriptions: subscriptions,
+            messageId: messageId
+          });
+        });
+      });
+    };
+
+    buildTest("#", "test/topic");
+    buildTest("#", "/test/topic");
+    buildTest("foo/#", "foo/bar/baz");
+    buildTest("foo/+/baz", "foo/bar/baz");
+    buildTest("foo/#", "foo");
+    buildTest("/#", "/foo");
+    buildTest("test/topic/", "test/topic");
+    buildTest("+/+/+/+/+/+/+/+/+/+/test", "one/two/three/four/five/six/seven/eight/nine/ten/test");
   });
 });
