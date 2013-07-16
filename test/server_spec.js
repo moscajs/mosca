@@ -12,7 +12,7 @@ describe("mosca.Server", function() {
   function buildOpts() {
     return {
       keepalive: 1000,
-      clientId: 'mosca_' + require("crypto").randomBytes(16).toString('hex'),
+      clientId: 'mosca_' + require("crypto").randomBytes(8).toString('hex'),
       protocolId: 'MQIsdp',
       protocolVersion: 3
     };
@@ -98,6 +98,24 @@ describe("mosca.Server", function() {
       client.on('connack', function(packet) {
         client.disconnect();
         expect(packet.returnCode).to.eql(0);
+      });
+    });
+  });
+
+  it("should send a connack packet with returnCode 2 if the clientId is longer than 23 chars", function(done) {
+    buildClient(done, function(client) {
+
+      var opts = buildOpts(), clientId = [];
+
+      for(var i=0; i < 25; i++) {
+        clientId.push("i");
+      }
+      opts.clientId = clientId.join("");
+
+      client.connect(opts);
+
+      client.on('connack', function(packet) {
+        expect(packet.returnCode).to.eql(2);
       });
     });
   });
