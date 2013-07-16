@@ -427,7 +427,9 @@ describe("mosca.Server", function() {
 
     newSettings.backend = {
       type: "mqtt",
+      json: false,
       port: settings.port,
+      keepalive: 3000,
       host: "127.0.0.1",
       mqtt: require("mqtt")
     };

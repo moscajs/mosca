@@ -28,16 +28,19 @@ global.rabbitSettings = function() {
 };
 
 var bunyan = require("bunyan");
+
+global.globalLogger = bunyan.createLogger({
+  name: "moscaTests",
+  level: 60
+});
+
 global.moscaSettings = function() {
-  var logger = bunyan.createLogger({
-    name: "moscaTests"
-  });
-
-  logger.level(60);
-
   return {
     port: nextPort(),
-    logger: logger
+    logger: {
+      name: "moscaTests",
+      level: 60
+    }
   };
 };
 

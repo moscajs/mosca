@@ -135,7 +135,8 @@ describe("mosca.cli", function() {
     args.push("--config");
     args.push("test/sample_config.js");
     startServer(done, function(server) {
-      expect(server.opts).to.eql(require("./sample_config"));
+      expect(server.opts).to.have.property("port", 2883);
+      expect(server.opts).to.have.deep.property("backend.port", 3833);
     });
   });
 

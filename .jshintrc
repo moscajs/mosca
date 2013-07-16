@@ -11,6 +11,7 @@
     "mosca": false,
     "expect": false,
     "before": false,
-    "moscaSettings": false
+    "moscaSettings": false,
+    "globalLogger": false
   }
 }
