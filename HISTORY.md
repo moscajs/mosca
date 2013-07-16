@@ -1,6 +1,18 @@
 History
 =======
 
+## 0.9.0
+
+* Bumped Ascoltatori to 0.11.0.
+* Improved logging for each client.
+* Fixed multiple topic naming, mainly 'test/topic' and 'test/topic/'
+  should be the same
+  [#46](https://github.com/mcollina/mosca/pull/46).
+* Better handling of defaults 
+  [#39](https://github.com/mcollina/mosca/pull/39).
+* Enforcing client identifier length
+  [#33](https://github.com/mcollina/mosca/pull/33).
+
 ## 0.8.2
 
 * Passing the correct Client object to `authorizePublish`,
