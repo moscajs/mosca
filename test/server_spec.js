@@ -12,7 +12,7 @@ describe("mosca.Server", function() {
   function buildOpts() {
     return {
       keepalive: 1000,
-      clientId: 'mosca_' + require("crypto").randomBytes(16).toString('hex'),
+      clientId: 'mosca_' + require("crypto").randomBytes(8).toString('hex'),
       protocolId: 'MQIsdp',
       protocolVersion: 3
     };
@@ -62,7 +62,6 @@ describe("mosca.Server", function() {
     });
   }
 
-
   function buildAndConnect(done, opts, callback) {
 
     if (typeof opts === "function") {
@@ -99,6 +98,24 @@ describe("mosca.Server", function() {
       client.on('connack', function(packet) {
         client.disconnect();
         expect(packet.returnCode).to.eql(0);
+      });
+    });
+  });
+
+  it("should send a connack packet with returnCode 2 if the clientId is longer than 23 chars", function(done) {
+    buildClient(done, function(client) {
+
+      var opts = buildOpts(), clientId = [];
+
+      for(var i=0; i < 25; i++) {
+        clientId.push("i");
+      }
+      opts.clientId = clientId.join("");
+
+      client.connect(opts);
+
+      client.on('connack', function(packet) {
+        expect(packet.returnCode).to.eql(2);
       });
     });
   });
@@ -508,7 +525,9 @@ describe("mosca.Server", function() {
 
     newSettings.backend = {
       type: "mqtt",
+      json: false,
       port: settings.port,
+      keepalive: 3000,
       host: "127.0.0.1",
       mqtt: require("mqtt")
     };
@@ -1027,7 +1046,7 @@ describe("mosca.Server", function() {
           cb(null);
         });
         client3.on("publish", function(packet) {
-          expect(packet.topic).to.be.eql("/hello/died");
+          expect(packet.topic).to.be.eql("hello/died");
           expect(packet.payload).to.be.eql("client1 died");
           client3.disconnect();
         });
@@ -1160,7 +1179,35 @@ describe("mosca.Server", function() {
     });
   });
 
-  it("should support publish authorization (success)", function(done) {
+  it("should share the authenticated client during the publish authorization", function(done) {
+    instance.authenticate = function(client, username, password, callback) {
+      client.shared = 'message';
+      callback(null, true);
+    };
+
+    instance.authorizePublish = function(client, topic, payload, callback) {
+      expect(client).to.have.property("shared", "message");
+      callback(null, true);
+    };
+
+    buildAndConnect(done, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+
+      client.on("puback", function(packet) {
+        client.disconnect();
+      });
+
+      client.publish({
+        topic: "hello",
+        qos: 1,
+        payload: "world",
+        messageId: messageId
+      });
+    });
+  });
+
+  it("should support subscribe authorization (success)", function(done) {
     instance.authorizeSubscribe = function(client, topic, callback) {
       expect(topic).to.be.eql("hello");
       callback(null, true);
@@ -1185,7 +1232,7 @@ describe("mosca.Server", function() {
     });
   });
 
-  it("should support publish authorization (failure)", function(done) {
+  it("should support subscribe authorization (failure)", function(done) {
     instance.authorizeSubscribe = function(client, topic, callback) {
       expect(topic).to.be.eql("hello");
       callback(null, false);
@@ -1200,6 +1247,36 @@ describe("mosca.Server", function() {
       ];
 
       // it exists no negation of auth, it just disconnect the client
+      client.subscribe({
+        subscriptions: subscriptions,
+        messageId: 42
+      });
+    });
+  });
+
+  it("should share the authenticated client during the subscribe authorization", function(done) {
+    instance.authenticate = function(client, username, password, callback) {
+      client.shared = "message";
+      callback(null, true);
+    };
+
+    instance.authorizeSubscribe = function(client, topic, callback) {
+      expect(client).to.have.property("shared", "message");
+      callback(null, true);
+    };
+
+    buildAndConnect(done, function(client) {
+
+      client.on("suback", function(packet) {
+        client.disconnect();
+      });
+
+      var subscriptions = [{
+          topic: "hello",
+          qos: 0
+        }
+      ];
+
       client.subscribe({
         subscriptions: subscriptions,
         messageId: 42
@@ -1377,5 +1454,52 @@ describe("mosca.Server", function() {
         });
       }
     ], done);
+  });
+
+  describe("pattern matching", function() {
+
+    var buildTest = function(subscribed, published) {
+      it("should support forwarding to " + subscribed + " when publishing " + published, function(done) {
+        var d = donner(2, done);
+        buildAndConnect(d, function(client1) {
+
+          var messageId = Math.floor(65535 * Math.random());
+          var subscriptions = [{
+              topic: subscribed,
+              qos: 0
+            }
+          ];
+
+          client1.on("publish", function(packet) {
+            client1.disconnect();
+          });
+
+          client1.on("suback", function() {
+            buildAndConnect(d, function(client2) {
+              client2.publish({
+                topic: published,
+                payload: "some data",
+                messageId: messageId
+              });
+              client2.disconnect();
+            });
+          });
+
+          client1.subscribe({
+            subscriptions: subscriptions,
+            messageId: messageId
+          });
+        });
+      });
+    };
+
+    buildTest("#", "test/topic");
+    buildTest("#", "/test/topic");
+    buildTest("foo/#", "foo/bar/baz");
+    buildTest("foo/+/baz", "foo/bar/baz");
+    buildTest("foo/#", "foo");
+    buildTest("/#", "/foo");
+    buildTest("test/topic/", "test/topic");
+    buildTest("+/+/+/+/+/+/+/+/+/+/test", "one/two/three/four/five/six/seven/eight/nine/ten/test");
   });
 });
