@@ -47,7 +47,7 @@
   "dependencies": {
     "mqtt": "~0.2.10",
     "async": "~0.2.4",
-    "ascoltatori": "~0.8.0",
+    "ascoltatori": "~0.11.0",
     "debug": "~0.7.2",
     "commander": "~1.1.1",
     "minimatch": "~0.2.11",
