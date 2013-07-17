@@ -160,12 +160,110 @@ describe("mosca.Server", function() {
 
       client.stream.on("close", function() {
         var interval = (microtime.now() - timer) / 1000000;
-        expect(interval).to.be.least(keepalive + keepalive / 4);
+        expect(interval).to.be.least(keepalive + keepalive / 2);
       });
 
       setTimeout(function() {
         client.pingreq();
-      }, keepalive * 1000 / 4);
+      }, keepalive * 1000 / 2);
+    });
+  });
+
+  it("should correctly renew the keepalive window after a subscribe", function(done) {
+    buildClient(done, function(client) {
+      var keepalive = 1;
+      var timer = microtime.now();
+
+      var opts = buildOpts();
+      opts.keepalive = keepalive;
+      
+      var messageId = Math.floor(65535 * Math.random());
+      var subscriptions = [{
+          topic: "hello",
+          qos: 0
+        }
+      ];
+      
+      client.connect(opts);
+
+      client.stream.on("close", function() {
+        var interval = (microtime.now() - timer) / 1000000;
+        expect(interval).to.be.least(keepalive + keepalive / 2);
+      });
+
+      setTimeout(function() {
+        client.subscribe({
+          subscriptions: subscriptions,
+          messageId: messageId
+        });
+      }, keepalive * 1000 / 2);
+    });
+  });
+
+  it("should correctly renew the keepalive window after a publish", function(done) {
+    buildClient(done, function(client) {
+      var keepalive = 1;
+      var timer = microtime.now();
+
+      var opts = buildOpts();
+      opts.keepalive = keepalive;
+      
+      var messageId = Math.floor(65535 * Math.random());
+      var subscriptions = [{
+          topic: "hello",
+          qos: 0
+        }
+      ];
+
+      client.connect(opts);
+
+      client.stream.on("close", function() {
+        var interval = (microtime.now() - timer) / 1000000;
+        expect(interval).to.be.least(keepalive + keepalive / 2);
+      });
+
+      setTimeout(function() {
+        client.publish({
+          topic: "hello",
+          payload: "some data",
+          messageId: messageId
+        });
+      }, keepalive * 1000 / 2);
+    });
+  });
+
+  it("should correctly renew the keepalive window after an unsubscribe", function(done) {
+    buildClient(done, function(client) {
+      var keepalive = 1;
+      var timer = microtime.now();
+
+      var opts = buildOpts();
+      opts.keepalive = keepalive;
+      
+      var messageId = Math.floor(65535 * Math.random());
+      var subscriptions = [{
+          topic: "hello",
+          qos: 0
+        }
+      ];
+
+      client.connect(opts);
+      client.subscribe({
+        subscriptions: subscriptions,
+        messageId: messageId
+      });
+
+      client.stream.on("close", function() {
+        var interval = (microtime.now() - timer) / 1000000;
+        expect(interval).to.be.least(keepalive + keepalive / 2);
+      });
+
+      setTimeout(function() {
+        client.unsubscribe({
+          unsubscriptions: ['hello'],
+          messageId: messageId
+        });
+      }, keepalive * 1000 / 2);
     });
   });
 
