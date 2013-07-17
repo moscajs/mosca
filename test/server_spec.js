@@ -948,7 +948,7 @@ describe("mosca.Server", function() {
           cb(null);
         });
         client3.on("publish", function(packet) {
-          expect(packet.topic).to.be.eql("hello/died");
+          expect(packet.topic).to.be.eql("/hello/died");
           expect(packet.payload).to.be.eql("client1 died");
           client3.disconnect();
         });
@@ -1360,8 +1360,18 @@ describe("mosca.Server", function() {
 
   describe("pattern matching", function() {
 
-    var buildTest = function(subscribed, published) {
-      it("should support forwarding to " + subscribed + " when publishing " + published, function(done) {
+    var buildTest = function(subscribed, published, expected) {
+      var not = "";
+
+      if (expected === undefined) {
+        expected = true;
+      }
+
+      if (!expected) {
+        not = "not ";
+      }
+
+      it("should " + not + "support forwarding to " + subscribed + " when publishing " + published, function(done) {
         var d = donner(2, done);
         buildAndConnect(d, function(client1) {
 
@@ -1374,6 +1384,9 @@ describe("mosca.Server", function() {
 
           client1.on("publish", function(packet) {
             client1.disconnect();
+            if (!expected) {
+              throw new Error("the message was not expected");
+            }
           });
 
           client1.on("suback", function() {
@@ -1391,6 +1404,12 @@ describe("mosca.Server", function() {
             subscriptions: subscriptions,
             messageId: messageId
           });
+
+          if (!expected) {
+            setTimeout(function() {
+              client1.disconnect();
+            }, 50);
+          }
         });
       });
     };
@@ -1403,5 +1422,9 @@ describe("mosca.Server", function() {
     buildTest("/#", "/foo");
     buildTest("test/topic/", "test/topic");
     buildTest("+/+/+/+/+/+/+/+/+/+/test", "one/two/three/four/five/six/seven/eight/nine/ten/test");
+    buildTest("/test/topic", "test/topic", false);
+    buildTest("/test//topic", "/test/topic");
+    buildTest("/test//topic", "/test//topic");
+    buildTest("/test/+/topic", "/test//topic", false);
   });
 });
