@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.9.1
+
+* 'test/topic' is different from '/test/topic'
+* Resetting ping timer on publish, subcribe, unsubscribe:
+  [#47](https://github.com/mcollina/mosca/pull/47).
+
 ## 0.9.0
 
 * Bumped Ascoltatori to 0.11.0.
