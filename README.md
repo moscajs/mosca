@@ -89,7 +89,7 @@ and one using a
 [tree-based](https://github.com/mcollina/mosca/tree/master/examples/mosca-tree) topology of Moscas.
 
 A configuration file is structured in the following way:
-```
+```js
 module.exports = {
   port: 4883,
   backend: {
