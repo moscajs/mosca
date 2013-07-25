@@ -79,6 +79,21 @@ describe("mosca.Server", function() {
     });
   }
 
+  it("should pass itself in the callback", function(done) {
+    secondInstance = new mosca.Server(moscaSettings(), function(err, server) {
+      expect(server === secondInstance).to.be.true;
+      done();
+    });
+  });
+
+  it("should allow to be called like a function", function(done) {
+    var func = mosca.Server;
+    secondInstance = func(moscaSettings(), function(err, server) {
+      expect(server === secondInstance).to.be.true;
+      done();
+    });
+  });
+
   it("should support connecting and disconnecting", function(done) {
     buildClient(done, function(client) {
 
@@ -626,7 +641,9 @@ describe("mosca.Server", function() {
           type: "mqtt"
         };
         settings.port = nextPort();
-        secondInstance = new mosca.Server(settings, cb);
+        secondInstance = new mosca.Server(settings, function() {
+          cb();
+        });
       },
 
       function(cb) {
@@ -737,7 +754,9 @@ describe("mosca.Server", function() {
           type: "mqtt"
         };
         settings.port = settings.port + 1000;
-        secondInstance = new mosca.Server(settings, cb);
+        secondInstance = new mosca.Server(settings, function() {
+          cb();
+        });
       },
 
       function(cb) {
@@ -756,61 +775,26 @@ describe("mosca.Server", function() {
     ]);
   });
   
-  it("should support specifying an Ascoltatore instead of backend options in a tree-based topology", function(done) {
-    var d = donner(2, done);
+  it("should support specifying an Ascoltatore instead of backend options", function(done) {
 
     async.waterfall([
 
       function(cb) {
-        buildAndConnect(d, function(client1) {
-          cb(null, client1);
-        });
-      },
-
-      function(client1, cb) {
-        client1.on("publish", function(packet) {
-          expect(packet.payload).to.be.eql("some data");
-          client1.disconnect();
-        });
-
-        var subscriptions = [{
-            topic: "hello/#",
-            qos: 0
-          }
-        ];
-
-        client1.subscribe({
-          subscriptions: subscriptions,
-          messageId: 42
-        });
-        client1.on("suback", function() {
-          cb(null);
-        });
-      },
-
-      function(cb) {
         settings.ascoltatore = ascoltatori.build({
-          port: settings.port,
-          type: "mqtt",
           json: false
         });
         settings.port = settings.port + 1000;
-        secondInstance = new mosca.Server(settings, cb);
+        mosca.Server(settings, cb);
       },
 
-      function(cb) {
-        buildAndConnect(d, function(client2) {
-          cb(null, client2);
+      function(server, cb) {
+        secondInstance = server;
+        buildAndConnect(done, function(client) {
+          client.disconnect();
+          cb(null);
         });
-      },
-
-      function(client2, cb) {
-        client2.publish({
-          topic: "hello/world",
-          payload: "some data"
-        });
-        client2.disconnect();
       }
+
     ]);
   });
 
