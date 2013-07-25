@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.9.2
+
+* Added the ability to pass a custom Ascoltatore to `mosca.Server`.
+* `mosca.Server` callbacks now yields the server.
+* `mosca.Server` can now be called like a function.
+
 ## 0.9.1
 
 * 'test/topic' is different from '/test/topic'
