@@ -755,6 +755,64 @@ describe("mosca.Server", function() {
       }
     ]);
   });
+  
+  it("should support specifying an Ascoltatore instead of backend options in a tree-based topology", function(done) {
+    var d = donner(2, done);
+
+    async.waterfall([
+
+      function(cb) {
+        buildAndConnect(d, function(client1) {
+          cb(null, client1);
+        });
+      },
+
+      function(client1, cb) {
+        client1.on("publish", function(packet) {
+          expect(packet.payload).to.be.eql("some data");
+          client1.disconnect();
+        });
+
+        var subscriptions = [{
+            topic: "hello/#",
+            qos: 0
+          }
+        ];
+
+        client1.subscribe({
+          subscriptions: subscriptions,
+          messageId: 42
+        });
+        client1.on("suback", function() {
+          cb(null);
+        });
+      },
+
+      function(cb) {
+        settings.ascoltatore = ascoltatori.build({
+          port: settings.port,
+          type: "mqtt",
+          json: false
+        });
+        settings.port = settings.port + 1000;
+        secondInstance = new mosca.Server(settings, cb);
+      },
+
+      function(cb) {
+        buildAndConnect(d, function(client2) {
+          cb(null, client2);
+        });
+      },
+
+      function(client2, cb) {
+        client2.publish({
+          topic: "hello/world",
+          payload: "some data"
+        });
+        client2.disconnect();
+      }
+    ]);
+  });
 
   it("should support unsubscribing a single client", function(done) {
     var d = donner(2, done);
