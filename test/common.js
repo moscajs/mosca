@@ -38,7 +38,7 @@ global.moscaSettings = function() {
   return {
     port: nextPort(),
     logger: {
-      name: "moscaTests",
+      childOf: globalLogger,
       level: 60
     }
   };
