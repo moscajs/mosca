@@ -1,6 +1,14 @@
 History
 =======
 
+## 0.9.3
+
+* Upgraded LevelUp to 0.12.0.
+* Fixed level-fix-range dependency to avoid a bug
+  https://github.com/dominictarr/level-sublevel/issues/21.
+* Improved Logger creation in Server.
+* Improved Logger handling inside clients.
+
 ## 0.9.2
 
 * Added the ability to pass a custom Ascoltatore to `mosca.Server`.
