@@ -1,29 +1,54 @@
-Mosca
-=====
+# Mosca
 
 ![Mosca](https://raw.github.com/mcollina/mosca/master/mosca.png)
+[![Build Status](https://travis-ci.org/mcollina/mosca.png)](https://travis-ci.org/mcollina/mosca)
 
-[![Build
-Status](https://travis-ci.org/mcollina/mosca.png)](https://travis-ci.org/mcollina/mosca)
+Mosca is a multi-transport [MQTT](http://mqtt.org/) broker
+supporting the following brokers/protocols.
 
-__Mosca__ is a multi-transport [MQTT](http://mqtt.org/) broker.
-It aims to support every publish/subscribe
-broker or protocol out there.
-This list currently includes:
+* [Redis](http://redis.io/), a key/value store created by [@antirez](https://github.com/antirez).
+* [MongoDB](http://www.mongodb.org/), a scalable, high-performance, document-oriented database.
+* [Mosquitto](http://mosquitto.org/) and all implementations of the [MQTT](http://mqtt.org/) protocol.
+* [RabbitMQ](http://www.rabbitmq.com/) and all implementations of the [AMQP](http://www.amqp.org/) protocol.
+* [ZeroMQ](http://www.zeromq.org/) to use Ascoltatori in a P2P fashion.
 
-* [RabbitMQ](http://www.rabbitmq.com/) and all implementations of
-  the [AMQP](http://www.amqp.org/) protocol.
-* [Redis](http://redis.io/), the fabulous key/value store by
-  [@antirez](https://github.com/antirez).
-* [Mosquitto](http://mosquitto.org/) and all implementations of the
-  [MQTT](http://mqtt.org/) protocol, including itself.
-* [ZeroMQ](http://www.zeromq.org/) without a central broker, so
-  Mosca can also be used in a P2P fashion.
-* [MongoDB](http://www.mongodb.org/), the documental NoSQL that is
-  revolutioning how web apps are built.
 
-__Mosca__ is still under active development, but it should work :).
-Let me know if you plan to use __Mosca__ in production.
+Find out more about Mosca reading the
+[dox generated documentation](http://mcollina.github.io/mosca/docs/mosca.js.html)
+
+
+
+
+Mosca is still under active development. Let us know if you plan to use Mosca in production.
+We'll be more than happy to help you getting started.
+
+
+## Features
+
+* MQTT 3.1 compliant
+* QoS 0 and QoS 1
+* Various storage options for QoS 1 offline packets, and subscriptions
+* As fast as it is possible
+* Usable inside ANY other node.js app.
+
+  [API](http://mcollina.github.com/mosca/docs/lib/server.js.html).
+
+## Install
+
+Install the client library using [npm](http://npmjs.org/).
+
+```
+$ npm install ascoltatori --save
+```
+
+Install the client library using git.
+
+```
+$ git clone git://github.com/mcollina/ascoltatori.git
+$ cd ascoltatori
+$ npm install
+```
+
 
 ## Usage
 
@@ -37,17 +62,6 @@ $: mosca -v | bunyan
 
 Then you can connect to it with your preferred [MQTT](http://mqtt.org)
 client.
-
-## Features
-
-* MQTT 3.1 compliant
-* QoS 0 and QoS 1
-* Various storage options for QoS 1 offline packets,
-  and subscriptions.
-* Built on top on node.js
-* As fast as it is possible
-* Usable inside ANY other node.js app, see the
-  [API](http://mcollina.github.com/mosca/docs/lib/server.js.html).
 
 ## Configuration
 
