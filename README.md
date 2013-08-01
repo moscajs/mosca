@@ -94,44 +94,50 @@ broker is defined. Here follows an example using Redis.
 module.exports = {
   port: 4883,
   backend: {
-    type: 'redis'
+    type: 'redis',
+    redis: require('redis'),
+    db: 12,
+    port: 6379,
+    host: localhost
   }
 };
 ```
 
 Ad Mosca is based on Ascoltatori, [here](http://mcollina.github.com/ascoltatori#brokers) you can
-find configuration examples covering Redis, MongoDB, AMQP, ZeroMQ and and MQTT brokers like Mosquitto.
+find configuration examples covering Redis, MongoDB, AMQP, ZeroMQ and and MQTT brokers (e.g Mosquitto).
 
 
 ### Client Authorization
 
 Mosca supports user authentication through the use of a specific json file.
-In order to create one, you can just add an user to it.
+In order to create one run the following command.
 
 ```
-$ mosca adduser myuser mypass --credentials ./credentials.json
+$ mosca adduser <user> <pass> --credentials ./credentials.json
 ```
 
-Then, in order to start __Mosca__ with a specific set of credentials:
+The start Mosca with a specific set of credentials:
+
 ```
 $ mosca --credentials ./credentials.json
 ```
 
 It is also possible to remove a user:
+
 ```
 $ mosca rmuser myuser --credentials ./credentials.json
 ```
 
 The `adduser` command allows also to specify the pattern of topics that
-a given user is authorized to access, like so:
+a given user is authorized to access.
+
 ```
 $ mosca adduser myuser mypass --credentials ./credentials.json \
   --authorize-publish 'hello/*' --authorize-subscribe 'hello/*'
 ```
-The patterns are checked and validated using
-[Minimatch](https://github.com/isaacs/minimatch).
 
-The credentials file can be automatically reladed by __Mosca__ if it
+The patterns are checked and validated using [Minimatch](https://github.com/isaacs/minimatch).
+The credentials file can be automatically reladed by Mosca if it
 receives a `SIGHUP`.
 
 ## Persistence
