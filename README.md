@@ -112,8 +112,8 @@ find configuration examples covering Redis, MongoDB, AMQP, ZeroMQ and and MQTT b
 Mosca supports user authentication through the use of a specific json file.
 In order to create one run the following command.
 
-```ruby
-# add user
+```javascript
+// add user
 $ mosca adduser <user> <pass> --credentials ./credentials.json
 ```
 
