@@ -88,13 +88,11 @@ publish/subscribe library supporting different brokers/protocols such as Redis,
 MongoDB, RabbitMQ, Mosquitto, and ZeroMQ. This means that you can use any of the
 listed solutions to let your MQTT client communicate with any service.
 
-Suppose your client publish to a MQTT Mosca server a JSON. This message will be
-accessible to all Ascoltatori. Follows an MQTT client build with Node.js and a
-sample Ascoltatore.
+#### MQTT Client Publish Example
+
+This is a Node.js MQTT client publishing on a topic.
 
 ```javascript
-// MQTT client publishing on a topic
-
 var mqtt = require('mqtt')
   , host = 'localhost'
   , port = '1883';
@@ -110,16 +108,14 @@ var settings = {
 var client = mqtt.createClient(port, host, settings);
 
 // client publishing a sample JSON
-client.publish('hello/you', '{ "hello": "you" });
+client.publish('hello/you', '{ "hello": "you" }');
 ```
 
-This message will be received from the Mosca Server. Now, any Ascoltatore
-who has subscribed to this topic will receive the information. Here follows
-an Ascoltatore example (this could live in another app).
+This message will be received from the Mosca Server and any Ascoltatore
+who has subscribed to this topic will automatically receive the message.
 
 ```javascript
-// Ascoltatore receiving notification thanks to Mosca
-
+var ascoltatori = require('ascoltatori');
 var settings = {
   type: 'mongo',
   uri: 'mongodb://localhost:27017/',
@@ -138,11 +134,11 @@ ascoltatori.build(settings, function (ascoltatore) {
 With the same logics, a client subscribing to the Mosca Server to a specific
 topic will get notified everytime an element will be added through Ascoltatori.
 
+#### MQTT Client Subscribe Example
 
+This is a Node.js MQTT client subscribing a topic.
 
 ```javascript
-// MQTT client subscribing a topic
-
 var mqtt = require('mqtt')
   , host = 'localhost'
   , port = '1883';
@@ -164,6 +160,23 @@ client.on('message', function(topic, message) {
 });
 ```
 
+When an Ascoltatore publish a message on the subscribed topic, the Mosca
+Server will forward it to the subscribing client.
+
+```javascript
+var ascoltatori = require('ascoltatori');
+var settings = {
+  type: 'mongo',
+  uri: 'mongodb://localhost:27017/',
+  db: 'mqtt',
+  pubsubCollection: 'ascoltatori',
+  mongo: {}
+};
+
+ascoltatori.build(settings, function (_ascoltatore) {
+  ascoltatore.publish('hello/me', '{ "hello": "you" }');
+});
+```
 
 
 ## Mosca Client
