@@ -23,22 +23,22 @@ you getting started and solve any issue you'll find out.
 
 ## Features
 
-* MQTT 3.1 compliant
-* QoS 0 and QoS 1
-* Various storage options for QoS 1 offline packets, and subscriptions
-* As fast as it is possible
+* MQTT 3.1 compliant.
+* QoS 0 and QoS 1.
+* Various storage options for QoS 1 offline packets, and subscriptions.
+* As fast as it is possible.
 * Usable inside ANY other node.js app.
 
 
 ## Install
 
-Install the client library using [npm](http://npmjs.org/).
+Install the library using [npm](http://npmjs.org/).
 
 ```
 $ npm install mosca bunyan -g
 ```
 
-Install the client library using git.
+Install the library using git.
 
 ```
 $ git clone git://github.com/mcollina/mosca.git
@@ -81,14 +81,14 @@ server.on('published', function(packet, client) {
 });
 ```
 
-### Mosca explained
+### How Mosca works.
 
 Mosca is based on [Ascoltatori](https://github.com/mcollina/ascoltatori), a simple
 publish/subscribe library supporting different brokers/protocols such as Redis,
 MongoDB, RabbitMQ, Mosquitto, and ZeroMQ. This means that you can use any of the
 listed solutions to let your MQTT client communicate with any service.
 
-#### MQTT Client Publish Example
+#### MQTT Client Publish Flow
 
 This is a Node.js MQTT client publishing on a topic.
 
@@ -131,11 +131,10 @@ ascoltatori.build(settings, function (ascoltatore) {
 });
 ```
 
+#### MQTT Client Subscribe Flow
+
 With the same logics, a client subscribing to the Mosca Server to a specific
 topic will get notified everytime an element will be added through Ascoltatori.
-
-#### MQTT Client Subscribe Example
-
 This is a Node.js MQTT client subscribing a topic.
 
 ```javascript
@@ -160,8 +159,8 @@ client.on('message', function(topic, message) {
 });
 ```
 
-When an Ascoltatore publish a message on the subscribed topic, the Mosca
-Server will forward it to the subscribing client.
+When an Ascoltatore publishes a message to the subscribed topic, Mosca
+will send it to the client.
 
 ```javascript
 var ascoltatori = require('ascoltatori');
@@ -176,6 +175,60 @@ var settings = {
 ascoltatori.build(settings, function (_ascoltatore) {
   ascoltatore.publish('hello/me', '{ "hello": "you" }');
 });
+```
+
+### Authorizations
+
+With Mosca you can authorize a client defining three methods.
+
+* `#authenticate`
+* `#authorizePublish`
+* `#authorizeSubscribe`
+
+Those methods can be used to restric for the accessible topics from the clients.
+Here follows an example where a client send a username and a password during the
+connection phase and where the username will be saved and used to see if a specific
+client can publish or subscribe information for that specific user.
+
+```javascript
+// accepts the connection if the username and password are valid
+var authenticate = function(client, username, password, callback) {
+  // verify credentials (usually from BD)
+  var authorized = (username === 'alice' && password === 'secret');
+  // save the username value in the object (accessible later)
+  if authorized client.user = username;
+  // accepts the connection if authorized is true
+  callback(null, authorized);
+}
+
+// let the client publish to the authorized channel
+// in this case the client authorized as alice can publish to /users/alice
+var authorizePublish = function(client, topic, payload, callback) {
+  // take the username from the topic and verify it is the same of the authorized user
+  callback(null, client.user == topic.split('/')[1]);
+}
+
+// let the client subscribe to the authorized channel
+// in this case the client authorized as alice can subscribe to /users/alice
+var authorizeSubscribe = function(client, topic, callback) {
+  // take the username from the topic and verify it is the same of the authorized user
+  callback(null, client.user == topic.split('/')[1]);
+}
+```
+
+As you can see with this logic someone that subscribe to, let's say bob, will not be
+ablo to publish to its channel `users/bob`. Now that we have the authorizing methods
+we can set them up in the server.
+
+```javascript
+var server = new mosca.Server(settings);
+server.on('ready', setup);
+
+function setup() {
+  server.authenticate = authenticate;
+  server.authorizePublish = authorizePublish;
+  server.authorizeSubscribe = authorizeSubscribe;
+}
 ```
 
 
