@@ -47,6 +47,39 @@ $ npm install
 ```
 
 
+## Getting Started
+
+Mosca can be used into any Node.js app. Here an example that uses MongoDB as broker.
+
+```javascript
+var ascoltatore = {
+  type: 'mongo',
+  uri: 'mongodb://localhost:27017/',
+  db: 'mqtt',
+  pubsubCollection: 'ascoltatori',
+  mongo: {}
+};
+
+var settings = {
+  port: 1883,
+  backend: ascoltatore
+};
+
+var server = new mosca.Server(settings);
+server.on('ready', setup);
+
+// fired when the mqtt server is ready
+function setup() {
+  console.log('Mosca server is up and running')
+}
+
+// fired when a message is published
+server.on('published', function(packet, client) {
+  debug('Published', packet.payload);
+});
+```
+
+
 ## Mosca Client
 
 Mosca offers a Node.js client application. Run it and connect your preferred client.
