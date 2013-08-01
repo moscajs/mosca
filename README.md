@@ -52,6 +52,8 @@ $ npm install
 Mosca can be used into any Node.js app. Here an example that uses MongoDB as broker.
 
 ```javascript
+var mosca = require('mosca')
+
 var ascoltatore = {
   type: 'mongo',
   uri: 'mongodb://localhost:27017/',
@@ -75,9 +77,93 @@ function setup() {
 
 // fired when a message is published
 server.on('published', function(packet, client) {
-  debug('Published', packet.payload);
+  console.log('Published', packet.payload);
 });
 ```
+
+### Mosca explained
+
+Mosca is based on [Ascoltatori](https://github.com/mcollina/ascoltatori), a simple
+publish/subscribe library supporting different brokers/protocols such as Redis,
+MongoDB, RabbitMQ, Mosquitto, and ZeroMQ. This means that you can use any of the
+listed solutions to let your MQTT client communicate with any service.
+
+Suppose your client publish to a MQTT Mosca server a JSON. This message will be
+accessible to all Ascoltatori. Follows an MQTT client build with Node.js and a
+sample Ascoltatore.
+
+```javascript
+// MQTT client publishing on a topic
+
+var mqtt = require('mqtt')
+  , host = 'localhost'
+  , port = '1883';
+
+var settings = {
+  keepalive: 1000,
+  protocolId: 'MQIsdp',
+  protocolVersion: 3,
+  clientId: 'client-1'
+}
+
+// client connection
+var client = mqtt.createClient(port, host, settings);
+
+// client publishing a sample JSON
+client.publish('hello/you', '{ "hello": "you" });
+```
+
+This message will be received from the Mosca Server. Now, any Ascoltatore
+who has subscribed to this topic will receive the information. Here follows
+an Ascoltatore example (this could live in another app).
+
+```javascript
+// Ascoltatore receiving notification thanks to Mosca
+
+var settings = {
+  type: 'mongo',
+  uri: 'mongodb://localhost:27017/',
+  db: 'mqtt',
+  pubsubCollection: 'ascoltatori',
+  mongo: {}
+};
+
+ascoltatori.build(settings, function (ascoltatore) {
+  ascoltatore.subscribe('hello/*', function() {
+    console.log('Received message', arguments);
+  });
+});
+```
+
+With the same logics, a client subscribing to the Mosca Server to a specific
+topic will get notified everytime an element will be added through Ascoltatori.
+
+
+
+```javascript
+// MQTT client subscribing a topic
+
+var mqtt = require('mqtt')
+  , host = 'localhost'
+  , port = '1883';
+
+var settings = {
+  keepalive: 1000,
+  protocolId: 'MQIsdp',
+  protocolVersion: 3,
+  clientId: 'client-1'
+}
+
+// client connection
+var client = mqtt.createClient(port, host, settings);
+
+// client subscription
+client.subscribe('hello/me')
+client.on('message', function(topic, message) {
+  console.log('received', topic, message);
+});
+```
+
 
 
 ## Mosca Client
