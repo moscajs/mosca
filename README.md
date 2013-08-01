@@ -15,7 +15,7 @@ supporting the following brokers/protocols.
 
 
 Find out more about Mosca reading the
-[dox generated documentation](http://mcollina.github.io/mosca/docs/mosca.js.html).
+[dox generated documentation](http://mcollina.github.io/mosca/docs).
 Note that Mosca is under active development. if you plan to use Mosca in production
 [let us know ](http://twitter.com/matteocollina), we'll be more than happy to help
 you getting started and solve any issue you'll find out.
@@ -115,11 +115,14 @@ In order to create one run the following command.
 ```javascript
 // add a user
 $ mosca adduser <user> <pass> --credentials ./credentials.json
+
 // add a user specifying the authorized topics
 $ mosca adduser myuser mypass --credentials ./credentials.json \
   --authorize-publish 'hello/*' --authorize-subscribe 'hello/*'
+
 // remove a user
 $ mosca rmuser myuser --credentials ./credentials.json
+
 // start Mosca with a specific set of credentials:
 $ mosca --credentials ./credentials.json
 ```
@@ -127,36 +130,63 @@ $ mosca --credentials ./credentials.json
 The patterns are checked and validated using [Minimatch](https://github.com/isaacs/minimatch).
 The credentials file can be automatically reladed by Mosca if it receives a `SIGHUP`.
 
+
 ## Persistence
 
 The MQTT specification requires a persistent storage for offline QoS 1
-subscription that has been done by an unclean client.
-__Mosca__ offers several persitance options:
+subscription that has been done by an unclean client. Mosca offers several
+persitance options.
 
-* [Memory](http://mcollina.github.com/mosca/docs/lib/persistence/memory.js.html),
-* [LevelUp](http://mcollina.github.com/mosca/docs/lib/persistence/levelup.js.html),
-* [Redis](http://mcollina.github.com/mosca/docs/lib/persistence/redis.js.html),
+* [Redis](http://mcollina.github.com/mosca/docs/lib/persistence/redis.js.html)
 * [MongoDB](http://mcollina.github.com/mosca/docs/lib/persistence/mongo.js.html)
+* [LevelUp](http://mcollina.github.com/mosca/docs/lib/persistence/levelup.js.html)
+* [Memory](http://mcollina.github.com/mosca/docs/lib/persistence/memory.js.html)
 
-All of them can be configured from the configuration file, under the
-`persistence` key. The only exception is LevelUp, which can be specified
-by using the `--db` option from the command line.
+All of them can be configured from the configuration file, under the `persistence` key.
+The only exception is LevelUp, which can be specified by using the `--db` option from
+the command line.
 
-## Contributing to Mosca
 
-* Check out the latest master to make sure the feature hasn't been
-  implemented or the bug hasn't been fixed yet
-* Check out the issue tracker to make sure someone already hasn't
-  requested it and/or contributed it
-* Fork the project
-* Start a feature/bugfix branch
-* Commit and push until you are happy with your contribution
-* Make sure to add tests for it. This is important so I don't break it
-  in a future version unintentionally.
-* Please try not to mess with the Makefile and package.json. If you
-  want to have your own version, or is otherwise necessary, that is
-  fine, but please isolate to its own commit so I can cherry-pick around
-  it.
+## Contributing
+
+Fork the repo on github and send a pull requests with topic branches.
+Do not forget to provide specs to your contribution.
+
+
+### Running specs
+
+* Fork and clone the repository
+* Run `npm install`
+* Run `npm test`
+
+
+## Coding guidelines
+
+Follow [felix](http://nodeguide.com/style.html) guidelines.
+
+
+## Feedback
+
+Use the [issue tracker](http://github.com/mcollina/ascoltatori/issues) for bugs.
+[Tweet](http://twitter.com/matteocollina) us for any idea that can improve the project.
+
+
+## Links
+
+* [GIT Repository](http://github.com/mcollina/mosca)
+* [Mosca Documentation](http://mcollina.github.io/mosca/docs)
+* [Ascoltatori](http://github.com/mcollina/ascoltatori)
+
+
+## Authors
+
+[Matteo Collina](http://twitter.com/matteocollina)
+
+
+## Contributors
+
+Special thanks to the [following people](https://github.com/mcollina/mosca/contributors) for submitting patches.
+
 
 ## LICENSE - "MIT License"
 
