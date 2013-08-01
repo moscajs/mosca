@@ -113,33 +113,19 @@ Mosca supports user authentication through the use of a specific json file.
 In order to create one run the following command.
 
 ```javascript
-// add user
+// add a user
 $ mosca adduser <user> <pass> --credentials ./credentials.json
-```
-
-The start Mosca with a specific set of credentials:
-
-```
+// add a user specifying the authorized topics
+$ mosca adduser myuser mypass --credentials ./credentials.json \
+  --authorize-publish 'hello/*' --authorize-subscribe 'hello/*'
+// remove a user
+$ mosca rmuser myuser --credentials ./credentials.json
+// start Mosca with a specific set of credentials:
 $ mosca --credentials ./credentials.json
 ```
 
-It is also possible to remove a user:
-
-```
-$ mosca rmuser myuser --credentials ./credentials.json
-```
-
-The `adduser` command allows also to specify the pattern of topics that
-a given user is authorized to access.
-
-```
-$ mosca adduser myuser mypass --credentials ./credentials.json \
-  --authorize-publish 'hello/*' --authorize-subscribe 'hello/*'
-```
-
 The patterns are checked and validated using [Minimatch](https://github.com/isaacs/minimatch).
-The credentials file can be automatically reladed by Mosca if it
-receives a `SIGHUP`.
+The credentials file can be automatically reladed by Mosca if it receives a `SIGHUP`.
 
 ## Persistence
 
