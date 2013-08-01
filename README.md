@@ -81,12 +81,15 @@ server.on('published', function(packet, client) {
 });
 ```
 
-### How Mosca works.
+### How Mosca works
 
 Mosca is based on [Ascoltatori](https://github.com/mcollina/ascoltatori), a simple
 publish/subscribe library supporting different brokers/protocols such as Redis,
 MongoDB, RabbitMQ, Mosquitto, and ZeroMQ. This means that you can use any of the
-listed solutions to let your MQTT client communicate with any service.
+listed solutions to let your MQTT client communicate with any service. Note that
+Mosca and Ascoltatore must share the same underlying broker.
+
+
 
 #### MQTT Client Publish Flow
 
@@ -111,8 +114,8 @@ var client = mqtt.createClient(port, host, settings);
 client.publish('hello/you', '{ "hello": "you" }');
 ```
 
-This message will be received from the Mosca Server and any Ascoltatore
-who has subscribed to this topic will automatically receive the message.
+This message will be received from Mosca and any Ascoltatore who has subscribed
+to this topic will automatically receive the message.
 
 ```javascript
 var ascoltatori = require('ascoltatori');
@@ -133,9 +136,9 @@ ascoltatori.build(settings, function (ascoltatore) {
 
 #### MQTT Client Subscribe Flow
 
-With the same logics, a client subscribing to the Mosca Server to a specific
-topic will get notified everytime an element will be added through Ascoltatori.
-This is a Node.js MQTT client subscribing a topic.
+With the same logics, a client subscribing to Mosca for a specific topic will
+get notified everytime an element will be published in Ascoltatori. This is a
+Node.js MQTT client subscribing a topic.
 
 ```javascript
 var mqtt = require('mqtt')
@@ -159,8 +162,8 @@ client.on('message', function(topic, message) {
 });
 ```
 
-When an Ascoltatore publishes a message to the subscribed topic, Mosca
-will send it to the client.
+When an Ascoltatore publishes a message to the topic, Mosca forwards it to the
+client who subscribed it.
 
 ```javascript
 var ascoltatori = require('ascoltatori');
@@ -177,6 +180,7 @@ ascoltatori.build(settings, function (_ascoltatore) {
 });
 ```
 
+
 ### Authorizations
 
 With Mosca you can authorize a client defining three methods.
@@ -185,40 +189,34 @@ With Mosca you can authorize a client defining three methods.
 * `#authorizePublish`
 * `#authorizeSubscribe`
 
-Those methods can be used to restric for the accessible topics from the clients.
-Here follows an example where a client send a username and a password during the
-connection phase and where the username will be saved and used to see if a specific
-client can publish or subscribe information for that specific user.
+Those methods can be used to restric the accessible topics for a specific clients.
+Follows an example where a client send a username and a password during the connection
+phase and where the username will be saved and used later on to verify if a specific
+client can publish or subscribe for the specific user.
 
 ```javascript
-// accepts the connection if the username and password are valid
+// Accepts the connection if the username and password are valid
 var authenticate = function(client, username, password, callback) {
-  // verify credentials (usually from BD)
   var authorized = (username === 'alice' && password === 'secret');
-  // save the username value in the object (accessible later)
   if authorized client.user = username;
-  // accepts the connection if authorized is true
   callback(null, authorized);
 }
 
-// let the client publish to the authorized channel
-// in this case the client authorized as alice can publish to /users/alice
+// In this case the client authorized as alice can publish to /users/alice taking
+// the username from the topic and verifing it is the same of the authorized user
 var authorizePublish = function(client, topic, payload, callback) {
-  // take the username from the topic and verify it is the same of the authorized user
   callback(null, client.user == topic.split('/')[1]);
 }
 
-// let the client subscribe to the authorized channel
-// in this case the client authorized as alice can subscribe to /users/alice
+// In this case the client authorized as alice can subscribe to /users/alice taking
+// the username from the topic and verifing it is the same of the authorized user
 var authorizeSubscribe = function(client, topic, callback) {
-  // take the username from the topic and verify it is the same of the authorized user
   callback(null, client.user == topic.split('/')[1]);
 }
 ```
 
-As you can see with this logic someone that subscribe to, let's say bob, will not be
-ablo to publish to its channel `users/bob`. Now that we have the authorizing methods
-we can set them up in the server.
+With this logic someone that is authorized as alice will not be able to publish to
+the topic `users/bob`. Now that we have the authorizing methods we can configure mosca.
 
 ```javascript
 var server = new mosca.Server(settings);
