@@ -11,7 +11,7 @@ supporting the following brokers/protocols.
 * [MongoDB](http://www.mongodb.org/), a scalable, high-performance, document-oriented database.
 * [Mosquitto](http://mosquitto.org/) and all implementations of the [MQTT](http://mqtt.org/) protocol.
 * [RabbitMQ](http://www.rabbitmq.com/) and all implementations of the [AMQP](http://www.amqp.org/) protocol.
-* [ZeroMQ](http://www.zeromq.org/) to use Ascoltatori in a P2P fashion.
+* [ZeroMQ](http://www.zeromq.org/) to use Mosca in a P2P fashion.
 
 
 Find out more about Mosca reading the
@@ -350,7 +350,7 @@ Follow [felix](http://nodeguide.com/style.html) guidelines.
 
 ## Feedback
 
-Use the [issue tracker](http://github.com/mcollina/ascoltatori/issues) for bugs.
+Use the [issue tracker](http://github.com/mcollina/mosca/issues) for bugs.
 [Tweet](http://twitter.com/matteocollina) us for any idea that can improve the project.
 
 
