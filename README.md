@@ -16,8 +16,9 @@ supporting the following brokers/protocols.
 
 Find out more about Mosca reading the
 [dox generated documentation](http://mcollina.github.io/mosca/docs/mosca.js.html).
-Mosca is still under active development. [Let us know ](http://twitter.com/matteocollina)
-if you plan to use Mosca in production, we'll be more than happy to help you getting started.
+Note that Mosca is under active development. if you plan to use Mosca in production
+[let us know ](http://twitter.com/matteocollina), we'll be more than happy to help
+you getting started and solve any issue you'll find out.
 
 
 ## Features
@@ -28,41 +29,36 @@ if you plan to use Mosca in production, we'll be more than happy to help you get
 * As fast as it is possible
 * Usable inside ANY other node.js app.
 
-  [API](http://mcollina.github.com/mosca/docs/lib/server.js.html).
 
 ## Install
 
 Install the client library using [npm](http://npmjs.org/).
 
 ```
-$ npm install ascoltatori --save
+$ npm install mosca bunyan -g
 ```
 
 Install the client library using git.
 
 ```
-$ git clone git://github.com/mcollina/ascoltatori.git
-$ cd ascoltatori
+$ git clone git://github.com/mcollina/mosca.git
+$ cd mosca
 $ npm install
 ```
 
 
-## Usage
+## Mosca Client
 
-Mosca is a node.js application, so it needs [node.js](http://nodejs.org)
-to run.
+Mosca offers a Node.js client application. Run it and connect your preferred client.
 
 ```
-$: npm install mosca bunyan -g
-$: mosca -v | bunyan
+$ mosca -v | bunyan
 ```
 
-Then you can connect to it with your preferred [MQTT](http://mqtt.org)
-client.
 
-## Configuration
+### Client configuration
 
-Mosca supports some command line options:
+Here you can see the options accepted by the client.
 
 ```
   Usage: mosca [options] [command]
@@ -90,38 +86,28 @@ Mosca supports some command line options:
     --very-verbose                   set the bunyan log to DEBUG
 ```
 
-However you can only use a MQTT backend with the command line options.
 
-If you want to unleash the full power of mosca, you will need to
-use a configuration file.
-Some examples are included in this repository, one using
-[Redis](https://github.com/mcollina/mosca/tree/master/examples/redis),
-and one using a
-[tree-based](https://github.com/mcollina/mosca/tree/master/examples/mosca-tree) topology of Moscas.
+To fully use mosca you need to define a configuration file where the communication
+broker is defined. Here follows an example using Redis.
 
-A configuration file is structured in the following way:
-```
+```javascript
 module.exports = {
   port: 4883,
   backend: {
-    type: "redis"
+    type: 'redis'
   }
 };
 ```
 
-As __Mosca__ is based on
-[Ascoltatori](http://mcollina.github.com/ascoltatori/) to integrate
-all backends, please refer to __Ascoltatori__'s documentation to set
-them up accordingly.
-The whole content of the `backend` key is passed through to the
-[ascoltatori.build](http://mcollina.github.com/ascoltatori/docs/ascoltatori.js.html#build)
-method.
+Ad Mosca is based on Ascoltatori, [here](http://mcollina.github.com/ascoltatori#brokers) you can
+find configuration examples covering Redis, MongoDB, AMQP, ZeroMQ and and MQTT brokers like Mosquitto.
 
-## Users
 
-__Mosca__ support user authentication through the use of a specific json
-file.
-In order to create one, you can just add an user to it:
+### Client Authorization
+
+Mosca supports user authentication through the use of a specific json file.
+In order to create one, you can just add an user to it.
+
 ```
 $ mosca adduser myuser mypass --credentials ./credentials.json
 ```
