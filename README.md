@@ -1,6 +1,7 @@
 # Mosca
 
 ![Mosca](https://raw.github.com/mcollina/mosca/master/mosca.png)
+
 [![Build Status](https://travis-ci.org/mcollina/mosca.png)](https://travis-ci.org/mcollina/mosca)
 
 Mosca is a multi-transport [MQTT](http://mqtt.org/) broker
@@ -14,13 +15,9 @@ supporting the following brokers/protocols.
 
 
 Find out more about Mosca reading the
-[dox generated documentation](http://mcollina.github.io/mosca/docs/mosca.js.html)
-
-
-
-
-Mosca is still under active development. Let us know if you plan to use Mosca in production.
-We'll be more than happy to help you getting started.
+[dox generated documentation](http://mcollina.github.io/mosca/docs/mosca.js.html).
+Mosca is still under active development. [Let us know ](http://twitter.com/matteocollina)
+if you plan to use Mosca in production, we'll be more than happy to help you getting started.
 
 
 ## Features
