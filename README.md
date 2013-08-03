@@ -30,7 +30,9 @@ you getting started and solve any issue you'll find out.
 * Usable inside ANY other node.js app.
 
 
-## Install
+## Using Mosca Standalone
+
+### Install
 
 Install the library using [npm](http://npmjs.org/).
 
@@ -46,7 +48,7 @@ $ cd mosca
 $ npm install
 ```
 
-## Using Mosca Standalone
+### Usage
 
 Mosca offers an executable for running it standalone.
 Run it and connect your preferred MQTT client.
@@ -178,6 +180,14 @@ function setup() {
 server.on('published', function(packet, client) {
   console.log('Published', packet.payload);
 });
+```
+
+### Install
+
+Install the library using [npm](http://npmjs.org/).
+
+```
+$ npm install mosca --save
 ```
 
 ### How Mosca works
