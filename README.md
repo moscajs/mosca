@@ -20,6 +20,9 @@ Note that Mosca is under active development. if you plan to use Mosca in product
 [let us know ](http://twitter.com/matteocollina), we'll be more than happy to help
 you getting started and solve any issue you'll find out.
 
+Mosca can be used:
+* <a href="#standalone">Standalone</a>
+* <a href="#embedded">Embedded in another Node.js application</a>
 
 ## Features
 
@@ -29,7 +32,7 @@ you getting started and solve any issue you'll find out.
 * As fast as it is possible.
 * Usable inside ANY other node.js app.
 
-
+<a name="standalone"></a>
 ## Using Mosca Standalone
 
 ### Install
@@ -147,7 +150,7 @@ All of them can be configured from the configuration file, under the `persistenc
 The only exception is LevelUp, which can be specified by using the `--db` option from
 the command line.
 
-
+<a name="embedded"></a>
 ## Embedding Mosca
 
 Mosca can be used into any Node.js app. Here an example that uses MongoDB as broker.
