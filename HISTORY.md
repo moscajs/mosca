@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.9.4
+
+* New README, thanks to [Andrea Reginato](https://github.com/andreareginato).
+* Removed explicit dependency to level-fix-range, as the original bug
+  was solved in level-sublevel v4.8.1.
+
 ## 0.9.3
 
 * Upgraded LevelUp to 0.12.0.
