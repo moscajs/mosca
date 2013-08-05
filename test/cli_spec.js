@@ -140,6 +140,15 @@ describe("mosca.cli", function() {
     });
   });
 
+  it("should support a config option with an absolute path", function(done) {
+    args.push("-c");
+    args.push(process.cwd() + "/test/sample_config.js");
+    startServer(done, function(server) {
+      expect(server.opts).to.have.property("port", 2883);
+      expect(server.opts).to.have.deep.property("backend.port", 3833);
+    });
+  });
+
   it("should add an user to an authorization file", function(done) {
     args.push("adduser");
     args.push("myuser");
