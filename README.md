@@ -16,8 +16,9 @@ supporting the following brokers/protocols.
 
 Find out more about Mosca reading the
 [dox generated documentation](http://mcollina.github.io/mosca/docs).
-Note that Mosca is under active development. if you plan to use Mosca in production
-[let us know ](http://twitter.com/matteocollina), we'll be more than happy to help
+
+If you plan to use Mosca in production
+[let us know](http://twitter.com/matteocollina), we'll be more than happy to help
 you getting started and solve any issue you'll find out.
 
 Mosca can be used:
