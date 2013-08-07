@@ -1,6 +1,6 @@
 {
   "name": "mosca",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "The multi-transport MQTT broker for node.js. It supports AMQP, Redis, ZeroMQ, MongoDB or just MQTT.",
   "main": "index.js",
   "bin": {

@@ -1,6 +1,13 @@
 History
 =======
 
+## 0.9.5
+
+* Consistent support of the "ready" callback in the persistences
+  implementations (Memory and Mongo).
+* Fixed loading of a config file from an absolute path.
+* README fixes.
+
 ## 0.9.4
 
 * New README, thanks to [Andrea Reginato](https://github.com/andreareginato).
