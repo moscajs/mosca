@@ -3,18 +3,32 @@
 var async = require("async");
 var EventEmitter = require("events").EventEmitter;
 
-module.exports = function(create) {
+module.exports = function(create, buildOpts) {
+  var _opts;
+
+  if (typeof buildOpts !== "function") {
+    _opts = buildOpts;
+    buildOpts = function(cb) {
+      cb(null, _opts); 
+    };
+  }
 
   beforeEach(function(done) {
     var that = this;
-    create.call(this, function(err, result, opts) {
+    buildOpts(function(err, opts) {
       if (err) {
         return done(err);
       }
 
-      that.instance = result;
-      that.opts = opts;
-      done();
+      create(opts, function(err, result) {
+        if (err) {
+          return done(err);
+        }
+
+        that.instance = result;
+        that.opts = opts;
+        done();
+      });
     });
   });
 

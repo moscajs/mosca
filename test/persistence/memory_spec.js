@@ -13,7 +13,5 @@ describe("mosca.persistence.Memory", function() {
     }
   };
 
-  abstract(function(cb) {
-    cb(null, new Memory(opts), opts);
-  });
+  abstract(Memory, opts);
 });

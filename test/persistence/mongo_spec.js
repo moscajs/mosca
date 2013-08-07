@@ -40,11 +40,7 @@ describe("mosca.persistence.Mongo", function() {
     this.secondInstance = null;
   });
 
-  abstract(function(cb) {
-    new Mongo(opts, function(err, mongo) {
-      cb(err, mongo, opts);
-    });
-  });
+  abstract(Mongo, opts);
 
   describe("two clients", function() {
 

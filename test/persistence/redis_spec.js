@@ -14,11 +14,7 @@ describe("mosca.persistence.Redis", function() {
     }
   };
 
-  abstract(function(cb) {
-    new Redis(opts, function(err, instance) {
-      cb(null, instance, opts);
-    });
-  });
+  abstract(Redis, opts);
 
   afterEach(function(cb) {
     var flush = function() {

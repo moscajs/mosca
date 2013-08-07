@@ -15,16 +15,15 @@ describe("mosca.persistence.LevelUp", function() {
     }
   };
 
-  abstract(function(cb) {
+  abstract(LevelUp, function(cb) {
     var that = this;
     tmp.dir(function (err, path) {
       if (err) {
         return cb(err);
       }
 
-      that.path = path;
       opts.path = path;
-      cb(null, new LevelUp(opts), opts);
+      cb(null, opts);
     });
   });
 
