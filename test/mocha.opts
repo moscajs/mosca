@@ -3,4 +3,4 @@
 --ui bdd
 --growl
 --colors
---globals s
+--check-leaks
