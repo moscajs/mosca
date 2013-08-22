@@ -1,6 +1,10 @@
 History
 =======
 
+## 0.10.0
+
+* Updated MQTT.js to v0.3.0.
+
 ## 0.9.5
 
 * Consistent support of the "ready" callback in the persistences
