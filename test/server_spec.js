@@ -909,13 +909,14 @@ describe("mosca.Server", function() {
     });
   });
 
-  it("should resend messages if a subscription is done with QoS 1", function(done) {
+  it("should resend messages with a dup flag if a subscription is done with QoS 1", function(done) {
     buildAndConnect(done, function(client) {
 
       client.once("publish", function(packet1) {
         // the first time we do nothing
         process.nextTick(function() {
           client.once("publish", function(packet2) {
+            packet1.dup = true;
             expect(packet2).to.be.deep.equal(packet1);
             client.disconnect();
           });
