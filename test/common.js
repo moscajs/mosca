@@ -13,6 +13,24 @@ global.nextPort = function() {
   return ++portCounter;
 };
 
+global.buildOpts = function() {
+  return {
+    keepalive: 1000,
+    clientId: 'mosca_' + require("crypto").randomBytes(8).toString('hex'),
+    protocolId: 'MQIsdp',
+    protocolVersion: 3
+  };
+}
+
+global.donner = function(count, done) {
+  return function() {
+    count--;
+    if (count === 0) {
+      done();
+    }
+  };
+}
+
 global.zeromqSettings = function(remote_ports) {
   return {
     zmq: require("zmq"),

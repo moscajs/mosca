@@ -76,6 +76,6 @@ var createConnection = function(port, host, callback) {
   return mqtt_conn;
 };
 
-describe.skip("mosca.SecureServer", function() {
+describe("mosca.SecureServer", function() {
   abstractServerTests(moscaSettings, createConnection)
 });
