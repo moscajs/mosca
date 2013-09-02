@@ -34,15 +34,6 @@ global.globalLogger = bunyan.createLogger({
   level: 60
 });
 
-global.moscaSettings = function() {
-  return {
-    port: nextPort(),
-    logger: {
-      childOf: globalLogger,
-      level: 60
-    }
-  };
-};
 
 var sinonChai = require("sinon-chai");
 chai.use(sinonChai);
