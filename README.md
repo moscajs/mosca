@@ -4,6 +4,10 @@
 
 [![Build Status](https://travis-ci.org/mcollina/mosca.png)](https://travis-ci.org/mcollina/mosca)
 
+[![NPM](https://nodei.co/npm/mosca.png)](https://nodei.co/npm/mosca/)
+
+[![NPM](https://nodei.co/npm-dl/mosca.png)](https://nodei.co/npm/mosca/)
+
 Mosca is a multi-transport [MQTT](http://mqtt.org/) broker
 supporting the following brokers/protocols.
 
