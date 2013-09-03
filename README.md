@@ -140,6 +140,7 @@ $ mosca --credentials ./credentials.json
 The patterns are checked and validated using [Minimatch](https://github.com/isaacs/minimatch).
 The credentials file can be automatically reladed by Mosca if it receives a `SIGHUP`.
 
+
 ### Persistence
 
 The MQTT specification requires a persistent storage for offline QoS 1
@@ -154,6 +155,7 @@ persitance options.
 All of them can be configured from the configuration file, under the `persistence` key.
 The only exception is LevelUp, which can be specified by using the `--db` option from
 the command line.
+
 
 <a name="embedded"></a>
 ## Embedding Mosca
@@ -189,6 +191,44 @@ server.on('published', function(packet, client) {
   console.log('Published', packet.payload);
 });
 ```
+
+### Encryption Support
+
+Mosca supports encrypted communication via TLS.  
+http://nodejs.org/api/tls.html#tls_tls_ssl
+
+```javascript
+// Command line (must supply a private key AND a signed certificate)
+$ mosca --key test/secure/tls-key.pem --cert test/secure/tls-cert.pem  --port 8443
+```
+
+Or in embedded mode:
+
+```javascript
+var mosca = require('mosca')
+
+var SECURE_KEY = __dirname + '/../../test/secure/tls-key.pem';
+var SECURE_CERT = __dirname + '/../../test/secure/tls-cert.pem';
+
+var settings = {
+  port: 8443,
+  logger: {
+    name: "secureExample",
+    level: 40,
+  },
+  secure : { 
+    keyPath: SECURE_KEY,
+    certPath: SECURE_CERT,
+  }
+};
+var server = new mosca.Server(settings);
+server.on('ready', setup);
+
+// fired when the mqtt server is ready
+function setup() {
+  console.log('Mosca server is up and running')
+}
+
 
 ### Install
 

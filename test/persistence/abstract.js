@@ -451,7 +451,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: false,
-        logger: moscaSettings().logger,
+        logger: globalLogger,
         subscriptions: {
           hello: {
             qos: 1
@@ -499,7 +499,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: false,
-        logger: moscaSettings().logger,
+        logger: globalLogger,
         subscriptions: {
           hello: {
             qos: 1

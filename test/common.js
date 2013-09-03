@@ -13,6 +13,24 @@ global.nextPort = function() {
   return ++portCounter;
 };
 
+global.buildOpts = function() {
+  return {
+    keepalive: 1000,
+    clientId: 'mosca_' + require("crypto").randomBytes(8).toString('hex'),
+    protocolId: 'MQIsdp',
+    protocolVersion: 3
+  };
+};
+
+global.donner = function(count, done) {
+  return function() {
+    count--;
+    if (count === 0) {
+      done();
+    }
+  };
+};
+
 global.zeromqSettings = function(remote_ports) {
   return {
     zmq: require("zmq"),
@@ -33,16 +51,6 @@ global.globalLogger = bunyan.createLogger({
   name: "moscaTests",
   level: 60
 });
-
-global.moscaSettings = function() {
-  return {
-    port: nextPort(),
-    logger: {
-      childOf: globalLogger,
-      level: 60
-    }
-  };
-};
 
 var sinonChai = require("sinon-chai");
 chai.use(sinonChai);
