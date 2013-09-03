@@ -89,6 +89,8 @@ Here you can see the options accepted by the command line tool:
     --credentials <file>             the file containing the credentials
     --authorize-publish <pattern>    the pattern for publishing to topics for the added user
     --authorize-subscribe <pattern>  the pattern for subscribing to topics for the added user
+    --key <file>                     the server's private key
+    --cert <file>                    the certificate issued to the server
     -c, --config <c>                 the config file to use (override every other option)
     -d, --db <path>                  the path were to store the database
     -v, --verbose                    set the bunyan log to INFO
@@ -109,6 +111,10 @@ module.exports = {
     db: 12,
     port: 6379,
     host: localhost
+  },
+  secure: {
+    keyPath: "/path/to/key",
+    certPath: "/path/to/cert"
   }
 };
 ```
@@ -192,51 +198,6 @@ server.on('published', function(packet, client) {
 });
 ```
 
-### Encryption Support
-
-Mosca supports encrypted communication via TLS.  
-http://nodejs.org/api/tls.html#tls_tls_ssl
-
-```javascript
-// Command line (must supply a private key AND a signed certificate)
-$ mosca --key test/secure/tls-key.pem --cert test/secure/tls-cert.pem  --port 8443
-```
-
-Or in embedded mode:
-
-```javascript
-var mosca = require('mosca')
-
-var SECURE_KEY = __dirname + '/../../test/secure/tls-key.pem';
-var SECURE_CERT = __dirname + '/../../test/secure/tls-cert.pem';
-
-var settings = {
-  port: 8443,
-  logger: {
-    name: "secureExample",
-    level: 40,
-  },
-  secure : { 
-    keyPath: SECURE_KEY,
-    certPath: SECURE_CERT,
-  }
-};
-var server = new mosca.Server(settings);
-server.on('ready', setup);
-
-// fired when the mqtt server is ready
-function setup() {
-  console.log('Mosca server is up and running')
-}
-
-
-### Install
-
-Install the library using [npm](http://npmjs.org/).
-
-```
-$ npm install mosca --save
-```
 
 ### How Mosca works
 
@@ -405,6 +366,37 @@ var mosca = require("mosca");
 var server = new mosca.Server();
 var db = new mosca.persistence.LevelUp({ path: "/path/to/the/db" });
 db.wire(server);
+```
+
+### Encryption Support
+
+Mosca supports encrypted communication via node's TLS implementation:
+http://nodejs.org/api/tls.html#tls_tls_ssl.
+
+```javascript
+var mosca = require('mosca')
+
+var SECURE_KEY = __dirname + '/../../test/secure/tls-key.pem';
+var SECURE_CERT = __dirname + '/../../test/secure/tls-cert.pem';
+
+var settings = {
+  port: 8443,
+  logger: {
+    name: "secureExample",
+    level: 40,
+  },
+  secure : { 
+    keyPath: SECURE_KEY,
+    certPath: SECURE_CERT,
+  }
+};
+var server = new mosca.Server(settings);
+server.on('ready', setup);
+
+// fired when the mqtt server is ready
+function setup() {
+  console.log('Mosca server is up and running')
+}
 ```
 
 ## Contributing
