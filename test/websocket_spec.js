@@ -12,7 +12,8 @@ var moscaSettings = function() {
     },
     http: {
       port: nextPort(),
-      static: __dirname + "/static"
+      static: __dirname + "/static",
+      bundle: true
     },
     onlyHttp: true
   };
@@ -34,5 +35,14 @@ describe("mosca.Server", function() {
     var req = request("http://localhost:" + curPort);
 
     req.get('/test').expect(200, "42\n").end(done);
+  });
+
+  it("should serve a browserify bundle", function(done) {
+    var curPort = nextPort() - 1;
+    var req = request("http://localhost:" + curPort);
+
+    req.get('/bundle.js')
+       .expect('Content-Type', /javascript/)
+       .expect(200).end(done);
   });
 });

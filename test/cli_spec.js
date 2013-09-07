@@ -492,4 +492,13 @@ describe("mosca.cli", function() {
       expect(server.opts.http.static).to.eql("/path/to/nowhere");
     });
   });
+
+  it("should serve a browserify bundle", function(done) {
+    args.push("--http-port");
+    args.push("3000");
+    args.push("--http-bundle");
+    startServer(done, function(server) {
+      expect(server.opts.http.bundle).to.eql(true);
+    });
+  });
 });
