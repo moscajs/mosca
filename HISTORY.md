@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.11.0
+
+* TLS support thanks to (@samirnaik)[https://github.com/samirnaik].
+* Send dup flag for resent messages.
+
 ## 0.10.0
 
 * Updated MQTT.js to v0.3.0.
