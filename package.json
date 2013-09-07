@@ -59,7 +59,11 @@
     "qlobber": "~0.3.0",
     "lru-cache": "~2.3.0",
     "node-uuid": "~1.4.0",
-    "extend": "~1.1.3"
+    "extend": "~1.1.3",
+    "mqtt.js-over-websockets": "git://github.com/mcollina/mqtt.js-over-websocket",
+    "connect": "~2.8.8",
+    "express": "~3.3.8",
+    "browserify-middleware": "~1.17.2"
   },
   "optionalDependencies": {
     "leveldown": "~0.6.2",
