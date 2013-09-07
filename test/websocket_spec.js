@@ -2,6 +2,7 @@ var mqtt = require("mqtt.js-over-websockets");
 var async = require("async");
 var ascoltatori = require("ascoltatori");
 var abstractServerTests = require("./abstract_server");
+var request = require('supertest');
 
 var moscaSettings = function() {
   var settings = {
@@ -10,7 +11,8 @@ var moscaSettings = function() {
       level: 60
     },
     http: {
-      port: nextPort()
+      port: nextPort(),
+      static: __dirname + "/static"
     },
     onlyHttp: true
   };
@@ -26,4 +28,11 @@ var moscaSettings = function() {
 
 describe("mosca.Server", function() {
   abstractServerTests(moscaSettings, mqtt.createConnection);
+
+  it("should retrieve a static file", function(done) {
+    var curPort = nextPort() - 1;
+    var req = request("http://localhost:" + curPort);
+
+    req.get('/test').expect(200, "42\n").end(done);
+  });
 });

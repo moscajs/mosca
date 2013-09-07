@@ -482,4 +482,14 @@ describe("mosca.cli", function() {
       expect(server.opts.http.port).to.eql(3000);
     });
   });
+
+  it("should serve a static directory", function(done) {
+    args.push("--http-port");
+    args.push("3000");
+    args.push("--http-static");
+    args.push("/path/to/nowhere");
+    startServer(done, function(server) {
+      expect(server.opts.http.static).to.eql("/path/to/nowhere");
+    });
+  });
 });

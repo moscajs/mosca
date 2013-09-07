@@ -41,7 +41,8 @@
     "dox-foundation": "~0.4.4",
     "jshint": "~1.0.0",
     "js-beautify": "~0.4.2",
-    "tmp": "0.0.20"
+    "tmp": "0.0.20",
+    "supertest": "~0.7.1"
   },
   "dependencies": {
     "mqtt": "~0.3.1",
