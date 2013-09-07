@@ -91,6 +91,8 @@ Here you can see the options accepted by the command line tool:
     --authorize-subscribe <pattern>  the pattern for subscribing to topics for the added user
     --key <file>                     the server's private key
     --cert <file>                    the certificate issued to the server
+    --secure-port <n>                the TLS port to listen to
+    --non-secure                     start both a secure and non-secure server
     -c, --config <c>                 the config file to use (override every other option)
     -d, --db <path>                  the path were to store the database
     -v, --verbose                    set the bunyan log to INFO

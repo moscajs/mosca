@@ -3,6 +3,9 @@ var tmp = require('tmp');
 var fs = require("fs");
 var mqtt = require("mqtt");
 
+var SECURE_KEY = __dirname + '/secure/tls-key.pem';
+var SECURE_CERT = __dirname + '/secure/tls-cert.pem';
+
 describe("mosca.cli", function() {
 
   var servers = null,
@@ -420,6 +423,45 @@ describe("mosca.cli", function() {
       startServer(done, function(server) {
         expect(server.persistence).to.be.instanceOf(mosca.persistence.LevelUp);
         expect(server.persistence.options.path).to.eql(path);
+      });
+    });
+  });
+
+  describe("with --key and --cert", function() {
+
+    beforeEach(function() {
+      args.push("--key");
+      args.push(SECURE_KEY);
+      args.push("--cert");
+      args.push(SECURE_CERT);
+    });
+
+    it("should pass key and cert to the server", function(done) {
+      startServer(done, function(server) {
+        expect(server.opts.secure.keyPath).to.eql(SECURE_KEY);
+        expect(server.opts.secure.certPath).to.eql(SECURE_CERT);
+      });
+    });
+
+    it("should support the --secure-port flag", function(done) {
+      var port = nextPort();
+      args.push("--secure-port");
+      args.push(port);
+      startServer(done, function(server) {
+        expect(server.opts.secure.port).to.eql(port);
+      });
+    });
+
+    it("should set the secure port by default at 8883", function(done) {
+      startServer(done, function(server) {
+        expect(server.opts.secure.port).to.eql(8883);
+      });
+    });
+
+    it("should pass the --non-secure flag to the server", function(done) {
+      args.push("--non-secure");
+      startServer(done, function(server) {
+        expect(server.opts.allowNonSecure).to.eql(true);
       });
     });
   });
