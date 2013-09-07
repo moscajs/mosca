@@ -36,10 +36,14 @@ describe("mosca.Server - Secure and non-secure Connection", function() {
   var conn;
 
   afterEach(function(done) {
-    conn.stream.end();
-    conn.on("close", function() {
+    if (conn) {
+      conn.stream.end();
+      conn.on("close", function() {
+        instance.close(done);
+      });
+    } else {
       instance.close(done);
-    });
+    }
   });
 
   it("should not allow non-secure connections", function(done) {
@@ -49,6 +53,7 @@ describe("mosca.Server - Secure and non-secure Connection", function() {
     instance = new mosca.Server(settings, function() {
       conn = mqtt.createConnection(settings.port);
       conn.on('error', function(err) {
+        conn = null;
         done();
       });
     });
