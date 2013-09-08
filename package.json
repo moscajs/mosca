@@ -45,7 +45,7 @@
     "supertest": "~0.7.1"
   },
   "dependencies": {
-    "mqtt": "~0.3.1",
+    "mqtt": "git://github.com/adamvr/MQTT.js#browserify",
     "async": "~0.2.4",
     "ascoltatori": "~0.11.0",
     "debug": "~0.7.2",
