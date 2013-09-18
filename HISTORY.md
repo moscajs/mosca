@@ -1,6 +1,15 @@
 History
 =======
 
+## 0.12.0
+
+* Close forcefully a connecting client
+  [#57](https://github.com/mcollina/mosca/pull/57) by
+  (@chriswiggins)[https://github.com/chriswiggins].
+* Updated LevelUp to 0.16.0.
+* Updated Level-Sublevel to 5.1.1.
+* Better persistence for the subscriptions.
+
 ## 0.11.0
 
 * TLS support thanks to (@samirnaik)[https://github.com/samirnaik].
