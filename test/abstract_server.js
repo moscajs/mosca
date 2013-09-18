@@ -15,20 +15,15 @@ module.exports = function(moscaSettings, createConnection) {
   });
 
   afterEach(function(done) {
-    var instances = [instance];
-
-    if (secondInstance) {
-      instances = [secondInstance].concat(instances);
-    }
-
-    async.parallel(instances.map(function(i) {
-      return function(cb) {
+    var instances = [instance, secondInstance];
+    async.each(instances, function(i, cb) {
+      if (i) {
         i.close(cb);
-      };
-    }), function() {
+      } else {
+        cb();
+      }
+    }, function() {
       done();
-      instance = null;
-      secondInstance = null;
     });
   });
 
@@ -119,27 +114,23 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
   
-  it("should close the first client if a second client with the same clientId connects", function(done){
-	  var d = donner(2, done);
-	  var opts = buildOpts(), clientId = "123456789";
-	  opts.clientId = clientId;
-	  async.waterfall([
-	       function(cb){
-	    	   buildAndConnect(d, opts, function(client1){
-	    		   cb(null, client1);
-			   });
-	       },
-	       function(client1, cb){
-	    	   buildAndConnect(d, opts, function(client2){
-	    		   if(settings.secure === undefined){
-	    			   expect(client1.stream.destroyed).to.eql(true);
-	    		   }else{
-	    			   expect(client1.stream._destroyed).to.eql(true);
-	    		   }
-	    		   client2.disconnect();
-	    	   });
-	       }   
-	  ]);
+  it("should close the first client if a second client with the same clientId connects", function(done) {
+    var d = donner(2, done);
+    var opts = buildOpts(), clientId = "123456789";
+    opts.clientId = clientId;
+    async.waterfall([
+      function(cb) {
+        buildAndConnect(d, opts, function(client1) {
+          cb(null, client1);
+        });
+      }, function(client1, cb) {
+        buildAndConnect(d, opts, function(client2) {
+          // no need to check if client1 is destroyed
+          // if not, this test will timeout
+          client2.disconnect();
+        });
+      }
+    ]);
   });
 
   it("should close the connection after the keepalive interval", function(done) {
@@ -722,13 +713,11 @@ module.exports = function(moscaSettings, createConnection) {
     buildAndConnect(done, function(client) {
 
       client.once("publish", function(packet1) {
-        // the first time we do nothing
-        process.nextTick(function() {
-          client.once("publish", function(packet2) {
-            packet1.dup = true;
-            expect(packet2).to.be.deep.equal(packet1);
-            client.disconnect();
-          });
+
+        client.once("publish", function(packet2) {
+          packet1.dup = true;
+          expect(packet2).to.be.deep.equal(packet1);
+          client.disconnect();
         });
       });
 
@@ -847,6 +836,7 @@ module.exports = function(moscaSettings, createConnection) {
 
         client.on("connected", function() {
           var opts = buildOpts();
+          opts.clientId = 'client1';
           opts.will = {
             topic: "/hello/died",
             payload: "client1 died",
@@ -894,7 +884,7 @@ module.exports = function(moscaSettings, createConnection) {
           messageId: 42
         });
         client3.on("suback", function() {
-          client1.stream.end();
+          client1.stream.destroy();
           cb(null);
         });
         client3.on("publish", function(packet) {

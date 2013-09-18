@@ -5,13 +5,14 @@ var SECURE_KEY = __dirname + '/secure/tls-key.pem';
 var SECURE_CERT = __dirname + '/secure/tls-cert.pem';
 
 var moscaSettings = function() {
+  var port = nextPort();
   var settings = {
     logger: {
-      childOf: globalLogger,
+      childOf: globalLogger.child({ port: port }),
       level: 60
     },
-    secure : { 
-      port: nextPort(),
+    secure: {
+      port: port,
       keyPath: SECURE_KEY,
       certPath: SECURE_CERT
     }
@@ -21,7 +22,7 @@ var moscaSettings = function() {
   // test work
   // TODO refactor abstract test suite to take
   // the port as a parameter
-  settings.port = settings.secure.port;
+  settings.port = port;
 
   return settings;
 };
