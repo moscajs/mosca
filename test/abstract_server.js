@@ -118,6 +118,32 @@ module.exports = function(moscaSettings, createConnection) {
       });
     });
   });
+  
+  it("should close the first client if a second client with the same clientId connects", function(done){
+	  var d = donner(2, done);
+	  var opts = buildOpts(), clientId = "123456789";
+	  opts.clientId = clientId;
+	  async.waterfall([
+	       function(cb){
+	    	   buildAndConnect(d, opts, function(client1){
+	    		   //console.log("hi");
+	    		   cb(null, client1);
+			   });
+	       },
+	       function(client1, cb){
+	    	   //console.log("h2i");
+	    	   buildAndConnect(d, opts, function(client2){
+	    		   //console.log("hi2");
+	    		   //console.log(client2);
+	    		   //console.log('heh');
+	    		   expect(client1.stream.destroyed).to.eql(true);
+	    		   client2.disconnect();
+	    	   });
+	       }
+	                   
+	  ]);
+	 
+  });
 
   it("should close the connection after the keepalive interval", function(done) {
     buildClient(done, function(client) {
