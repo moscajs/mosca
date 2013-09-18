@@ -126,23 +126,20 @@ module.exports = function(moscaSettings, createConnection) {
 	  async.waterfall([
 	       function(cb){
 	    	   buildAndConnect(d, opts, function(client1){
-	    		   //console.log("hi");
 	    		   cb(null, client1);
 			   });
 	       },
 	       function(client1, cb){
-	    	   //console.log("h2i");
 	    	   buildAndConnect(d, opts, function(client2){
-	    		   //console.log("hi2");
-	    		   //console.log(client2);
-	    		   //console.log('heh');
-	    		   expect(client1.stream.destroyed).to.eql(true);
+	    		   if(settings.secure === undefined){
+	    			   expect(client1.stream.destroyed).to.eql(true);
+	    		   }else{
+	    			   expect(client1.stream._destroyed).to.eql(true);
+	    		   }
 	    		   client2.disconnect();
 	    	   });
-	       }
-	                   
+	       }   
 	  ]);
-	 
   });
 
   it("should close the connection after the keepalive interval", function(done) {
