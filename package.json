@@ -31,8 +31,8 @@
   "author": "Matteo Collina <hello@matteocollina.com>",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "~1.8.1",
-    "chai": "~1.7.1",
+    "mocha": "~1.13.0",
+    "chai": "~1.8.0",
     "sinon": "~1.4.2",
     "sinon-chai": "~2.1.2",
     "async_bench": "0.2.1",
@@ -44,7 +44,7 @@
     "tmp": "0.0.20"
   },
   "dependencies": {
-    "mqtt": "~0.3.1",
+    "mqtt": "~0.3.2",
     "async": "~0.2.4",
     "ascoltatori": "~0.11.0",
     "debug": "~0.7.2",

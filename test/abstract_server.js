@@ -472,7 +472,7 @@ module.exports = function(moscaSettings, createConnection) {
 
       instance.on("published", function(packet, serverClient) {
         expect(packet.topic).to.be.equal("hello");
-        expect(packet.payload).to.be.equal("some data");
+        expect(packet.payload.toString()).to.be.equal("some data");
         expect(serverClient).not.to.be.equal(undefined);
         client.disconnect();
       });
@@ -980,7 +980,7 @@ module.exports = function(moscaSettings, createConnection) {
   it("should support publish authorization (success)", function(done) {
     instance.authorizePublish = function(client, topic, payload, callback) {
       expect(topic).to.be.eql("hello");
-      expect(payload).to.be.eql("world");
+      expect(payload.toString()).to.be.eql("world");
       callback(null, true);
     };
 
@@ -1005,7 +1005,7 @@ module.exports = function(moscaSettings, createConnection) {
   it("should support publish authorization (failure)", function(done) {
     instance.authorizePublish = function(client, topic, payload, callback) {
       expect(topic).to.be.eql("hello");
-      expect(payload).to.be.eql("world");
+      expect(payload.toString()).to.be.eql("world");
       callback(null, false);
     };
 
@@ -1180,7 +1180,7 @@ module.exports = function(moscaSettings, createConnection) {
 
         client.on("publish", function(packet) {
           expect(packet.topic).to.be.eql("hello");
-          expect(packet.payload).to.be.eql("world");
+          expect(packet.payload.toString()).to.be.eql("world");
           client.disconnect();
         });
       }

@@ -46,7 +46,7 @@ module.exports = function(create, buildOpts) {
       var packet = {
         topic: "hello",
         qos: 0,
-        payload: "world",
+        payload: new Buffer("world"),
         messageId: 42,
         retain: true
       };
@@ -64,7 +64,7 @@ module.exports = function(create, buildOpts) {
       var packet = {
         topic: "hello",
         qos: 0,
-        payload: "world",
+        payload: new Buffer("world"),
         messageId: 42,
         retain: true
       };
@@ -88,7 +88,7 @@ module.exports = function(create, buildOpts) {
       var packet1 = {
         topic: "hello/1",
         qos: 0,
-        payload: "world",
+        payload: new Buffer("world"),
         messageId: 42,
         retain: true
       };
@@ -96,7 +96,7 @@ module.exports = function(create, buildOpts) {
       var packet2 = {
         topic: "hello/2",
         qos: 0,
-        payload: "world",
+        payload: new Buffer("world"),
         messageId: 43,
         retain: true
       };
@@ -125,7 +125,7 @@ module.exports = function(create, buildOpts) {
       var packet1 = {
         topic: "hello/1",
         qos: 0,
-        payload: "world",
+        payload: new Buffer("world"),
         messageId: 42,
         retain: true
       };
@@ -145,7 +145,7 @@ module.exports = function(create, buildOpts) {
       var packet1 = {
         topic: "hello/1",
         qos: 0,
-        payload: "world",
+        payload: new Buffer("world"),
         messageId: 42,
         retain: true
       };
@@ -405,7 +405,7 @@ module.exports = function(create, buildOpts) {
     var packet = {
       topic: "hello",
       qos: 0,
-      payload: "world",
+      payload: new Buffer("world"),
       messageId: 42
     };
 
@@ -566,7 +566,7 @@ module.exports = function(create, buildOpts) {
     var packet = {
       topic: "hello/42",
       qos: 0,
-      payload: "world",
+      payload: new Buffer("world"),
       messageId: 42
     };
 
@@ -589,7 +589,7 @@ module.exports = function(create, buildOpts) {
     var packet = {
       topic: "hello",
       qos: 0,
-      payload: "world",
+      payload: new Buffer("world"),
       messageId: 42
     };
     var client = { 
