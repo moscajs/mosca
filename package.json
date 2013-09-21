@@ -51,14 +51,15 @@
     "commander": "~1.1.1",
     "minimatch": "~0.2.11",
     "bunyan": "~0.21.3",
-    "memdown": "~0.2.0",
+    "memdown": "~0.3.0",
     "levelup": "~0.16.0",
     "level-sublevel": "~5.1.1",
     "level-ttl": "~0.4.0",
     "qlobber": "~0.3.0",
     "lru-cache": "~2.3.0",
     "node-uuid": "~1.4.0",
-    "extend": "~1.1.3"
+    "extend": "~1.1.3",
+    "json-buffer": "~2.0.7"
   },
   "optionalDependencies": {
     "leveldown": "~0.8.0",

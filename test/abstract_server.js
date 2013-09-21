@@ -1143,48 +1143,51 @@ module.exports = function(moscaSettings, createConnection) {
 
           client.on('connack', function(packet) {
 
-            cb(null, client);
+            client.publish({
+              topic: "hello",
+              qos: 0,
+              payload: new Buffer("world world"),
+              messageId: 42,
+              retain: true
+            });
+
+            client.disconnect();
+
+            cb();
           });
         });
       },
 
-      function(client, cb) {
-        client.publish({
-          topic: "hello",
-          qos: 0,
-          payload: "world",
-          messageId: 42,
-          retain: true
-        });
-        client.on("close", cb);
-        client.stream.end();
-      },
-
       function(cb) {
-        buildAndConnect(done, function(client) {
-          cb(null, client);
-        });
-      },
+        var client = createConnection(settings.port, settings.host);
 
-      function(client, cb) {
-        var subscriptions = [{
-            topic: "hello",
-            qos: 0
-          }
-        ];
+        client.on("connected", function() {
+          var opts = buildOpts();
 
-        client.subscribe({
-          subscriptions: subscriptions,
-          messageId: 42
-        });
+          client.connect(opts);
 
-        client.on("publish", function(packet) {
-          expect(packet.topic).to.be.eql("hello");
-          expect(packet.payload.toString()).to.be.eql("world");
-          client.disconnect();
+          client.on('connack', function(packet) {
+            var subscriptions = [{
+                topic: "hello",
+                qos: 0
+              }
+            ];
+
+            client.subscribe({
+              subscriptions: subscriptions,
+              messageId: 29
+            });
+          });
+
+          client.on("publish", function(packet) {
+            expect(packet.topic).to.be.eql("hello");
+            expect(packet.payload.toString()).to.be.eql("world world");
+            client.stream.end();
+            cb();
+          });
         });
       }
-    ]);
+    ], done);
   });
 
   it("should support unclean clients", function(done) {
