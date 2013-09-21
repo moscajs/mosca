@@ -1151,7 +1151,7 @@ module.exports = function(moscaSettings, createConnection) {
               retain: true
             });
 
-            client.disconnect();
+            client.stream.end();
 
             cb();
           });
