@@ -152,6 +152,16 @@ describe("mosca.cli", function() {
     });
   });
 
+  it("should create necessary default options even if not specified in config file", function(done) {
+    args.push("-c");
+    args.push(process.cwd() + "/test/sample_config.js");
+    args.push("-v");
+
+    startServer(done, function(server) {
+      expect(server.opts).to.have.deep.property("logger.name", "mosca");
+    });
+  });
+
   it("should add an user to an authorization file", function(done) {
     args.push("adduser");
     args.push("myuser");
