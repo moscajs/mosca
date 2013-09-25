@@ -1,6 +1,6 @@
 {
   "name": "mosca",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "The multi-transport MQTT broker for node.js. It supports AMQP, Redis, ZeroMQ, MongoDB or just MQTT.",
   "main": "index.js",
   "bin": {
@@ -31,8 +31,8 @@
   "author": "Matteo Collina <hello@matteocollina.com>",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "~1.8.1",
-    "chai": "~1.7.1",
+    "mocha": "~1.13.0",
+    "chai": "~1.8.0",
     "sinon": "~1.4.2",
     "sinon-chai": "~2.1.2",
     "async_bench": "0.2.1",
@@ -52,10 +52,9 @@
     "commander": "~1.1.1",
     "minimatch": "~0.2.11",
     "bunyan": "~0.21.3",
-    "memdown": "~0.2.0",
-    "levelup": "~0.12.0",
-    "level-sublevel": "~4.8.1",
-    "level-range": "0.0.0",
+    "memdown": "~0.3.0",
+    "levelup": "~0.16.0",
+    "level-sublevel": "~5.1.1",
     "level-ttl": "~0.4.0",
     "qlobber": "~0.3.0",
     "lru-cache": "~2.3.0",
@@ -64,10 +63,11 @@
     "mqtt.js-over-websockets": "git://github.com/mcollina/mqtt.js-over-websocket",
     "connect": "~2.8.8",
     "express": "~3.3.8",
-    "browserify-middleware": "~1.17.2"
+    "browserify-middleware": "~1.17.2",
+    "json-buffer": "~2.0.7"
   },
   "optionalDependencies": {
-    "leveldown": "~0.6.2",
+    "leveldown": "~0.8.0",
     "zmq": "~2.4.0",
     "amqp": "~0.1.4",
     "redis": "~0.8.2",

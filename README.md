@@ -441,11 +441,18 @@ Use the [issue tracker](http://github.com/mcollina/mosca/issues) for bugs.
 
 [Matteo Collina](http://twitter.com/matteocollina)
 
-
 ## Contributors
 
-Special thanks to the [following people](https://github.com/mcollina/mosca/contributors) for submitting patches.
-
+<table><tbody>
+<tr><th align="left">David Halls</th><td><a
+href="https://github.com/davedoesdev">GitHub/davedoesdev</a></td>
+</tr>
+<tr><th align="left">Andrea Reginato</th><td><a
+href="https://github.com/andreareginato">GitHub/andreareginato</a></td>
+</tr>
+<tr><th align="left">Chris Wiggins</th><td><a
+href="https://github.com/chriswiggins">GitHub/chriswiggins</a></td>
+</tbody></table>
 
 ## LICENSE - "MIT License"
 

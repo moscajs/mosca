@@ -15,20 +15,15 @@ module.exports = function(moscaSettings, createConnection) {
   });
 
   afterEach(function(done) {
-    var instances = [instance];
-
-    if (secondInstance) {
-      instances = [secondInstance].concat(instances);
-    }
-
-    async.parallel(instances.map(function(i) {
-      return function(cb) {
+    var instances = [instance, secondInstance];
+    async.each(instances, function(i, cb) {
+      if (i) {
         i.close(cb);
-      };
-    }), function() {
+      } else {
+        cb();
+      }
+    }, function() {
       done();
-      instance = null;
-      secondInstance = null;
     });
   });
 
@@ -117,6 +112,25 @@ module.exports = function(moscaSettings, createConnection) {
         expect(packet.returnCode).to.eql(2);
       });
     });
+  });
+  
+  it("should close the first client if a second client with the same clientId connects", function(done) {
+    var d = donner(2, done);
+    var opts = buildOpts(), clientId = "123456789";
+    opts.clientId = clientId;
+    async.waterfall([
+      function(cb) {
+        buildAndConnect(d, opts, function(client1) {
+          cb(null, client1);
+        });
+      }, function(client1, cb) {
+        buildAndConnect(d, opts, function(client2) {
+          // no need to check if client1 is destroyed
+          // if not, this test will timeout
+          client2.disconnect();
+        });
+      }
+    ]);
   });
 
   it("should close the connection after the keepalive interval", function(done) {
@@ -458,7 +472,7 @@ module.exports = function(moscaSettings, createConnection) {
 
       instance.on("published", function(packet, serverClient) {
         expect(packet.topic).to.be.equal("hello");
-        expect(packet.payload).to.be.equal("some data");
+        expect(packet.payload.toString()).to.be.equal("some data");
         expect(serverClient).not.to.be.equal(undefined);
         client.disconnect();
       });
@@ -699,13 +713,11 @@ module.exports = function(moscaSettings, createConnection) {
     buildAndConnect(done, function(client) {
 
       client.once("publish", function(packet1) {
-        // the first time we do nothing
-        process.nextTick(function() {
-          client.once("publish", function(packet2) {
-            packet1.dup = true;
-            expect(packet2).to.be.deep.equal(packet1);
-            client.disconnect();
-          });
+
+        client.once("publish", function(packet2) {
+          packet1.dup = true;
+          expect(packet2).to.be.deep.equal(packet1);
+          client.disconnect();
         });
       });
 
@@ -824,6 +836,7 @@ module.exports = function(moscaSettings, createConnection) {
 
         client.on("connected", function() {
           var opts = buildOpts();
+          opts.clientId = 'client1';
           opts.will = {
             topic: "/hello/died",
             payload: "client1 died",
@@ -871,7 +884,7 @@ module.exports = function(moscaSettings, createConnection) {
           messageId: 42
         });
         client3.on("suback", function() {
-          client1.stream.end();
+          client1.stream.destroy();
           cb(null);
         });
         client3.on("publish", function(packet) {
@@ -967,7 +980,7 @@ module.exports = function(moscaSettings, createConnection) {
   it("should support publish authorization (success)", function(done) {
     instance.authorizePublish = function(client, topic, payload, callback) {
       expect(topic).to.be.eql("hello");
-      expect(payload).to.be.eql("world");
+      expect(payload.toString()).to.be.eql("world");
       callback(null, true);
     };
 
@@ -992,7 +1005,7 @@ module.exports = function(moscaSettings, createConnection) {
   it("should support publish authorization (failure)", function(done) {
     instance.authorizePublish = function(client, topic, payload, callback) {
       expect(topic).to.be.eql("hello");
-      expect(payload).to.be.eql("world");
+      expect(payload.toString()).to.be.eql("world");
       callback(null, false);
     };
 
@@ -1130,48 +1143,51 @@ module.exports = function(moscaSettings, createConnection) {
 
           client.on('connack', function(packet) {
 
-            cb(null, client);
+            client.publish({
+              topic: "hello",
+              qos: 0,
+              payload: new Buffer("world world"),
+              messageId: 42,
+              retain: true
+            });
+
+            client.stream.end();
+
+            cb();
           });
         });
       },
 
-      function(client, cb) {
-        client.publish({
-          topic: "hello",
-          qos: 0,
-          payload: "world",
-          messageId: 42,
-          retain: true
-        });
-        client.on("close", cb);
-        client.stream.end();
-      },
-
       function(cb) {
-        buildAndConnect(done, function(client) {
-          cb(null, client);
-        });
-      },
+        var client = createConnection(settings.port, settings.host);
 
-      function(client, cb) {
-        var subscriptions = [{
-            topic: "hello",
-            qos: 0
-          }
-        ];
+        client.on("connected", function() {
+          var opts = buildOpts();
 
-        client.subscribe({
-          subscriptions: subscriptions,
-          messageId: 42
-        });
+          client.connect(opts);
 
-        client.on("publish", function(packet) {
-          expect(packet.topic).to.be.eql("hello");
-          expect(packet.payload).to.be.eql("world");
-          client.disconnect();
+          client.on('connack', function(packet) {
+            var subscriptions = [{
+                topic: "hello",
+                qos: 0
+              }
+            ];
+
+            client.subscribe({
+              subscriptions: subscriptions,
+              messageId: 29
+            });
+          });
+
+          client.on("publish", function(packet) {
+            expect(packet.topic).to.be.eql("hello");
+            expect(packet.payload.toString()).to.be.eql("world world");
+            client.stream.end();
+            cb();
+          });
         });
       }
-    ]);
+    ], done);
   });
 
   it("should support unclean clients", function(done) {
