@@ -1,6 +1,14 @@
 History
 =======
 
+## 0.12.1
+
+* Support both a config file and command-line options,
+  fixes [#58](https://github.com/mcollina/mosca/issues/58) and
+  [#60](https://github.com/mcollina/mosca/issues/60).
+* Fixes redis persistence for unknown client ids
+  [#59](https://github.com/mcollina/mosca/pull#59).
+
 ## 0.12.0
 
 * Close forcefully a connecting client
