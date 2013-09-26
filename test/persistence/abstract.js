@@ -245,6 +245,25 @@ module.exports = function(create, buildOpts) {
       });
     });
 
+    it("should allow a clean client to connect", function(done) {
+      var instance = this.instance;
+      var client = {
+        id: "my client id - 42",
+        clean: true,
+        logger: globalLogger,
+        subscriptions: {
+          hello: {
+            qos: 1
+          }
+        }
+      };
+
+      instance.lookupSubscriptions(client, function(err, results) {
+        expect(results).to.eql({});
+        done();
+      });
+    });
+
     it("should load an empty subscriptions object for a clean client", function(done) {
       var instance = this.instance;
       var client = {
