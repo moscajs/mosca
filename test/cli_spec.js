@@ -157,9 +157,13 @@ describe("mosca.cli", function() {
     args.push(process.cwd() + "/test/sample_config.js");
     args.push("-v");
 
-    startServer(done, function(server) {
+    var s = startServer(done, function(server) {
       expect(server.opts).to.have.deep.property("logger.name", "mosca");
     });
+
+    if (s.logger) {
+      s.logger.streams.pop();
+    }
   });
 
   it("should add an user to an authorization file", function(done) {
