@@ -60,7 +60,7 @@ module.exports = function(create, buildOpts) {
       });
     });
 
-    it("should match and load a retain message", function(done) {
+    it("should match and load a retained message", function(done) {
       var packet = {
         topic: "hello",
         qos: 0,
@@ -78,6 +78,38 @@ module.exports = function(create, buildOpts) {
         function(cb) {
           instance.lookupRetained("hello", function(err, results) {
             expect(results[0]).to.eql(packet);
+            cb();
+          });
+        }
+      ], done);
+    });
+
+    it("should overwrite a retained message", function(done) {
+      var packet = {
+        topic: "hello",
+        qos: 0,
+        payload: new Buffer("world"),
+        messageId: 42,
+        retain: true
+      };
+
+      var packet2 = {
+        topic: "hello",
+        qos: 0,
+        payload: new Buffer("matteo"),
+        messageId: 43,
+        retain: true
+      };
+
+      var instance = this.instance;
+
+      async.series([
+        instance.storeRetained.bind(instance, packet),
+        instance.storeRetained.bind(instance, packet2),
+        function(cb) {
+          instance.lookupRetained("hello", function(err, results) {
+            expect(results).to.have.property("length", 1);
+            expect(results[0]).to.eql(packet2);
             cb();
           });
         }
