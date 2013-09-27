@@ -28,151 +28,470 @@
         </ul>
       </header>
       <section>
-        <h1>Mosca</h1>
+        <h1>
+<a name="mosca" class="anchor" href="#mosca"><span class="octicon octicon-link"></span></a>Mosca</h1>
 
 <p><img src="https://raw.github.com/mcollina/mosca/master/mosca.png" alt="Mosca"></p>
 
-<p><a href="https://travis-ci.org/mcollina/mosca"><img src="https://travis-ci.org/mcollina/mosca.png" alt="Build
-Status"></a></p>
+<p><a href="https://travis-ci.org/mcollina/mosca"><img src="https://travis-ci.org/mcollina/mosca.png" alt="Build Status"></a></p>
 
-<p><strong>Mosca</strong> is a multi-transport <a href="http://mqtt.org/">MQTT</a> broker.
-It aims to support every publish/subscribe
-broker or protocol out there.
-This list currently includes:</p>
+<p><a href="https://nodei.co/npm/mosca/"><img src="https://nodei.co/npm/mosca.png" alt="NPM"></a></p>
+
+<p><a href="https://nodei.co/npm/mosca/"><img src="https://nodei.co/npm-dl/mosca.png" alt="NPM"></a></p>
+
+<p>Mosca is a multi-transport <a href="http://mqtt.org/">MQTT</a> broker
+supporting the following brokers/protocols.</p>
 
 <ul>
 <li>
-<a href="http://www.rabbitmq.com/">RabbitMQ</a> and all implementations of
-the <a href="http://www.amqp.org/">AMQP</a> protocol.</li>
+<a href="http://redis.io/">Redis</a>, a key/value store created by <a href="https://github.com/antirez">@antirez</a>.</li>
 <li>
-<a href="http://redis.io/">Redis</a>, the fabulous key/value store by
-<a href="https://github.com/antirez">@antirez</a>.</li>
+<a href="http://www.mongodb.org/">MongoDB</a>, a scalable, high-performance, document-oriented database.</li>
 <li>
-<a href="http://mosquitto.org/">Mosquitto</a> and all implementations of the
-<a href="http://mqtt.org/">MQTT</a> protocol, including itself.</li>
+<a href="http://mosquitto.org/">Mosquitto</a> and all implementations of the <a href="http://mqtt.org/">MQTT</a> protocol.</li>
 <li>
-<a href="http://www.zeromq.org/">ZeroMQ</a> without a central broker, so
-Mosca can also be used in a P2P fashion.</li>
-</ul><p><strong>Mosca</strong> is still under active development, but it should work :).
-Let me know if you plan to use <strong>Mosca</strong> in production.</p>
+<a href="http://www.rabbitmq.com/">RabbitMQ</a> and all implementations of the <a href="http://www.amqp.org/">AMQP</a> protocol.</li>
+<li>
+<a href="http://www.zeromq.org/">ZeroMQ</a> to use Mosca in a P2P fashion.</li>
+</ul><p>Find out more about Mosca reading the
+<a href="http://mcollina.github.io/mosca/docs">dox generated documentation</a>.</p>
 
-<h2>Usage</h2>
+<p>If you plan to use Mosca in production
+<a href="http://twitter.com/matteocollina">let us know</a>, we'll be more than happy to help
+you getting started and solve any issue you'll find out.</p>
 
-<p>Mosca is a node.js application, so it needs <a href="http://nodejs.org">node.js</a>
-to run.</p>
+<p>Mosca can be used:</p>
 
-<pre><code>$: npm install mosca -g
-$: mosca -v
+<ul>
+<li><a href="#standalone">Standalone</a></li>
+<li><a href="#embedded">Embedded in another Node.js application</a></li>
+</ul><h2>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<ul>
+<li>MQTT 3.1 compliant.</li>
+<li>QoS 0 and QoS 1.</li>
+<li>Various storage options for QoS 1 offline packets, and subscriptions.</li>
+<li>As fast as it is possible.</li>
+<li>Usable inside ANY other node.js app.</li>
+</ul><p><a name="standalone"></a></p>
+
+<h2>
+<a name="using-mosca-standalone" class="anchor" href="#using-mosca-standalone"><span class="octicon octicon-link"></span></a>Using Mosca Standalone</h2>
+
+<h3>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h3>
+
+<p>Install the library using <a href="http://npmjs.org/">npm</a>.</p>
+
+<pre><code>$ npm install mosca bunyan -g
 </code></pre>
 
-<p>Then you can connect to it with your preferred <a href="http://mqtt.org">MQTT</a>
-client.</p>
+<p>Install the library using git.</p>
 
-<h2>Features</h2>
+<pre><code>$ git clone git://github.com/mcollina/mosca.git
+$ cd mosca
+$ npm install
+</code></pre>
 
-<ul>
-<li>MQTT 3.1 compliant</li>
-<li>QoS 0 and QoS 1, but without storage</li>
-<li>Built on top on node.js</li>
-<li>As fast as it is possible</li>
-<li>Usable inside ANY other node.js app, see the
-<a href="http://mcollina.github.com/mosca/docs/server.js.html">API</a>.</li>
-</ul><h2>Configuration</h2>
+<h3>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h3>
 
-<p>Mosca supports some command line options:</p>
+<p>Mosca offers an executable for running it standalone.
+Run it and connect your preferred MQTT client.</p>
 
-<pre><code>Usage: mosca [options]
+<pre><code>$ mosca -v | bunyan
+</code></pre>
+
+<h3>
+<a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h3>
+
+<p>Here you can see the options accepted by the command line tool:</p>
+
+<pre><code>  Usage: mosca [options] [command]
+
+  Commands:
+
+    adduser &lt;user&gt; &lt;pass&gt;  Add a user to the given credentials file
+    rmuser &lt;user&gt;          Removes a user from the given credentials file
+    start                  start the server (optional)
 
   Options:
 
-    -h, --help           output usage information
-    -V, --version        output the version number
-    -p, --port &lt;n&gt;       the port to listen to
-    --parent-port &lt;n&gt;    the parent port to connect to
-    --parent-host &lt;s&gt;    the parent host to connect to
-    --parent-prefix &lt;s&gt;  the prefix to use in the parent broker
-    -c, --config &lt;c&gt;     the config file to use (override every 
-                         other options)
-    -v, --verbose        equal to DEBUG=mosca
-    --very-verbose       equal to DEBUG=mosca,ascoltatori:*
+    -h, --help                       output usage information
+    -V, --version                    output the version number
+    -p, --port &lt;n&gt;                   the port to listen to
+    --parent-port &lt;n&gt;                the parent port to connect to
+    --parent-host &lt;s&gt;                the parent host to connect to
+    --parent-prefix &lt;s&gt;              the prefix to use in the parent broker
+    --credentials &lt;file&gt;             the file containing the credentials
+    --authorize-publish &lt;pattern&gt;    the pattern for publishing to topics for the added user
+    --authorize-subscribe &lt;pattern&gt;  the pattern for subscribing to topics for the added user
+    --key &lt;file&gt;                     the server's private key
+    --cert &lt;file&gt;                    the certificate issued to the server
+    --secure-port &lt;n&gt;                the TLS port to listen to
+    --non-secure                     start both a secure and non-secure server
+    -c, --config &lt;c&gt;                 the config file to use (override every other option)
+    -d, --db &lt;path&gt;                  the path were to store the database
+    -v, --verbose                    set the bunyan log to INFO
+    --very-verbose                   set the bunyan log to DEBUG
 </code></pre>
 
-<p>However you can only use a MQTT backend with the command line options.</p>
-
-<p>If you want to unleash the full power of mosca, you will need to
-use a configuration file.
-Some examples are included in this repository, one using
-<a href="https://github.com/mcollina/mosca/tree/master/examples/redis">Redis</a>,
-and one using a
-<a href="https://github.com/mcollina/mosca/tree/master/examples/mosca-tree">tree-based</a> topology of Moscas.</p>
+<p>To fully use mosca you need to define a configuration file where the communication
+broker is defined. Here follows an example using Redis.</p>
 
 <p>A configuration file is structured in the following way:</p>
 
-<pre><code>module.exports = {
-  port: 4883,
-  backend: {
-    type: "redis"
-  }
-};
-</code></pre>
+<div class="highlight highlight-javascript"><pre><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">port</span><span class="o">:</span> <span class="mi">4883</span><span class="p">,</span>
+  <span class="nx">backend</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">type</span><span class="o">:</span> <span class="s1">'redis'</span><span class="p">,</span>
+    <span class="nx">redis</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'redis'</span><span class="p">),</span>
+    <span class="nx">db</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
+    <span class="nx">port</span><span class="o">:</span> <span class="mi">6379</span><span class="p">,</span>
+    <span class="nx">host</span><span class="o">:</span> <span class="nx">localhost</span>
+  <span class="p">},</span>
+  <span class="nx">secure</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">keyPath</span><span class="o">:</span> <span class="s2">"/path/to/key"</span><span class="p">,</span>
+    <span class="nx">certPath</span><span class="o">:</span> <span class="s2">"/path/to/cert"</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
 
-<p>As <strong>Mosca</strong> is based on
-<a href="http://mcollina.github.com/ascoltatori/">Ascoltatori</a> to integrate
-all backends, please refer to <strong>Ascoltatori</strong>'s documentation to set
-them up accordingly.
-The whole content of the <code>backend</code> key is passed through to the
-<a href="http://mcollina.github.com/ascoltatori/docs/ascoltatori.js.html#build">ascoltatori.build</a>
-method.</p>
+<p>Ad Mosca is based on Ascoltatori, <a href="http://mcollina.github.com/ascoltatori#brokers">here</a> you can
+find configuration examples covering Redis, MongoDB, AMQP, ZeroMQ and and MQTT brokers (e.g Mosquitto).</p>
 
-<h2>Users</h2>
+<h3>
+<a name="authorization" class="anchor" href="#authorization"><span class="octicon octicon-link"></span></a>Authorization</h3>
 
-<p><strong>Mosca</strong> support user authentication through the use of a specific json
-file.
-In order to create one, you can just add an user to it:</p>
+<p>Mosca supports user authentication through the use of a specific json file.
+In order to create one run the following command.</p>
 
-<pre><code>$ mosca adduser myuser mypass --credentials ./credentials.json
-</code></pre>
+<div class="highlight highlight-javascript"><pre><span class="c1">// add a user</span>
+<span class="nx">$</span> <span class="nx">mosca</span> <span class="nx">adduser</span> <span class="o">&lt;</span><span class="nx">user</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nx">pass</span><span class="o">&gt;</span> <span class="o">--</span><span class="nx">credentials</span> <span class="p">.</span><span class="o">/</span><span class="nx">credentials</span><span class="p">.</span><span class="nx">json</span>
 
-<p>Then, in order to start <strong>Mosca</strong> with a specific set of credentials:</p>
+<span class="c1">// add a user specifying the authorized topics</span>
+<span class="nx">$</span> <span class="nx">mosca</span> <span class="nx">adduser</span> <span class="nx">myuser</span> <span class="nx">mypass</span> <span class="o">--</span><span class="nx">credentials</span> <span class="p">.</span><span class="o">/</span><span class="nx">credentials</span><span class="p">.</span><span class="nx">json</span> <span class="o">\</span>
+  <span class="o">--</span><span class="nx">authorize</span><span class="o">-</span><span class="nx">publish</span> <span class="s1">'hello/*'</span> <span class="o">--</span><span class="nx">authorize</span><span class="o">-</span><span class="nx">subscribe</span> <span class="s1">'hello/*'</span>
 
-<pre><code>$ mosca --credentials ./credentials.json
-</code></pre>
+<span class="c1">// remove a user</span>
+<span class="nx">$</span> <span class="nx">mosca</span> <span class="nx">rmuser</span> <span class="nx">myuser</span> <span class="o">--</span><span class="nx">credentials</span> <span class="p">.</span><span class="o">/</span><span class="nx">credentials</span><span class="p">.</span><span class="nx">json</span>
 
-<p>It is also possible to remove a user:</p>
+<span class="c1">// start Mosca with a specific set of credentials:</span>
+<span class="nx">$</span> <span class="nx">mosca</span> <span class="o">--</span><span class="nx">credentials</span> <span class="p">.</span><span class="o">/</span><span class="nx">credentials</span><span class="p">.</span><span class="nx">json</span>
+</pre></div>
 
-<pre><code>$ mosca rmuser myuser --credentials ./credentials.json
-</code></pre>
+<p>The patterns are checked and validated using <a href="https://github.com/isaacs/minimatch">Minimatch</a>.
+The credentials file can be automatically reladed by Mosca if it receives a <code>SIGHUP</code>.</p>
 
-<p>The <code>adduser</code> command allows also to specify the pattern of topics that
-a given user is authorized to access, like so:</p>
+<h3>
+<a name="persistence" class="anchor" href="#persistence"><span class="octicon octicon-link"></span></a>Persistence</h3>
 
-<pre><code>$ mosca adduser myuser mypass --credentials ./credentials.json \
-  --authorize-publish 'hello/*' --authorize-subscribe 'hello/*'
-</code></pre>
-
-<p>The patterns are checked and validated using
-<a href="https://github.com/isaacs/minimatch">Minimatch</a>.</p>
-
-<p>The credentials file can be automatically reladed by <strong>Mosca</strong> if it
-receives a <code>SIGHUP</code>.</p>
-
-<h2>Contributing to Mosca</h2>
+<p>The MQTT specification requires a persistent storage for offline QoS 1
+subscription that has been done by an unclean client. Mosca offers several
+persitance options.</p>
 
 <ul>
-<li>Check out the latest master to make sure the feature hasn't been
-implemented or the bug hasn't been fixed yet</li>
-<li>Check out the issue tracker to make sure someone already hasn't
-requested it and/or contributed it</li>
-<li>Fork the project</li>
-<li>Start a feature/bugfix branch</li>
-<li>Commit and push until you are happy with your contribution</li>
-<li>Make sure to add tests for it. This is important so I don't break it
-in a future version unintentionally.</li>
-<li>Please try not to mess with the Makefile and package.json. If you
-want to have your own version, or is otherwise necessary, that is
-fine, but please isolate to its own commit so I can cherry-pick around
-it.</li>
-</ul><h2>LICENSE - "MIT License"</h2>
+<li><a href="http://mcollina.github.com/mosca/docs/lib/persistence/redis.js.html">Redis</a></li>
+<li><a href="http://mcollina.github.com/mosca/docs/lib/persistence/mongo.js.html">MongoDB</a></li>
+<li><a href="http://mcollina.github.com/mosca/docs/lib/persistence/levelup.js.html">LevelUp</a></li>
+<li><a href="http://mcollina.github.com/mosca/docs/lib/persistence/memory.js.html">Memory</a></li>
+</ul><p>All of them can be configured from the configuration file, under the <code>persistence</code> key.
+The only exception is LevelUp, which can be specified by using the <code>--db</code> option from
+the command line.</p>
+
+<p><a name="embedded"></a></p>
+
+<h2>
+<a name="embedding-mosca" class="anchor" href="#embedding-mosca"><span class="octicon octicon-link"></span></a>Embedding Mosca</h2>
+
+<p>Mosca can be used into any Node.js app. Here an example that uses MongoDB as broker.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">mosca</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'mosca'</span><span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">ascoltatore</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">type</span><span class="o">:</span> <span class="s1">'mongo'</span><span class="p">,</span>
+  <span class="nx">uri</span><span class="o">:</span> <span class="s1">'mongodb://localhost:27017/'</span><span class="p">,</span>
+  <span class="nx">db</span><span class="o">:</span> <span class="s1">'mqtt'</span><span class="p">,</span>
+  <span class="nx">pubsubCollection</span><span class="o">:</span> <span class="s1">'ascoltatori'</span><span class="p">,</span>
+  <span class="nx">mongo</span><span class="o">:</span> <span class="p">{}</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">settings</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">port</span><span class="o">:</span> <span class="mi">1883</span><span class="p">,</span>
+  <span class="nx">backend</span><span class="o">:</span> <span class="nx">ascoltatore</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">server</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mosca</span><span class="p">.</span><span class="nx">Server</span><span class="p">(</span><span class="nx">settings</span><span class="p">);</span>
+<span class="nx">server</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'ready'</span><span class="p">,</span> <span class="nx">setup</span><span class="p">);</span>
+
+<span class="c1">// fired when the mqtt server is ready</span>
+<span class="kd">function</span> <span class="nx">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Mosca server is up and running'</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// fired when a message is published</span>
+<span class="nx">server</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'published'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">packet</span><span class="p">,</span> <span class="nx">client</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Published'</span><span class="p">,</span> <span class="nx">packet</span><span class="p">.</span><span class="nx">payload</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>
+<a name="how-mosca-works" class="anchor" href="#how-mosca-works"><span class="octicon octicon-link"></span></a>How Mosca works</h3>
+
+<p>Mosca is based on <a href="https://github.com/mcollina/ascoltatori">Ascoltatori</a>, a simple
+publish/subscribe library supporting different brokers/protocols such as Redis,
+MongoDB, RabbitMQ, Mosquitto, and ZeroMQ. This means that you can use any of the
+listed solutions to let your MQTT client communicate with any service. Note that
+Mosca and Ascoltatore must share the same underlying broker.</p>
+
+<h4>
+<a name="mqtt-client-publish-flow" class="anchor" href="#mqtt-client-publish-flow"><span class="octicon octicon-link"></span></a>MQTT Client Publish Flow</h4>
+
+<p>This is a Node.js MQTT client publishing on a topic.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">mqtt</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'mqtt'</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">host</span> <span class="o">=</span> <span class="s1">'localhost'</span>
+  <span class="p">,</span> <span class="nx">port</span> <span class="o">=</span> <span class="s1">'1883'</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">settings</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">keepalive</span><span class="o">:</span> <span class="mi">1000</span><span class="p">,</span>
+  <span class="nx">protocolId</span><span class="o">:</span> <span class="s1">'MQIsdp'</span><span class="p">,</span>
+  <span class="nx">protocolVersion</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="nx">clientId</span><span class="o">:</span> <span class="s1">'client-1'</span>
+<span class="p">}</span>
+
+<span class="c1">// client connection</span>
+<span class="kd">var</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">mqtt</span><span class="p">.</span><span class="nx">createClient</span><span class="p">(</span><span class="nx">port</span><span class="p">,</span> <span class="nx">host</span><span class="p">,</span> <span class="nx">settings</span><span class="p">);</span>
+
+<span class="c1">// client publishing a sample JSON</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="s1">'hello/you'</span><span class="p">,</span> <span class="s1">'{ "hello": "you" }'</span><span class="p">);</span>
+</pre></div>
+
+<p>This message will be received from Mosca and any Ascoltatore who has subscribed
+to this topic will automatically receive the message.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">ascoltatori</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'ascoltatori'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">settings</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">type</span><span class="o">:</span> <span class="s1">'mongo'</span><span class="p">,</span>
+  <span class="nx">uri</span><span class="o">:</span> <span class="s1">'mongodb://localhost:27017/'</span><span class="p">,</span>
+  <span class="nx">db</span><span class="o">:</span> <span class="s1">'mqtt'</span><span class="p">,</span>
+  <span class="nx">pubsubCollection</span><span class="o">:</span> <span class="s1">'ascoltatori'</span><span class="p">,</span>
+  <span class="nx">mongo</span><span class="o">:</span> <span class="p">{}</span>
+<span class="p">};</span>
+
+<span class="nx">ascoltatori</span><span class="p">.</span><span class="nx">build</span><span class="p">(</span><span class="nx">settings</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">ascoltatore</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">ascoltatore</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s1">'hello/*'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Received message'</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+
+<h4>
+<a name="mqtt-client-subscribe-flow" class="anchor" href="#mqtt-client-subscribe-flow"><span class="octicon octicon-link"></span></a>MQTT Client Subscribe Flow</h4>
+
+<p>With the same logics, a client subscribing to Mosca for a specific topic will
+get notified everytime an element will be published in Ascoltatori. This is a
+Node.js MQTT client subscribing a topic.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">mqtt</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'mqtt'</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">host</span> <span class="o">=</span> <span class="s1">'localhost'</span>
+  <span class="p">,</span> <span class="nx">port</span> <span class="o">=</span> <span class="s1">'1883'</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">settings</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">keepalive</span><span class="o">:</span> <span class="mi">1000</span><span class="p">,</span>
+  <span class="nx">protocolId</span><span class="o">:</span> <span class="s1">'MQIsdp'</span><span class="p">,</span>
+  <span class="nx">protocolVersion</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="nx">clientId</span><span class="o">:</span> <span class="s1">'client-1'</span>
+<span class="p">}</span>
+
+<span class="c1">// client connection</span>
+<span class="kd">var</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">mqtt</span><span class="p">.</span><span class="nx">createClient</span><span class="p">(</span><span class="nx">port</span><span class="p">,</span> <span class="nx">host</span><span class="p">,</span> <span class="nx">settings</span><span class="p">);</span>
+
+<span class="c1">// client subscription</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s1">'hello/me'</span><span class="p">)</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'message'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'received'</span><span class="p">,</span> <span class="nx">topic</span><span class="p">,</span> <span class="nx">message</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>When an Ascoltatore publishes a message to the topic, Mosca forwards it to the
+client who subscribed it.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">ascoltatori</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'ascoltatori'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">settings</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">type</span><span class="o">:</span> <span class="s1">'mongo'</span><span class="p">,</span>
+  <span class="nx">uri</span><span class="o">:</span> <span class="s1">'mongodb://localhost:27017/'</span><span class="p">,</span>
+  <span class="nx">db</span><span class="o">:</span> <span class="s1">'mqtt'</span><span class="p">,</span>
+  <span class="nx">pubsubCollection</span><span class="o">:</span> <span class="s1">'ascoltatori'</span><span class="p">,</span>
+  <span class="nx">mongo</span><span class="o">:</span> <span class="p">{}</span>
+<span class="p">};</span>
+
+<span class="nx">ascoltatori</span><span class="p">.</span><span class="nx">build</span><span class="p">(</span><span class="nx">settings</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">_ascoltatore</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">ascoltatore</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="s1">'hello/me'</span><span class="p">,</span> <span class="s1">'{ "hello": "you" }'</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>
+<a name="authorizations" class="anchor" href="#authorizations"><span class="octicon octicon-link"></span></a>Authorizations</h3>
+
+<p>With Mosca you can authorize a client defining three methods.</p>
+
+<ul>
+<li><code>#authenticate</code></li>
+<li><code>#authorizePublish</code></li>
+<li><code>#authorizeSubscribe</code></li>
+</ul><p>Those methods can be used to restric the accessible topics for a specific clients.
+Follows an example where a client send a username and a password during the connection
+phase and where the username will be saved and used later on to verify if a specific
+client can publish or subscribe for the specific user.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="c1">// Accepts the connection if the username and password are valid</span>
+<span class="kd">var</span> <span class="nx">authenticate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">client</span><span class="p">,</span> <span class="nx">username</span><span class="p">,</span> <span class="nx">password</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">authorized</span> <span class="o">=</span> <span class="p">(</span><span class="nx">username</span> <span class="o">===</span> <span class="s1">'alice'</span> <span class="o">&amp;&amp;</span> <span class="nx">password</span> <span class="o">===</span> <span class="s1">'secret'</span><span class="p">);</span>
+  <span class="k">if</span> <span class="nx">authorized</span> <span class="nx">client</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> <span class="nx">username</span><span class="p">;</span>
+  <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">authorized</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// In this case the client authorized as alice can publish to /users/alice taking</span>
+<span class="c1">// the username from the topic and verifing it is the same of the authorized user</span>
+<span class="kd">var</span> <span class="nx">authorizePublish</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">client</span><span class="p">,</span> <span class="nx">topic</span><span class="p">,</span> <span class="nx">payload</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">client</span><span class="p">.</span><span class="nx">user</span> <span class="o">==</span> <span class="nx">topic</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)[</span><span class="mi">1</span><span class="p">]);</span>
+<span class="p">}</span>
+
+<span class="c1">// In this case the client authorized as alice can subscribe to /users/alice taking</span>
+<span class="c1">// the username from the topic and verifing it is the same of the authorized user</span>
+<span class="kd">var</span> <span class="nx">authorizeSubscribe</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">client</span><span class="p">,</span> <span class="nx">topic</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">client</span><span class="p">.</span><span class="nx">user</span> <span class="o">==</span> <span class="nx">topic</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)[</span><span class="mi">1</span><span class="p">]);</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>With this logic someone that is authorized as alice will not be able to publish to
+the topic <code>users/bob</code>. Now that we have the authorizing methods we can configure mosca.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">server</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mosca</span><span class="p">.</span><span class="nx">Server</span><span class="p">(</span><span class="nx">settings</span><span class="p">);</span>
+<span class="nx">server</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'ready'</span><span class="p">,</span> <span class="nx">setup</span><span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">server</span><span class="p">.</span><span class="nx">authenticate</span> <span class="o">=</span> <span class="nx">authenticate</span><span class="p">;</span>
+  <span class="nx">server</span><span class="p">.</span><span class="nx">authorizePublish</span> <span class="o">=</span> <span class="nx">authorizePublish</span><span class="p">;</span>
+  <span class="nx">server</span><span class="p">.</span><span class="nx">authorizeSubscribe</span> <span class="o">=</span> <span class="nx">authorizeSubscribe</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<h3>
+<a name="persistence-1" class="anchor" href="#persistence-1"><span class="octicon octicon-link"></span></a>Persistence</h3>
+
+<p>The persistence is automatically configured when using the
+<code>mosca.Server</code> constructor, but it needs to be explicitly wired up.
+Here is the list of all supported database:</p>
+
+<ul>
+<li><a href="http://mcollina.github.com/mosca/docs/lib/persistence/redis.js.html">Redis</a></li>
+<li><a href="http://mcollina.github.com/mosca/docs/lib/persistence/mongo.js.html">MongoDB</a></li>
+<li><a href="http://mcollina.github.com/mosca/docs/lib/persistence/levelup.js.html">LevelUp</a></li>
+<li><a href="http://mcollina.github.com/mosca/docs/lib/persistence/memory.js.html">Memory</a></li>
+</ul><p>If you would like to see one more database, feel free to submit a
+pull-request.</p>
+
+<p>The wiring is easy:</p>
+
+<div class="highlight highlight-javascript"><pre>
+<span class="kd">var</span> <span class="nx">mosca</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"mosca"</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">server</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mosca</span><span class="p">.</span><span class="nx">Server</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">db</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mosca</span><span class="p">.</span><span class="nx">persistence</span><span class="p">.</span><span class="nx">LevelUp</span><span class="p">({</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">"/path/to/the/db"</span> <span class="p">});</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">wire</span><span class="p">(</span><span class="nx">server</span><span class="p">);</span>
+</pre></div>
+
+<h3>
+<a name="encryption-support" class="anchor" href="#encryption-support"><span class="octicon octicon-link"></span></a>Encryption Support</h3>
+
+<p>Mosca supports encrypted communication via node's TLS implementation:
+<a href="http://nodejs.org/api/tls.html#tls_tls_ssl">http://nodejs.org/api/tls.html#tls_tls_ssl</a>.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">mosca</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'mosca'</span><span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">SECURE_KEY</span> <span class="o">=</span> <span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">'/../../test/secure/tls-key.pem'</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">SECURE_CERT</span> <span class="o">=</span> <span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">'/../../test/secure/tls-cert.pem'</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">settings</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">port</span><span class="o">:</span> <span class="mi">8443</span><span class="p">,</span>
+  <span class="nx">logger</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">"secureExample"</span><span class="p">,</span>
+    <span class="nx">level</span><span class="o">:</span> <span class="mi">40</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="nx">secure</span> <span class="o">:</span> <span class="p">{</span> 
+    <span class="nx">keyPath</span><span class="o">:</span> <span class="nx">SECURE_KEY</span><span class="p">,</span>
+    <span class="nx">certPath</span><span class="o">:</span> <span class="nx">SECURE_CERT</span><span class="p">,</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+<span class="kd">var</span> <span class="nx">server</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mosca</span><span class="p">.</span><span class="nx">Server</span><span class="p">(</span><span class="nx">settings</span><span class="p">);</span>
+<span class="nx">server</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'ready'</span><span class="p">,</span> <span class="nx">setup</span><span class="p">);</span>
+
+<span class="c1">// fired when the mqtt server is ready</span>
+<span class="kd">function</span> <span class="nx">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Mosca server is up and running'</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+
+<p>Fork the repo on github and send a pull requests with topic branches.
+Do not forget to provide specs to your contribution.</p>
+
+<h3>
+<a name="running-specs" class="anchor" href="#running-specs"><span class="octicon octicon-link"></span></a>Running specs</h3>
+
+<ul>
+<li>Fork and clone the repository</li>
+<li>Run <code>npm install</code>
+</li>
+<li>Run <code>npm test</code>
+</li>
+</ul><h2>
+<a name="coding-guidelines" class="anchor" href="#coding-guidelines"><span class="octicon octicon-link"></span></a>Coding guidelines</h2>
+
+<p>Follow <a href="http://nodeguide.com/style.html">felix</a> guidelines.</p>
+
+<h2>
+<a name="feedback" class="anchor" href="#feedback"><span class="octicon octicon-link"></span></a>Feedback</h2>
+
+<p>Use the <a href="http://github.com/mcollina/mosca/issues">issue tracker</a> for bugs.
+<a href="http://twitter.com/matteocollina">Tweet</a> us for any idea that can improve the project.</p>
+
+<h2>
+<a name="links" class="anchor" href="#links"><span class="octicon octicon-link"></span></a>Links</h2>
+
+<ul>
+<li><a href="http://github.com/mcollina/mosca">GIT Repository</a></li>
+<li><a href="http://mcollina.github.io/mosca/docs">Mosca Documentation</a></li>
+<li><a href="http://github.com/mcollina/ascoltatori">Ascoltatori</a></li>
+<li><a href="http://mqtt.org">MQTT protocol</a></li>
+<li><a href="http://github.com/adamvr/MQTT.js">MQTT.js</a></li>
+</ul><h2>
+<a name="authors" class="anchor" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h2>
+
+<p><a href="http://twitter.com/matteocollina">Matteo Collina</a></p>
+
+<h2>
+<a name="contributors" class="anchor" href="#contributors"><span class="octicon octicon-link"></span></a>Contributors</h2>
+
+<table><tbody>
+<tr>
+<th align="left">David Halls</th>
+<td><a href="https://github.com/davedoesdev">GitHub/davedoesdev</a></td>
+</tr>
+<tr>
+<th align="left">Andrea Reginato</th>
+<td><a href="https://github.com/andreareginato">GitHub/andreareginato</a></td>
+</tr>
+<tr>
+<th align="left">Chris Wiggins</th>
+<td><a href="https://github.com/chriswiggins">GitHub/chriswiggins</a></td>
+</tr>
+</tbody></table><h2>
+<a name="license---mit-license" class="anchor" href="#license---mit-license"><span class="octicon octicon-link"></span></a>LICENSE - "MIT License"</h2>
 
 <p>Copyright (c) 2013 Matteo Collina, <a href="http://matteocollina.com">http://matteocollina.com</a></p>
 
