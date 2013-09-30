@@ -3,8 +3,10 @@ History
 
 ## 0.13.0
 
-* MQTT over websocket support.
+* mqtt over websocket support.
   [#44](https://github.com/mcollina/mosca/issues/44).
+* MongoDB persistence deletes old retained messages
+  [#61](https://github.com/mcollina/mosca/issues/61).
 
 ## 0.12.1
 
