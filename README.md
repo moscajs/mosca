@@ -93,6 +93,9 @@ Here you can see the options accepted by the command line tool:
     --cert <file>                    the certificate issued to the server
     --secure-port <n>                the TLS port to listen to
     --non-secure                     start both a secure and non-secure server
+    --http-port <n>                  start an mqtt-over-websocket server on the specified port
+    --http-static <directory>        serve some static files alongside the websocket client
+    --only-http                      start only an mqtt-over-websocket server
     -c, --config <c>                 the config file to use (override every other option)
     -d, --db <path>                  the path were to store the database
     -v, --verbose                    set the bunyan log to INFO

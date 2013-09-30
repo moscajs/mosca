@@ -1,0 +1,206 @@
+@font-face {
+  font-family: 'Century Schoolbook Monospace';
+  src: url('../fonts/Century-Schoolbook-Monospace-BT.eot');
+  src: url('../fonts/Century-Schoolbook-Monospace-BT.eot?#iefix') format('embedded-opentype'), url('../fonts/Century-Schoolbook-Monospace-BT.woff') format('woff'), url('../fonts/Century-Schoolbook-Monospace-BT.ttf') format('truetype'), url('../fonts/Century-Schoolbook-Monospace-BT.svg#CenturySchoolbookMonospaceBT') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Skranji';
+  src: url('../fonts/Skranji-Bold.eot');
+  src: local('☺'), url('../fonts/Skranji-Bold.woff') format('woff'), url('../fonts/Skranji-Bold.ttf') format('truetype'), url('../fonts/Skranji-Bold.svg') format('svg');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Skranji';
+  src: url('../fonts/Skranji-Regular.eot');
+  src: local('☺'), url('../fonts/Skranji-Regular.woff') format('woff'), url('../fonts/Skranji-Regular.ttf') format('truetype'), url('../fonts/Skranji-Regular.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.rv #main {
+  font-family: 'Skranji';
+  font-size: 15px;
+}
+
+body {
+  color: #33342d;
+}
+
+body, section.bespoke-slide {
+  -webkit-transition: -webkit-transform 0.4s ease, opacity 0.4s ease, background-color 0.4s ease;
+  -moz-transition: -moz-transform 0.4s ease, opacity 0.4s ease, background-color 0.4s ease;
+  -ms-transition: -ms-transform 0.4s ease, opacity 0.4s ease, background-color 0.4s ease;
+  -o-transition: -o-transform 0.4s ease, opacity 0.4s ease, background-color 0.4s ease;
+  transition: transform 0.4s ease, opacity 0.4s ease, background-color 0.4s ease;
+}
+
+.rv article {
+  -webkit-perspective: 600px;
+  -moz-perspective: 600px;
+  -ms-perspective: 600px;
+  -o-perspective: 600px;
+  perspective: 600px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: 512px;
+  height: 380px;
+  top: 50%;
+  left: 50%;
+  margin-left: -256px;
+  margin-top: -200px;
+  overflow: hidden;
+}
+
+.rv.classic section.bespoke-after-2 {
+  -webkit-transform: translate3d(1024px, 0, 0);
+  -moz-transform: translate3d(1024px, 0, 0);
+  -ms-transform: translate3d(1024px, 0, 0);
+  -o-transform: translate3d(1024px, 0, 0);
+  transform: translate3d(1024px, 0, 0);
+  opacity: 1;
+}
+
+.rv.classic section.bespoke-after-1 {
+  -webkit-transform: translate3d(512px, 0, 0);
+  -moz-transform: translate3d(512px, 0, 0);
+  -ms-transform: translate3d(512px, 0, 0);
+  -o-transform: translate3d(512px, 0, 0);
+  transform: translate3d(512px, 0, 0);
+  opacity: 1;
+}
+
+.rv.classic section.bespoke-before-1 {
+  -webkit-transform: translate3d(-512px, 0, 0);
+  -moz-transform: translate3d(-512px, 0, 0);
+  -ms-transform: translate3d(-512px, 0, 0);
+  -o-transform: translate3d(-512px, 0, 0);
+  transform: translate3d(-512px, 0, 0);
+  opacity: 1;
+}
+
+.rv.classic section.bespoke-before-2 {
+  -webkit-transform: translate3d(-1024px, 0, 0);
+  -moz-transform: translate3d(-1024px, 0, 0);
+  -ms-transform: translate3d(-1024px, 0, 0);
+  -o-transform: translate3d(-1024px, 0, 0);
+  transform: translate3d(-1024px, 0, 0);
+  opacity: 1;
+}
+
+.rv section {
+  border-radius: 0;
+  background: transparent;
+  border-radius: 0;
+  margin-top: 0;
+  margin-left: 0;
+  top: 0;
+  left: 0;
+  background-size: 400% 100%;
+  padding-right: 10px;
+}
+
+.rv section:nth-child(4n+1) {
+  background-position-x: 100%;
+}
+.rv section:nth-child(4n+2) {
+  background-position-x: 200%;
+}
+.rv section:nth-child(4n+3) {
+  background-position-x: 300%;
+}
+
+.rv header {
+}
+
+.rv h1, .rv h2, .rv h3, .rv h4 {
+  color: #33342d;
+  font-family: "Skranji";
+  top: auto;
+  position: static;
+  margin: 10px;
+}
+
+.rv section > *:first-child {
+  margin-top: 24px;
+}
+
+.rv h1 {
+  font-size: 56px;
+  margin-top: 75px !important;
+  text-shadow: none;
+}
+
+.rv h2 {
+  font-size: 30px;
+  margin: 20px 10px 10px 10px;
+}
+
+.rv h3 {
+  font-size: 22px;
+}
+
+.rv h4 {
+  font-size: 18px;
+}
+
+.rv p {
+  padding: 0 20px;
+  margin-bottom: 1em;
+}
+
+.rv ul {
+  margin-left: 4em;
+  margin-bottom: 1em;
+}
+
+.rv li {
+  margin-bottom: 0.5em;
+}
+
+.bespoke-bullet-inactive {
+  display: none;
+}
+
+.highlight {
+  margin: 0.25em 0.5em 1em 0.5em;
+  border-radius: 3px;
+  background: transparent;
+}
+
+.highlight pre, pre, code {
+  font-family: 'Century Schoolbook Monospace', monospace;
+  white-space: nowrap;
+  padding: 0px 5px;
+  border: 1px solid rgba(255, 255, 255, 0.33);
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+code {
+  font-size: 12px;
+}
+
+.highlight pre, pre {
+  overflow-x: auto;
+  white-space: pre;
+  padding: 10px;
+  line-height: 140%;
+  background: rgba(255, 255, 255, 0.5);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+pre code, pre tt {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  border: none;
+}
