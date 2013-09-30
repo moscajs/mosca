@@ -45,7 +45,7 @@
     "supertest": "~0.7.1"
   },
   "dependencies": {
-    "mqtt": "git://github.com/adamvr/MQTT.js#browserify",
+    "mqtt": "~0.3.3",
     "async": "~0.2.4",
     "ascoltatori": "~0.11.0",
     "debug": "~0.7.2",
@@ -60,7 +60,7 @@
     "lru-cache": "~2.3.0",
     "node-uuid": "~1.4.0",
     "extend": "~1.1.3",
-    "mqtt.js-over-websockets": "git://github.com/mcollina/mqtt.js-over-websocket",
+    "mows": "~0.0.1",
     "connect": "~2.8.8",
     "express": "~3.3.8",
     "browserify-middleware": "~1.17.2",

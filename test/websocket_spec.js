@@ -1,4 +1,4 @@
-var mqtt = require("mqtt.js-over-websockets");
+var mqtt = require("mows");
 var async = require("async");
 var ascoltatori = require("ascoltatori");
 var abstractServerTests = require("./abstract_server");
