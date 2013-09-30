@@ -1,0 +1,7 @@
+{
+  "name": "nodeconfeu.2013",
+  "version": "0.0.0",
+  "dependencies": {
+    "blorg": "~0.2.0"
+  }
+}

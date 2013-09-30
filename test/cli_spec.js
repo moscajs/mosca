@@ -479,4 +479,40 @@ describe("mosca.cli", function() {
       });
     });
   });
+
+  it("should allow to set the http port", function(done) {
+    args.push("--http-port");
+    args.push("3000");
+    startServer(done, function(server) {
+      expect(server.opts.http.port).to.eql(3000);
+    });
+  });
+
+  it("should allow to limit the server only to http", function(done) {
+    args.push("--http-port");
+    args.push("3000");
+    args.push("--only-http");
+    startServer(done, function(server) {
+      expect(server.opts.http.port).to.eql(3000);
+    });
+  });
+
+  it("should serve a static directory", function(done) {
+    args.push("--http-port");
+    args.push("3000");
+    args.push("--http-static");
+    args.push("/path/to/nowhere");
+    startServer(done, function(server) {
+      expect(server.opts.http.static).to.eql("/path/to/nowhere");
+    });
+  });
+
+  it("should serve a browserify bundle", function(done) {
+    args.push("--http-port");
+    args.push("3000");
+    args.push("--http-bundle");
+    startServer(done, function(server) {
+      expect(server.opts.http.bundle).to.eql(true);
+    });
+  });
 });
