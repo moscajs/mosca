@@ -41,7 +41,7 @@ describe("mosca.Server", function() {
     var curPort = nextPort() - 1;
     var req = request("http://localhost:" + curPort);
 
-    req.get('/bundle.js')
+    req.get('/mqtt.js')
        .expect('Content-Type', /javascript/)
        .expect(200).end(done);
   });

@@ -167,6 +167,41 @@ All of them can be configured from the configuration file, under the `persistenc
 The only exception is LevelUp, which can be specified by using the `--db` option from
 the command line.
 
+### MQTT over Websocket
+
+Since v0.13.0 Mosca support MQTT over Websocket through the
+[mows](http://npm.im/mows) package.
+
+It is very easy to use, just prepare an index.html file:
+```
+<html>
+  <head>
+    <script src="/mqtt.js"></script>
+  </head>
+  <body>
+    <script>
+      var client = mqtt.createClient();
+
+      client.subscribe("mqtt/demo");
+
+      client.on("message", function(topic, payload) {
+        alert([topic, payload].join(": "));
+        client.end();
+      });
+
+      client.publish("mqtt/demo", "hello world!");
+    </script>
+  </body>
+</html>
+```
+
+Then serve it with Mosca:
+```
+$ mosca --http-port 3000 --http-static . --http-bundle \
+        --very-verbose | bunyan
+```
+
+And point your browser to http://localhost:3000.
 
 <a name="embedded"></a>
 ## Embedding Mosca
@@ -402,6 +437,39 @@ server.on('ready', setup);
 function setup() {
   console.log('Mosca server is up and running')
 }
+```
+
+### Websocket
+
+It is possible to augment any node application with MQTT-over-websocket
+capabilities, just call the `Server#attachHttpServer` method,
+like so:
+
+```js
+var http     = require('http)
+  , httpServ = http.createServer()
+  , mosca    = require('mosca')
+  , mqttServ = new mosca.Server();
+
+mqttServ.attachHttpServer(httpServ);
+
+httpServer.listen(3000);
+```
+
+It is also possible to server the browserified bundle for the mqtt
+client:
+```
+var http     = require('http)
+  , express  = require('express')
+  , app      = express();
+  , httpServ = http.createServer(app)
+  , mosca    = require('mosca')
+  , mqttServ = new mosca.Server();
+
+mqttServ.attachHttpServer(httpServ);
+mqttServ.serveBundle(app);
+
+httpServer.listen(3000);
 ```
 
 ## Contributing
