@@ -15,7 +15,7 @@
     div.description {margin: 14px 0; padding-top: 14px; border-top:1px solid #eee; border-bottom:1px solid #eee; }
     .tags {}
       .tags .types {color:#666}
-  .ctx-type { float:right; margin-top:8px }</style></head><body><div class="row"><div class="twelve columns"><h1 class="pagetitle">Mosca</h1></div></div><div class="row"><div id="nav" class="three columns"><ul class="side-nav"><li><a href="../../docs/lib/authorizer.js.html">lib/authorizer.js</a><ul><li><a href="../../docs/lib/authorizer.js.html#Authorizer">Authorizer</a></li><li><a href="../../docs/lib/authorizer.js.html#addUser">addUser</a></li><li><a href="../../docs/lib/authorizer.js.html#rmUser">rmUser</a></li></ul></li><li><a href="../../docs/lib/client.js.html">lib/client.js</a><ul><li><a href="../../docs/lib/client.js.html#Client">Client</a></li><li><a href="../../docs/lib/client.js.html#close">close</a></li></ul></li><li><a href="../../docs/lib/hasher.js.html">lib/hasher.js</a><ul><li><a href="../../docs/lib/hasher.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/abstract.js.html">lib/persistence/abstract.js</a><ul><li><a href="../../docs/lib/persistence/abstract.js.html#AbstractPersistence">AbstractPersistence</a></li><li><a href="../../docs/lib/persistence/abstract.js.html#wire">wire</a></li><li><a href="../../docs/lib/persistence/abstract.js.html#close">close</a></li><li><a href="../../docs/lib/persistence/abstract.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/index.js.html">lib/persistence/index.js</a><ul></ul></li><li><a href="../../docs/lib/persistence/levelup.js.html">lib/persistence/levelup.js</a><ul><li><a href="../../docs/lib/persistence/levelup.js.html#LevelUpPersistence">LevelUpPersistence</a></li><li><a href="../../docs/lib/persistence/levelup.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/memory.js.html">lib/persistence/memory.js</a><ul><li><a href="../../docs/lib/persistence/memory.js.html#MemoryPersistence">MemoryPersistence</a></li><li><a href="../../docs/lib/persistence/memory.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/mongo.js.html">lib/persistence/mongo.js</a><ul><li><a href="../../docs/lib/persistence/mongo.js.html#MongoPersistence">MongoPersistence</a></li><li><a href="../../docs/lib/persistence/mongo.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/redis.js.html">lib/persistence/redis.js</a><ul><li><a href="../../docs/lib/persistence/redis.js.html#RedisPersistence">RedisPersistence</a></li><li><a href="../../docs/lib/persistence/redis.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/utils.js.html">lib/persistence/utils.js</a><ul><li><a href="../../docs/lib/persistence/utils.js.html#_topicPatterns">_topicPatterns</a></li><li><a href="../../docs/lib/persistence/utils.js.html#topicPatterns">topicPatterns</a></li></ul></li><li><a href="../../docs/lib/server.js.html">lib/server.js</a><ul><li><a href="../../docs/lib/server.js.html#Server">Server</a></li><li><a href="../../docs/lib/server.js.html#authenticate">authenticate</a></li><li><a href="../../docs/lib/server.js.html#authorizePublish">authorizePublish</a></li><li><a href="../../docs/lib/server.js.html#authorizeSubscribe">authorizeSubscribe</a></li><li><a href="../../docs/lib/server.js.html#storePacket">storePacket</a></li><li><a href="../../docs/lib/server.js.html#forwardRetained">forwardRetained</a></li><li><a href="../../docs/lib/server.js.html#restoreClient">restoreClient</a></li><li><a href="../../docs/lib/server.js.html#persistClient">persistClient</a></li><li><a href="../../docs/lib/server.js.html#close">close</a></li></ul></li></ul></div><div class="nine columns"><div class="comment"><div class="label radius ctx-type">function</div><h1 id="Server">Server</h1><h5 class="subheader">Server()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {Object} </span><span class="name">opts </span><span class="description">The option object</span></li><li><strong>@param: </strong><span class="types"> {Function} </span><span class="name">callback </span><span class="description">The ready callback</span></li></ul></div><div class="description"><p>The Mosca Server is a very simple MQTT server that<br />provides a simple event-based API to craft your own MQTT logic<br />It supports QoS 0 &amp; 1, without external storage.<br />It is backed by Ascoltatori, and it descends from<br />EventEmitter.</p>
+  .ctx-type { float:right; margin-top:8px }</style></head><body><div class="row"><div class="twelve columns"><h1 class="pagetitle">Mosca</h1></div></div><div class="row"><div id="nav" class="three columns"><ul class="side-nav"><li><a href="../../docs/lib/authorizer.js.html">lib/authorizer.js</a><ul><li><a href="../../docs/lib/authorizer.js.html#Authorizer">Authorizer</a></li><li><a href="../../docs/lib/authorizer.js.html#addUser">addUser</a></li><li><a href="../../docs/lib/authorizer.js.html#rmUser">rmUser</a></li></ul></li><li><a href="../../docs/lib/client.js.html">lib/client.js</a><ul><li><a href="../../docs/lib/client.js.html#Client">Client</a></li><li><a href="../../docs/lib/client.js.html#close">close</a></li></ul></li><li><a href="../../docs/lib/hasher.js.html">lib/hasher.js</a><ul><li><a href="../../docs/lib/hasher.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/abstract.js.html">lib/persistence/abstract.js</a><ul><li><a href="../../docs/lib/persistence/abstract.js.html#AbstractPersistence">AbstractPersistence</a></li><li><a href="../../docs/lib/persistence/abstract.js.html#wire">wire</a></li><li><a href="../../docs/lib/persistence/abstract.js.html#close">close</a></li><li><a href="../../docs/lib/persistence/abstract.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/index.js.html">lib/persistence/index.js</a><ul></ul></li><li><a href="../../docs/lib/persistence/levelup.js.html">lib/persistence/levelup.js</a><ul><li><a href="../../docs/lib/persistence/levelup.js.html#LevelUpPersistence">LevelUpPersistence</a></li><li><a href="../../docs/lib/persistence/levelup.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/memory.js.html">lib/persistence/memory.js</a><ul><li><a href="../../docs/lib/persistence/memory.js.html#MemoryPersistence">MemoryPersistence</a></li><li><a href="../../docs/lib/persistence/memory.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/mongo.js.html">lib/persistence/mongo.js</a><ul><li><a href="../../docs/lib/persistence/mongo.js.html#MongoPersistence">MongoPersistence</a></li><li><a href="../../docs/lib/persistence/mongo.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/redis.js.html">lib/persistence/redis.js</a><ul><li><a href="../../docs/lib/persistence/redis.js.html#RedisPersistence">RedisPersistence</a></li><li><a href="../../docs/lib/persistence/redis.js.html#exports">exports</a></li></ul></li><li><a href="../../docs/lib/persistence/utils.js.html">lib/persistence/utils.js</a><ul><li><a href="../../docs/lib/persistence/utils.js.html#_topicPatterns">_topicPatterns</a></li><li><a href="../../docs/lib/persistence/utils.js.html#topicPatterns">topicPatterns</a></li></ul></li><li><a href="../../docs/lib/server.js.html">lib/server.js</a><ul><li><a href="../../docs/lib/server.js.html#Server">Server</a></li><li><a href="../../docs/lib/server.js.html#authenticate">authenticate</a></li><li><a href="../../docs/lib/server.js.html#authorizePublish">authorizePublish</a></li><li><a href="../../docs/lib/server.js.html#authorizeSubscribe">authorizeSubscribe</a></li><li><a href="../../docs/lib/server.js.html#storePacket">storePacket</a></li><li><a href="../../docs/lib/server.js.html#forwardRetained">forwardRetained</a></li><li><a href="../../docs/lib/server.js.html#restoreClient">restoreClient</a></li><li><a href="../../docs/lib/server.js.html#persistClient">persistClient</a></li><li><a href="../../docs/lib/server.js.html#close">close</a></li><li><a href="../../docs/lib/server.js.html#attachHttpServer">attachHttpServer</a></li><li><a href="../../docs/lib/server.js.html#serveBundle">serveBundle</a></li></ul></li></ul></div><div class="nine columns"><div class="comment"><div class="label radius ctx-type">function</div><h1 id="Server">Server</h1><h5 class="subheader">Server()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {Object} </span><span class="name">opts </span><span class="description">The option object</span></li><li><strong>@param: </strong><span class="types"> {Function} </span><span class="name">callback </span><span class="description">The ready callback</span></li></ul></div><div class="description"><p>The Mosca Server is a very simple MQTT server that<br />provides a simple event-based API to craft your own MQTT logic<br />It supports QoS 0 &amp; 1, without external storage.<br />It is backed by Ascoltatori, and it descends from<br />EventEmitter.</p>
 
 <h2>Options</h2>
 
@@ -36,6 +36,11 @@ to use.</li>
 <li><code>keyPath</code>, the path to the key</li>
 <li><code>certPath</code>, the path to the certificate</li></ul></li>
 <li><code>allowNonSecure</code>, starts both the secure and the unsecure sevrver.</li>
+<li><code>http</code>, an object that includes the properties:
+<ul><li><code>port</code>, the port that will be used to open the http server</li>
+<li><code>bundle</code>, serve the bundled mqtt client</li>
+<li><code>static</code>, serve a directory through the static express
+middleware</li></ul></li>
 </ul>
 
 <h2>Events</h2>
@@ -102,7 +107,29 @@ the pattern and the client are passed as parameters.</li>
     },
     function(cb) {
       var server = null;
-      if (that.opts.secure) {
+      var app = express();
+      if (that.opts.http) {
+        server = http.createServer(app);
+
+        if (that.opts.http.bundle) {
+          that.serveBundle(app);
+        }
+
+        if (that.opts.http.static) {
+          app.use(express.static(that.opts.http.static));
+        }
+
+        that.attachHttpServer(server);
+        that.servers.push(server);
+        that.opts.http.port = that.opts.http.port || 3000;
+        server.listen(that.opts.http.port, cb);
+      } else {
+        cb();
+      }
+    },
+    function(cb) {
+      var server = null;
+      if (that.opts.secure &amp;&amp; !that.opts.onlyHttp) {
         server = mqtt.createSecureServer(that.opts.secure.keyPath, that.opts.secure.certPath, serveWrap);
         that.servers.push(server);
         that.opts.secure.port = that.opts.secure.port || 8883;
@@ -111,7 +138,7 @@ the pattern and the client are passed as parameters.</li>
         cb();
       }
     }, function(cb) {
-      if (typeof that.opts.secure === 'undefined' || that.opts.allowNonSecure) {
+      if ((typeof that.opts.secure === 'undefined' || that.opts.allowNonSecure) &amp;&amp; !that.opts.onlyHttp) {
         var server = mqtt.createServer(serveWrap);
         that.servers.push(server);
         server.listen(that.opts.port, cb);
@@ -119,7 +146,14 @@ the pattern and the client are passed as parameters.</li>
         cb();
       }
     }, function(cb) {
-      that.logger.info({ port: that.opts.port, securePort: (that.opts.secure || {}).port }, &quot;server started&quot;);
+      var logInfo = { 
+        port: that.opts.port, 
+        securePort: (that.opts.secure || {}).port,
+        httpPort: (that.opts.http || {}).port
+      };
+
+      that.logger.info(logInfo, &quot;server started&quot;);
+
       that.servers.forEach(function(server) {
         server.maxConnections = 100000;
       });
@@ -183,6 +217,15 @@ Server.prototype = Object.create(EventEmitter.prototype);</code></pre></div><div
       }
     });
   });
+};</code></pre></div><div class="comment"><div class="label radius ctx-type">method</div><h1 id="attachHttpServer">attachHttpServer</h1><h5 class="subheader">Server.prototype.attachHttpServer()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {HttpServer} </span><span class="name">server </span></li></ul></div><div class="description"><p>Attach a Mosca server to an existing http server</p></div><pre><code class="language-javascript">Server.prototype.attachHttpServer = function(server) {
+  var that = this;
+  mows.attachServer(server, function(conn) {
+    new Client(conn, that);
+  });
+};</code></pre></div><div class="comment"><div class="label radius ctx-type">method</div><h1 id="serveBundle">serveBundle</h1><h5 class="subheader">Server.prototype.serveBundle()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {ExpressApp} </span><span class="name">app </span></li></ul></div><div class="description"><p>Add the middleware for serving the bundle<br />to an Express app.</p></div><pre><code class="language-javascript">Server.prototype.serveBundle = function(app) {
+  app.get('/mqtt.js', browserify(
+    __dirname + '/../node_modules/mows/index.js', 
+    { standalone: 'mqtt' }));
 };</code></pre></div></div></div><!-- Foundation JS--><script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/3.2.2/javascripts/foundation.min.js"></script><!-- Prism js--><script type="text/javascript">
 /**
    * Prism: Lightweight, robust, elegant syntax highlighting
