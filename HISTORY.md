@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.13.0
+
+* MQTT over websocket support.
+  [#44](https://github.com/mcollina/mosca/issues/44).
+
 ## 0.12.1
 
 * Support both a config file and command-line options,
