@@ -371,37 +371,37 @@ module.exports = function(moscaSettings, createConnection) {
       var messageId = Math.floor(65535 * Math.random());
       var subscriptions = [{
           topic: "a/+",
-          qos: 0
+          qos: 1
         }, {
           topic: "+/b",
-          qos: 0
+          qos: 1
         }, {
           topic: "a/b",
-          qos: 0
+          qos: 1
         }
       ];
-      var called = false;
+      var called = 0;
 
       client1.on("publish", function(packet) {
-        expect(packet.topic).to.be.equal("a/b");
-        expect(packet.payload).to.be.equal("some other data");
-        expect(called).to.be.equal(false);
-        called = true;
-        // give time for duplicate messages to arrive
-        setTimeout(function ()
-        {
-            client1.disconnect();
-        }, 500);
+        expect(packet.topic).to.equal("a/b");
+        expect(packet.payload).to.equal("some other data");
+        expect(called).to.equal(0);
+        called++;
       });
 
       client1.on("suback", function() {
         buildAndConnect(d, function(client2) {
+          client2.on("puback", function() {
+            expect(called).to.equal(1);
+            client1.disconnect();
+            client2.disconnect();
+          });
           client2.publish({
             topic: "a/b",
             payload: "some other data",
-            messageId: messageId
+            messageId: messageId,
+            qos: 1
           });
-          client2.disconnect();
         });
       });
 
