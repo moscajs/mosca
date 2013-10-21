@@ -385,17 +385,23 @@ module.exports = function(moscaSettings, createConnection) {
       client1.on("publish", function(packet) {
         expect(packet.topic).to.equal("a/b");
         expect(packet.payload).to.equal("some other data");
-        expect(called).to.equal(0);
-        called++;
+        if (!packet.dup) {
+          expect(called).to.equal(0);
+          called++;
+        }
       });
 
       client1.on("suback", function() {
         buildAndConnect(d, function(client2) {
+
           client2.on("puback", function() {
-            expect(called).to.equal(1);
-            client1.disconnect();
-            client2.disconnect();
+            setTimeout(function () {
+              expect(called).to.equal(1);
+              client1.disconnect();
+              client2.disconnect();
+            }, 1000);
           });
+
           client2.publish({
             topic: "a/b",
             payload: "some other data",
