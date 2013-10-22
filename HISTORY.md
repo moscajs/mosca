@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.13.1
+
+* Do not duplicate messages over a single client
+  [#44](https://github.com/mcollina/mosca/issues/63).
+
 ## 0.13.0
 
 * mqtt over websocket support.
