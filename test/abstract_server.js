@@ -386,8 +386,7 @@ module.exports = function(moscaSettings, createConnection) {
         expect(packet.topic).to.equal("a/b");
         expect(packet.payload).to.equal("some other data");
         if (!packet.dup) {
-          expect(called).to.equal(0);
-          called++;
+          expect(called++).to.equal(0);
         }
       });
 
@@ -395,11 +394,8 @@ module.exports = function(moscaSettings, createConnection) {
         buildAndConnect(d, function(client2) {
 
           client2.on("puback", function() {
-            setTimeout(function () {
-              expect(called).to.equal(1);
-              client1.disconnect();
-              client2.disconnect();
-            }, 1000);
+            client1.disconnect();
+            client2.disconnect();
           });
 
           client2.publish({
