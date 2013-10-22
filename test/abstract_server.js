@@ -364,6 +364,60 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
+  it("should support subscribing with overlapping topics and receiving message only once", function(done) {
+    var d = donner(2, done);
+    buildAndConnect(d, function(client1) {
+
+      var messageId = Math.floor(65535 * Math.random());
+      var subscriptions = [{
+          topic: "a/+",
+          qos: 1
+        }, {
+          topic: "+/b",
+          qos: 1
+        }, {
+          topic: "a/b",
+          qos: 1
+        }
+      ];
+      var called = 0;
+
+      client1.on("publish", function(packet) {
+        expect(packet.topic).to.equal("a/b");
+        expect(packet.payload).to.equal("some other data");
+        if (!packet.dup) {
+          expect(called).to.equal(0);
+          called++;
+        }
+      });
+
+      client1.on("suback", function() {
+        buildAndConnect(d, function(client2) {
+
+          client2.on("puback", function() {
+            setTimeout(function () {
+              expect(called).to.equal(1);
+              client1.disconnect();
+              client2.disconnect();
+            }, 1000);
+          });
+
+          client2.publish({
+            topic: "a/b",
+            payload: "some other data",
+            messageId: messageId,
+            qos: 1
+          });
+        });
+      });
+
+      client1.subscribe({
+        subscriptions: subscriptions,
+        messageId: messageId
+      });
+    });
+  });
+
   it("should support unsubscribing", function(done) {
     buildAndConnect(done, function(client) {
 
