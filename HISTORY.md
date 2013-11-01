@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.13.2
+
+* Avoid crash using MongoDB backend
+  [#66](https://github.com/mcollina/mosca/issues/66).
+* Bumped Ascoltatori to v0.11.5.
+
 ## 0.13.1
 
 * Do not duplicate messages over a single client
