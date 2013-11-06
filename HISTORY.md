@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.13.3
+
+* Avoid crash if an error happens after client
+  disconnection [#67](https://github.com/mcollina/mosca/issues/67).
+
 ## 0.13.2
 
 * Avoid crash using MongoDB backend
