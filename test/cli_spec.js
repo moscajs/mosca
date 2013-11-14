@@ -478,6 +478,35 @@ describe("mosca.cli", function() {
         expect(server.opts.allowNonSecure).to.eql(true);
       });
     });
+
+    it("should allow to set the https port", function(done) {
+
+      args.push("--https-port");
+      args.push("3000");
+      startServer(done, function(server) {
+        expect(server.opts.https.port).to.eql(3000);
+      });
+    });
+
+    it("should serve a HTTPS static directory", function(done) {
+      args.push("--https-port");
+      args.push("3000");
+      args.push("--https-static");
+      args.push("/path/to/nowhere");
+      startServer(done, function(server) {
+        expect(server.opts.https.static).to.eql("/path/to/nowhere");
+      });
+    });
+
+    it("should serve a HTTPS browserify bundle", function(done) {
+      args.push("--https-port");
+      args.push("3000");
+      args.push("--https-bundle");
+      startServer(done, function(server) {
+        expect(server.opts.https.bundle).to.eql(true);
+      });
+    });
+
   });
 
   it("should allow to set the http port", function(done) {
@@ -497,7 +526,7 @@ describe("mosca.cli", function() {
     });
   });
 
-  it("should serve a static directory", function(done) {
+  it("should serve a HTTP static directory", function(done) {
     args.push("--http-port");
     args.push("3000");
     args.push("--http-static");
@@ -507,7 +536,7 @@ describe("mosca.cli", function() {
     });
   });
 
-  it("should serve a browserify bundle", function(done) {
+  it("should serve a HTTP browserify bundle", function(done) {
     args.push("--http-port");
     args.push("3000");
     args.push("--http-bundle");
@@ -515,4 +544,5 @@ describe("mosca.cli", function() {
       expect(server.opts.http.bundle).to.eql(true);
     });
   });
+
 });
