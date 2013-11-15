@@ -5,10 +5,8 @@ var mqtt = require("mows");
 
 module.exports = function(port, host, callback) {
 
-  var secureOpts =
-  {
-    protocol:
-    {
+  var secureOpts = {
+    protocol: {
       ca: fs.readFileSync(SECURE_CERT),
       rejectUnauthorized: false
     }
@@ -17,7 +15,7 @@ module.exports = function(port, host, callback) {
   var conn = mqtt.createConnection(port, host, secureOpts);
 
   conn.on('error', function(err){
-    console.log(err)
+    console.log(err);
   });
 
   return conn;

@@ -61,7 +61,7 @@
     "lru-cache": "~2.3.0",
     "node-uuid": "~1.4.0",
     "extend": "~1.1.3",
-    "mows": "~0.0.1",
+    "mows": "~0.0.2",
     "connect": "~2.8.8",
     "express": "~3.3.8",
     "browserify-middleware": "~1.19.0",
