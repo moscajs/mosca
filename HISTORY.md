@@ -1,6 +1,10 @@
 History
 =======
 
+## 0.13.4
+
+* Secure Websocket support [#71](https://github.com/mcollina/mosca/pull/71)
+
 ## 0.13.3
 
 * Avoid crash if an error happens after client
