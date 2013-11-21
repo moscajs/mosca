@@ -1,6 +1,5 @@
 var async = require("async");
 var mqtt = require("mqtt");
-var microtime = require("microtime");
 var ascoltatori = require("ascoltatori");
 
 module.exports = function(moscaSettings, createConnection) {
@@ -132,23 +131,6 @@ module.exports = function(moscaSettings, createConnection) {
     ]);
   });
 
-  it("should close the connection after the keepalive interval", function(done) {
-    buildClient(done, function(client) {
-      var keepalive = 1;
-      var timer = microtime.now();
-
-      var opts = buildOpts();
-      opts.keepalive = keepalive;
-
-      client.connect(opts);
-
-      client.stream.on("close", function() {
-        var interval = (microtime.now() - timer) / 1000000;
-        expect(interval).to.be.least(keepalive * 5 / 4);
-      });
-    });
-  });
-
   it("should send a pingresp when it receives a pingreq", function(done) {
     buildAndConnect(done, function(client) {
 
@@ -160,122 +142,168 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
-  it("should correctly renew the keepalive window after a pingreq", function(done) {
-    buildClient(done, function(client) {
-      var keepalive = 1;
-      var timer = microtime.now();
 
-      var opts = buildOpts();
-      opts.keepalive = keepalive;
+  describe("timers", function() {
+    var clock;
 
-      client.connect(opts);
-
-      client.stream.on("close", function() {
-        var interval = (microtime.now() - timer) / 1000000;
-        expect(interval).to.be.least(keepalive + keepalive / 2);
-      });
-
-      setTimeout(function() {
-        client.pingreq();
-      }, keepalive * 1000 / 2);
+    beforeEach(function() {
+      clock = sinon.useFakeTimers();
     });
-  });
 
-  it("should correctly renew the keepalive window after a subscribe", function(done) {
-    buildClient(done, function(client) {
-      var keepalive = 1;
-      var timer = microtime.now();
+    afterEach(function() {
+      clock.restore();
+    });
 
-      var opts = buildOpts();
-      opts.keepalive = keepalive;
-      
-      var messageId = Math.floor(65535 * Math.random());
-      var subscriptions = [{
-          topic: "hello",
-          qos: 0
-        }
-      ];
-      
-      client.connect(opts);
+    function fastForward(increase, max) {
+      clock.tick(increase);
+      if (increase < max)
+        async.setImmediate(fastForward.bind(null, increase, max - increase));
+    }
 
-      client.stream.on("close", function() {
-        var interval = (microtime.now() - timer) / 1000000;
-        expect(interval).to.be.least(keepalive + keepalive / 2);
+    it("should close the connection after the keepalive interval", function(done) {
+      buildClient(done, function(client) {
+        var keepalive = 1;
+        var timer = Date.now();
+
+        var opts = buildOpts();
+        opts.keepalive = keepalive;
+
+        client.connect(opts);
+
+        client.stream.on("close", function() {
+          var interval = (Date.now() - timer) / 1000;
+          expect(interval).to.be.least(keepalive * 5 / 4);
+        });
+
+        fastForward(100, keepalive * 2 * 1000);
       });
+    });
 
-      setTimeout(function() {
+    it("should correctly renew the keepalive window after a pingreq", function(done) {
+      buildClient(done, function(client) {
+        var keepalive = 1;
+        var timer = Date.now();
+
+        var opts = buildOpts();
+        opts.keepalive = keepalive;
+
+        client.connect(opts);
+
+        client.stream.on("close", function() {
+          var interval = (Date.now() - timer) / 1000;
+          expect(interval).to.be.least(keepalive + keepalive / 2);
+        });
+
+        setTimeout(function() {
+          client.pingreq();
+        }, keepalive * 1000 / 2);
+
+        fastForward(100, keepalive * 2 * 1000);
+      });
+    });
+
+    it("should correctly renew the keepalive window after a subscribe", function(done) {
+      buildClient(done, function(client) {
+        var keepalive = 1;
+        var timer = Date.now();
+
+        var opts = buildOpts();
+        opts.keepalive = keepalive;
+        
+        var messageId = Math.floor(65535 * Math.random());
+        var subscriptions = [{
+            topic: "hello",
+            qos: 0
+          }
+        ];
+        
+        client.connect(opts);
+
+        client.stream.on("close", function() {
+          var interval = (Date.now() - timer) / 1000;
+          expect(interval).to.be.least(keepalive + keepalive / 2);
+        });
+
+        setTimeout(function() {
+          client.subscribe({
+            subscriptions: subscriptions,
+            messageId: messageId
+          });
+        }, keepalive * 1000 / 2);
+
+        fastForward(100, keepalive * 2 * 1000);
+      });
+    });
+
+    it("should correctly renew the keepalive window after a publish", function(done) {
+      buildClient(done, function(client) {
+        var keepalive = 1;
+        var timer = Date.now();
+
+        var opts = buildOpts();
+        opts.keepalive = keepalive;
+        
+        var messageId = Math.floor(65535 * Math.random());
+        var subscriptions = [{
+            topic: "hello",
+            qos: 0
+          }
+        ];
+
+        client.connect(opts);
+
+        client.stream.on("close", function() {
+          var interval = (Date.now() - timer) / 1000;
+          expect(interval).to.be.least(keepalive + keepalive / 2);
+        });
+
+        setTimeout(function() {
+          client.publish({
+            topic: "hello",
+            payload: "some data",
+            messageId: messageId
+          });
+        }, keepalive * 1000 / 2);
+
+        fastForward(100, keepalive * 2 * 1000);
+      });
+    });
+
+    it("should correctly renew the keepalive window after an unsubscribe", function(done) {
+      buildClient(done, function(client) {
+        var keepalive = 1;
+        var timer = Date.now();
+
+        var opts = buildOpts();
+        opts.keepalive = keepalive;
+        
+        var messageId = Math.floor(65535 * Math.random());
+        var subscriptions = [{
+            topic: "hello",
+            qos: 0
+          }
+        ];
+
+        client.connect(opts);
         client.subscribe({
           subscriptions: subscriptions,
           messageId: messageId
         });
-      }, keepalive * 1000 / 2);
-    });
-  });
 
-  it("should correctly renew the keepalive window after a publish", function(done) {
-    buildClient(done, function(client) {
-      var keepalive = 1;
-      var timer = microtime.now();
-
-      var opts = buildOpts();
-      opts.keepalive = keepalive;
-      
-      var messageId = Math.floor(65535 * Math.random());
-      var subscriptions = [{
-          topic: "hello",
-          qos: 0
-        }
-      ];
-
-      client.connect(opts);
-
-      client.stream.on("close", function() {
-        var interval = (microtime.now() - timer) / 1000000;
-        expect(interval).to.be.least(keepalive + keepalive / 2);
-      });
-
-      setTimeout(function() {
-        client.publish({
-          topic: "hello",
-          payload: "some data",
-          messageId: messageId
+        client.stream.on("close", function() {
+          var interval = (Date.now() - timer) / 1000;
+          expect(interval).to.be.least(keepalive + keepalive / 2);
         });
-      }, keepalive * 1000 / 2);
-    });
-  });
 
-  it("should correctly renew the keepalive window after an unsubscribe", function(done) {
-    buildClient(done, function(client) {
-      var keepalive = 1;
-      var timer = microtime.now();
+        setTimeout(function() {
+          client.unsubscribe({
+            unsubscriptions: ['hello'],
+            messageId: messageId
+          });
+        }, keepalive * 1000 / 2);
 
-      var opts = buildOpts();
-      opts.keepalive = keepalive;
-      
-      var messageId = Math.floor(65535 * Math.random());
-      var subscriptions = [{
-          topic: "hello",
-          qos: 0
-        }
-      ];
-
-      client.connect(opts);
-      client.subscribe({
-        subscriptions: subscriptions,
-        messageId: messageId
+        fastForward(100, keepalive * 2 * 1000);
       });
-
-      client.stream.on("close", function() {
-        var interval = (microtime.now() - timer) / 1000000;
-        expect(interval).to.be.least(keepalive + keepalive / 2);
-      });
-
-      setTimeout(function() {
-        client.unsubscribe({
-          unsubscriptions: ['hello'],
-          messageId: messageId
-        });
-      }, keepalive * 1000 / 2);
     });
   });
 

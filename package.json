@@ -42,11 +42,10 @@
   "devDependencies": {
     "mocha": "~1.13.0",
     "chai": "~1.8.0",
-    "sinon": "~1.4.2",
+    "sinon": "~1.7.3",
     "sinon-chai": "~2.1.2",
     "async_bench": "0.2.1",
     "underscore": "~1.4.4",
-    "microtime": "~0.3.3",
     "dox-foundation": "~0.5.4",
     "jshint": "~2.3.0",
     "js-beautify": "~0.4.2",
