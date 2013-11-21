@@ -175,7 +175,7 @@ module.exports = function(moscaSettings, createConnection) {
           expect(interval).to.be.least(keepalive * 5 / 4);
         });
 
-        fastForward(100, keepalive * 2 * 1000);
+        fastForward(100, 4000);
       });
     });
 
@@ -198,7 +198,7 @@ module.exports = function(moscaSettings, createConnection) {
           client.pingreq();
         }, keepalive * 1000 / 2);
 
-        fastForward(100, keepalive * 2 * 1000);
+        fastForward(100, 4000);
       });
     });
 
@@ -231,7 +231,7 @@ module.exports = function(moscaSettings, createConnection) {
           });
         }, keepalive * 1000 / 2);
 
-        fastForward(100, keepalive * 2 * 1000);
+        fastForward(100, 4000);
       });
     });
 
@@ -265,7 +265,7 @@ module.exports = function(moscaSettings, createConnection) {
           });
         }, keepalive * 1000 / 2);
 
-        fastForward(100, keepalive * 2 * 1000);
+        fastForward(100, 4000);
       });
     });
 
