@@ -10,8 +10,9 @@ git checkout gh-pages
 git pull origin gh-pages
 rm -rf docs
 cp -R /tmp/mosca-docs docs
-git add docs
-git commit -m "Updated docs"
+git add -A docs
+git add -u
+git commit -m "Updated docs" -n
 git push origin
 git checkout master
 git stash apply
