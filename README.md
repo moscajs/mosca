@@ -390,6 +390,15 @@ function setup() {
 }
 ```
 
+### Executing a callback for every published message
+
+Mosca supports two ways to execute a function after the publish of every
+message: the `'published'` event or the
+[`mosca.Server#published`](http://mcollina.github.io/mosca/docs/lib/server.js.html#published)
+function. The first is a standard node-style event, while the second is
+a single callback, to use where respecting the QoS of a callback is
+important.
+
 ### Persistence
 
 The persistence is automatically configured when using the
