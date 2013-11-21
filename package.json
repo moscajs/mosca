@@ -7,8 +7,16 @@
     "mosca": "./bin/mosca"
   },
   "scripts": {
-    "test": "make bail"
+    "test": "mocha --recursive --bail --reporter spec test",
+    "ci": "mocha --recursive --bail --watch test",
+    "jshint-lib": "jshint lib/*.js",
+    "jshint-test": "jshint test/*.js"
   },
+  "pre-commit": [
+    "jshint-lib",
+    "jshint-test",
+    "test"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/mcollina/mosca.git"
@@ -40,10 +48,10 @@
     "underscore": "~1.4.4",
     "microtime": "~0.3.3",
     "dox-foundation": "~0.4.4",
-    "jshint": "~1.0.0",
+    "jshint": "~2.3.0",
     "js-beautify": "~0.4.2",
     "tmp": "0.0.20",
-    "supertest": "~0.7.1"
+    "supertest": "~0.8.1"
   },
   "dependencies": {
     "mqtt": "~0.3.3",
@@ -66,7 +74,8 @@
     "express": "~3.3.8",
     "browserify-middleware": "~1.19.0",
     "json-buffer": "~2.0.7",
-    "brfs": "0.0.8"
+    "brfs": "0.0.8",
+    "pre-commit": "0.0.4"
   },
   "optionalDependencies": {
     "leveldown": "~0.9.0",
