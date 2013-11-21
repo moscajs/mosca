@@ -1,6 +1,13 @@
 History
 =======
 
+## 0.14.0
+
+* Added `mosca.Server#published` callback to adding behavior before QoS
+  1 PUBACK [#72](https://github.com/mcollina/mosca/pull/72).
+* Doc fixes.
+* Updated LevelUp to 0.18.1 and LevelDown 0.10.1 to avoid a memleak.
+
 ## 0.13.4
 
 * Secure Websocket support [#71](https://github.com/mcollina/mosca/pull/71)
