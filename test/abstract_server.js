@@ -13,17 +13,14 @@ module.exports = function(moscaSettings, createConnection) {
     secondInstance = null;
   });
 
-  afterEach(function(done) {
-    var instances = [instance, secondInstance];
-    async.each(instances, function(i, cb) {
-      if (i) {
-        i.close(cb);
-      } else {
-        cb();
-      }
-    }, function() {
-      done();
-    });
+  // FIXME close is sync to avoid spurious timeouts in
+  // node v0.8. Sigh.
+  afterEach(function() {
+    instance.close();
+
+    if (secondInstance) {
+      secondInstance.close();
+    }
   });
 
   function buildClient(done, callback) {
