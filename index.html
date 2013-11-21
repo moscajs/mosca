@@ -31,8 +31,6 @@
         <h1>
 <a name="mosca" class="anchor" href="#mosca"><span class="octicon octicon-link"></span></a>Mosca</h1>
 
-<p><img src="https://raw.github.com/mcollina/mosca/master/mosca.png" alt="Mosca"></p>
-
 <p><a href="https://travis-ci.org/mcollina/mosca"><img src="https://travis-ci.org/mcollina/mosca.png" alt="Build Status"></a></p>
 
 <p><a href="https://nodei.co/npm/mosca/"><img src="https://nodei.co/npm/mosca.png" alt="NPM"></a></p>
@@ -108,7 +106,9 @@ Run it and connect your preferred MQTT client.</p>
 
 <p>Here you can see the options accepted by the command line tool:</p>
 
-<pre><code>  Usage: mosca [options] [command]
+<pre><code>$ mosca --help
+
+  Usage: mosca [options] [command]
 
   Commands:
 
@@ -131,6 +131,13 @@ Run it and connect your preferred MQTT client.</p>
     --cert &lt;file&gt;                    the certificate issued to the server
     --secure-port &lt;n&gt;                the TLS port to listen to
     --non-secure                     start both a secure and non-secure server
+    --http-port &lt;n&gt;                  start an mqtt-over-websocket server on the specified port
+    --https-port &lt;n&gt;                 start an mqtt-over-secure-websocket server on the specified port
+    --http-static &lt;directory&gt;        serve some static files alongside the websocket client
+    --https-static &lt;directory&gt;       serve some static files alongside the secure websocket client
+    --http-bundle                    serve a MQTT.js-based client at /mqtt.js on HTTP
+    --https-bundle                   serve a MQTT.js-based client at /mqtt.js on HTTPS
+    --only-http                      start only an mqtt-over-websocket server
     -c, --config &lt;c&gt;                 the config file to use (override every other option)
     -d, --db &lt;path&gt;                  the path were to store the database
     -v, --verbose                    set the bunyan log to INFO
@@ -199,6 +206,43 @@ persitance options.</p>
 </ul><p>All of them can be configured from the configuration file, under the <code>persistence</code> key.
 The only exception is LevelUp, which can be specified by using the <code>--db</code> option from
 the command line.</p>
+
+<h3>
+<a name="mqtt-over-websocket" class="anchor" href="#mqtt-over-websocket"><span class="octicon octicon-link"></span></a>MQTT over Websocket</h3>
+
+<p>Since v0.13.0 Mosca support MQTT over Websocket through the
+<a href="http://npm.im/mows">mows</a> package.</p>
+
+<p>It is very easy to use, just prepare an index.html file:</p>
+
+<pre><code>&lt;html&gt;
+  &lt;head&gt;
+    &lt;script src="/mqtt.js"&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;script&gt;
+      var client = mqtt.createClient();
+
+      client.subscribe("mqtt/demo");
+
+      client.on("message", function(topic, payload) {
+        alert([topic, payload].join(": "));
+        client.end();
+      });
+
+      client.publish("mqtt/demo", "hello world!");
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Then serve it with Mosca:</p>
+
+<pre><code>$ mosca --http-port 3000 --http-static . --http-bundle \
+        --very-verbose | bunyan
+</code></pre>
+
+<p>And point your browser to http://localhost:3000.</p>
 
 <p><a name="embedded"></a></p>
 
@@ -380,6 +424,16 @@ the topic <code>users/bob</code>. Now that we have the authorizing methods we ca
 </pre></div>
 
 <h3>
+<a name="executing-a-callback-for-every-published-message" class="anchor" href="#executing-a-callback-for-every-published-message"><span class="octicon octicon-link"></span></a>Executing a callback for every published message</h3>
+
+<p>Mosca supports two ways to execute a function after the publish of every
+message: the <code>'published'</code> event or the
+<a href="http://mcollina.github.io/mosca/docs/lib/server.js.html#published"><code>mosca.Server#published</code></a>
+function. The first is a standard node-style event, while the second is
+a single callback, to use where respecting the QoS of a callback is
+important.</p>
+
+<h3>
 <a name="persistence-1" class="anchor" href="#persistence-1"><span class="octicon octicon-link"></span></a>Persistence</h3>
 
 <p>The persistence is automatically configured when using the
@@ -433,6 +487,39 @@ pull-request.</p>
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Mosca server is up and running'</span><span class="p">)</span>
 <span class="p">}</span>
 </pre></div>
+
+<h3>
+<a name="websocket" class="anchor" href="#websocket"><span class="octicon octicon-link"></span></a>Websocket</h3>
+
+<p>It is possible to augment any node application with MQTT-over-websocket
+capabilities, just call the <code>Server#attachHttpServer</code> method,
+like so:</p>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">http</span>     <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'http)</span>
+<span class="s1">  , httpServ = http.createServer()</span>
+<span class="s1">  , mosca    = require('</span><span class="nx">mosca</span><span class="err">'</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">mqttServ</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mosca</span><span class="p">.</span><span class="nx">Server</span><span class="p">();</span>
+
+<span class="nx">mqttServ</span><span class="p">.</span><span class="nx">attachHttpServer</span><span class="p">(</span><span class="nx">httpServ</span><span class="p">);</span>
+
+<span class="nx">httpServer</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
+</pre></div>
+
+<p>It is also possible to server the browserified bundle for the mqtt
+client:</p>
+
+<pre><code>var http     = require('http)
+  , express  = require('express')
+  , app      = express();
+  , httpServ = http.createServer(app)
+  , mosca    = require('mosca')
+  , mqttServ = new mosca.Server();
+
+mqttServ.attachHttpServer(httpServ);
+mqttServ.serveBundle(app);
+
+httpServer.listen(3000);
+</code></pre>
 
 <h2>
 <a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
