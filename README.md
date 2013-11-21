@@ -1,6 +1,5 @@
-# Mosca
-
-![Mosca](https://raw.github.com/mcollina/mosca/master/mosca.png)
+Mosca
+====================
 
 [![Build Status](https://travis-ci.org/mcollina/mosca.png)](https://travis-ci.org/mcollina/mosca)
 
