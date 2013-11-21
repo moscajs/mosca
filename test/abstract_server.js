@@ -27,7 +27,6 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
-
   function buildClient(done, callback) {
     var client = createConnection(settings.port, settings.host);
 
@@ -516,7 +515,6 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
-
   it("should emit an event on every newly published packet", function(done) {
     buildAndConnect(done, function(client) {
 
@@ -530,6 +528,34 @@ module.exports = function(moscaSettings, createConnection) {
       client.publish({
         topic: "hello",
         payload: "some data"
+      });
+    });
+  });
+
+  it("should call onPublished on every newly published packet", function(done) {
+    var onPublishedCalled = false;
+
+    instance.published = function(packet, serverClient, callback) {
+      onPublishedCalled = true;
+
+      expect(packet.topic).to.be.equal("hello");
+      expect(packet.payload.toString()).to.be.equal("some data");
+      expect(serverClient).not.to.be.equal(undefined);
+
+      callback();
+    };
+
+    buildAndConnect(done, function(client) {
+      client.publish({
+        messageId: 42,
+        topic: "hello",
+        payload: "some data",
+        qos: 1
+      });
+
+      client.on("puback", function() {
+        expect(onPublishedCalled).to.eql(true);
+        client.disconnect();
       });
     });
   });
