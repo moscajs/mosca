@@ -305,6 +305,41 @@ module.exports = function(moscaSettings, createConnection) {
         fastForward(100, keepalive * 2 * 1000);
       });
     });
+
+    it("should resend messages if a subscription is done with QoS 1", function(done) {
+      buildAndConnect(done, function(client) {
+
+        client.once("publish", function(packet1) {
+
+          fastForward(100, 4 * 1000);
+
+          client.once("publish", function(packet2) {
+            packet1.dup = true;
+            expect(packet2).to.be.deep.equal(packet1);
+            client.disconnect();
+          });
+        });
+
+        client.on("suback", function(packet) {
+          client.publish({
+            topic: "hello",
+            qos: 1,
+            messageId: 24
+          });
+        });
+
+        var subscriptions = [{
+            topic: "hello",
+            qos: 1
+          }
+        ];
+
+        client.subscribe({
+          subscriptions: subscriptions,
+          messageId: 42
+        });
+      });
+    });
   });
 
   it("should support subscribing", function(done) {
@@ -809,39 +844,6 @@ module.exports = function(moscaSettings, createConnection) {
       client.subscribe({
         subscriptions: subscriptions,
         messageId: messageId
-      });
-    });
-  });
-
-  it("should resend messages if a subscription is done with QoS 1", function(done) {
-    buildAndConnect(done, function(client) {
-
-      client.once("publish", function(packet1) {
-
-        client.once("publish", function(packet2) {
-          packet1.dup = true;
-          expect(packet2).to.be.deep.equal(packet1);
-          client.disconnect();
-        });
-      });
-
-      client.on("suback", function(packet) {
-        client.publish({
-          topic: "hello",
-          qos: 1,
-          messageId: 24
-        });
-      });
-
-      var subscriptions = [{
-          topic: "hello",
-          qos: 1
-        }
-      ];
-
-      client.subscribe({
-        subscriptions: subscriptions,
-        messageId: 42
       });
     });
   });
