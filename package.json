@@ -65,7 +65,8 @@
     "connect": "~2.8.8",
     "express": "~3.3.8",
     "browserify-middleware": "~1.19.0",
-    "json-buffer": "~2.0.7"
+    "json-buffer": "~2.0.7",
+    "brfs": "0.0.8"
   },
   "optionalDependencies": {
     "leveldown": "~0.9.0",
