@@ -69,6 +69,8 @@ $ mosca -v | bunyan
 Here you can see the options accepted by the command line tool:
 
 ```
+$ mosca --help
+
   Usage: mosca [options] [command]
 
   Commands:
@@ -93,7 +95,11 @@ Here you can see the options accepted by the command line tool:
     --secure-port <n>                the TLS port to listen to
     --non-secure                     start both a secure and non-secure server
     --http-port <n>                  start an mqtt-over-websocket server on the specified port
+    --https-port <n>                 start an mqtt-over-secure-websocket server on the specified port
     --http-static <directory>        serve some static files alongside the websocket client
+    --https-static <directory>       serve some static files alongside the secure websocket client
+    --http-bundle                    serve a MQTT.js-based client at /mqtt.js on HTTP
+    --https-bundle                   serve a MQTT.js-based client at /mqtt.js on HTTPS
     --only-http                      start only an mqtt-over-websocket server
     -c, --config <c>                 the config file to use (override every other option)
     -d, --db <path>                  the path were to store the database
