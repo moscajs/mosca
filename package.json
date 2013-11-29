@@ -9,6 +9,8 @@
   "scripts": {
     "test": "mocha --recursive --bail --reporter spec test",
     "ci": "mocha --recursive --bail --watch test",
+    "coverage": "rm -rf coverage; istanbul cover _mocha -- --recursive --reporter spec --bail",
+    "publish-coverage": "npm run coverage && (cat coverage/lcov.info | coveralls)",
     "jshint-lib": "jshint lib/*.js",
     "jshint-test": "jshint test/*.js"
   },
@@ -50,7 +52,9 @@
     "jshint": "~2.3.0",
     "js-beautify": "~0.4.2",
     "tmp": "0.0.22",
-    "supertest": "~0.8.1"
+    "supertest": "~0.8.1",
+    "coveralls": "~2.5.0",
+    "istanbul": "~0.1.45"
   },
   "dependencies": {
     "mqtt": "~0.3.7",

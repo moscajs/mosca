@@ -18,3 +18,4 @@ node_modules
 docs
 mosquitto.db
 *rdb
+coverage/

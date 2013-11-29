@@ -5,3 +5,5 @@ services:
   - rabbitmq
   - redis-server
   - mongodb
+script:
+  - npm run publish-coverage
