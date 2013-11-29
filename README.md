@@ -1,7 +1,5 @@
-Mosca
+Mosca&bnsp;&bnsp;&bnsp;[![Build Status](https://travis-ci.org/mcollina/mosca.png)](https://travis-ci.org/mcollina/mosca)&bnsp;&bnsp;[![Coverage Status](https://coveralls.io/repos/mcollina/mosca/badge.png)](https://coveralls.io/r/mcollina/mosca)
 ====================
-
-[![Build Status](https://travis-ci.org/mcollina/mosca.png)](https://travis-ci.org/mcollina/mosca)
 
 [![NPM](https://nodei.co/npm/mosca.png)](https://nodei.co/npm/mosca/)
 
