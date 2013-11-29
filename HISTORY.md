@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.14.1
+
+* Bumped Ascoltatori to 0.12.0 to support a more compact mongo url.
+* Updated some patch-level dependencies.
+* Added test coverage.
+
 ## 0.14.0
 
 * Added `mosca.Server#published` callback to adding behavior before QoS
