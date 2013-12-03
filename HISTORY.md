@@ -1,6 +1,10 @@
 History
 =======
 
+## 0.14.2
+
+* README fixes.
+
 ## 0.14.1
 
 * Bumped Ascoltatori to 0.12.0 to support a more compact mongo url.
