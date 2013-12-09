@@ -2,7 +2,6 @@
 
 var abstract = require("./abstract");
 var Mongo = require("../../").persistence.Mongo;
-var redis = require("redis");
 var MongoClient = require('mongodb').MongoClient;
 var async = require("async");
 
