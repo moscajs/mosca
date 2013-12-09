@@ -2,6 +2,7 @@ var async = require("async");
 var tmp = require('tmp');
 var fs = require("fs");
 var mqtt = require("mqtt");
+var os = require("os");
 
 var SECURE_KEY = __dirname + '/secure/tls-key.pem';
 var SECURE_CERT = __dirname + '/secure/tls-cert.pem';
@@ -318,12 +319,16 @@ describe("mosca.cli", function() {
     });
   });
 
-  it("should reload the config using if killed with SIGHUP", function(done) {
+  //Todo: Fix for windows
+  it("should reload the current config if killed with SIGHUP on a Linux-based OS", function(done) {
+
+    if(os.platform() === "win32") return done();
+
     args.push("adduser");
     args.push("myuser");
     args.push("mypass");
     args.push("--credentials");
-    
+
     var cloned = null;
 
     async.waterfall([
