@@ -1218,10 +1218,9 @@ module.exports = function(moscaSettings, createConnection) {
 
           client.on('connack', function(packet) {
             var subscriptions = [{
-                topic: "hello",
-                qos: 0
-              }
-            ];
+              topic: "hello",
+              qos: 0
+            }];
 
             client.subscribe({
               subscriptions: subscriptions,
@@ -1241,108 +1240,107 @@ module.exports = function(moscaSettings, createConnection) {
   });
 
   it("should return only a single retained message", function(done) {
-    var pers = new mosca.persistence.Memory({},function(){
 
-      pers.wire(instance);
+    var pers = new mosca.persistence.Memory();
 
-      async.waterfall([
+    pers.wire(instance);
 
-        function(cb) {
-          var client = createConnection(settings.port, settings.host);
+    async.waterfall([
 
-          var defaultMessage = {
-            topic: "hello",
-            qos: 0,
-            payload: null,
-            messageId: null,
-            retain: true
-          }
+      function(cb) {
+        var client = createConnection(settings.port, settings.host);
+        client.name = "Phase 1";
+        var defaultMessage = {
+          topic: "hello",
+          qos: 0,
+          payload: null,
+          messageId: null,
+          retain: true
+        }
 
-          client.on("connected", function() {
-            var opts = buildOpts();
-            opts.clean = true;
+        client.on("connected", function() {
+          var opts = buildOpts();
+          opts.clean = true;
 
-            var totalMessages = 10;
-            var publishCount = 0;
+          var totalMessages = 10;
+          var publishCount = 0;
 
-            client.connect(opts);
+          client.connect(opts);
 
-            client.on('publish', function(packet){
-              publishCount++;
-              if(publishCount == totalMessages)
-              {
+          client.on('publish', function(packet){
+            publishCount++;
+            if(publishCount == totalMessages)
+            {
                 client.stream.end();
-                cb();
-              }
-
-            });
-
-            client.on('connack', function(packet) {
-
-              var subscriptions = [{
-                topic: "hello",
-                qos: 0
-              }];
-
-              client.subscribe({
-                subscriptions: subscriptions,
-                messageId: 20
-              });
-
-              for(var c = 1 ; c <= 10 ; c++)
-              {
-                defaultMessage.payload = (c == totalMessages) ? new Buffer("Final Message") : new Buffer("Message " + c);
-                defaultMessage.messageId = 40 + c;
-                client.publish(defaultMessage);
-              }
-
-            });
-          });
-        },
-
-        function(cb) {
-          var client = createConnection(settings.port, settings.host);
-
-          var retainedReceivedCount = 0;
-
-          client.on("connected", function() {
-            var opts = buildOpts();
-            opts.clean = true;
-
-            client.connect(opts);
-
-            client.on('connack', function(packet) {
-              var subscriptions = [{
-                topic: "hello",
-                qos: 0
-              }
-              ];
-
-              client.subscribe({
-                subscriptions: subscriptions,
-                messageId: 20
-              });
-            });
-
-            var handleTimeout = function(){
-              expect(retainedReceivedCount).to.be.equal(1);
-              client.stream.end();
               cb();
             }
 
-            var timeout;
+          });
 
-            client.on("publish", function(packet) {
-              clearInterval(timeout);
-              timeout = setTimeout(handleTimeout, 100);
-              retainedReceivedCount ++;
+          client.on('connack', function(packet) {
+
+            var subscriptions = [{
+              topic: "hello",
+              qos: 0
+            }];
+
+            client.subscribe({
+              subscriptions: subscriptions,
+              messageId: 20
             });
 
-          });
-        }
-      ], done);
+            for(var c = 1 ; c <= 10 ; c++)
+            {
+              defaultMessage.payload = (c == totalMessages) ? new Buffer("Final Message") : new Buffer("Message " + c);
+              defaultMessage.messageId = 40 + c;
+              client.publish(defaultMessage);
+            }
 
-    });
+          });
+        });
+      },
+
+      function(cb) {
+        var client = createConnection(settings.port, settings.host);
+
+        var retainedReceivedCount = 0;
+
+        client.on("connected", function() {
+          var opts = buildOpts();
+          opts.clean = true;
+
+          client.connect(opts);
+
+          client.on('connack', function(packet) {
+            var subscriptions = [{
+              topic: "hello",
+              qos: 0
+            }
+            ];
+
+            client.subscribe({
+              subscriptions: subscriptions,
+              messageId: 20
+            });
+          });
+
+          var handleTimeout = function(){
+            expect(retainedReceivedCount).to.be.equal(1);
+            client.stream.end();
+            cb();
+          }
+
+          var timeout;
+
+          client.on("publish", function(packet) {
+            clearInterval(timeout);
+            timeout = setTimeout(handleTimeout, 100);
+            retainedReceivedCount ++;
+          });
+
+        });
+      }
+    ], done);
   });
 
   it("should support unclean clients", function(done) {
