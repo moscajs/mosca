@@ -84,6 +84,39 @@ module.exports = function(create, buildOpts) {
       ], done);
     });
 
+    it("should match and load a single retained message", function(done) {
+
+      var packetMessageId = 0;
+
+      var getPacket = function(){
+
+        packetMessageId++;
+
+        return {
+          topic: "hello",
+          qos: 0,
+          payload: new Buffer("world"),
+          messageId: packetMessageId,
+          retain: true
+        };
+      };
+
+      var instance = this.instance;
+
+      async.parallel([
+        function(cb) { instance.storeRetained(getPacket(), cb); },
+        function(cb) { instance.storeRetained(getPacket(), cb); },
+        function(cb) { instance.storeRetained(getPacket(), cb); },
+        function(cb) { instance.storeRetained(getPacket(), cb); },
+        function(cb) { instance.storeRetained(getPacket(), cb); }
+      ], function(err, results) {
+          instance.lookupRetained("hello", function(err, results) {
+            expect(results.length).to.be.eql(1);
+            done();
+          });
+      });
+    });
+
     it("should overwrite a retained message", function(done) {
       var packet = {
         topic: "hello",
