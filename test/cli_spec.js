@@ -319,7 +319,6 @@ describe("mosca.cli", function() {
     });
   });
 
-  //Todo: Fix for windows
   it("should reload the current config if killed with SIGHUP on a Linux-based OS", function(done) {
 
     if(os.platform() === "win32") return done();
