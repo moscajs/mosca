@@ -531,6 +531,10 @@ href="https://github.com/andreareginato">GitHub/andreareginato</a></td>
 </tr>
 <tr><th align="left">Chris Wiggins</th><td><a
 href="https://github.com/chriswiggins">GitHub/chriswiggins</a></td>
+<tr><th align="left">Samir Naik</th><td><a
+href="https://github.com/samirnaik">GitHub/samirnaik</a></td>
+<tr><th align="left">Leo Steiner</th><td><a
+href="https://github.com/ldstein">GitHub/ldstein</a></td>
 </tbody></table>
 
 ## LICENSE - "MIT License"
