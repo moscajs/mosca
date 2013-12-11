@@ -53,7 +53,7 @@ describe("mosca.Server - Secure Websocket", function() {
     var curPort = nextPort() - 1;
     var req = request("https://localhost:" + curPort);
 
-    req.get('/test').expect(200, "42\n").end(done);
+    req.get('/test').expect(200, "42").end(done);
   });
 
   it("should serve a browserify bundle", function(done) {
