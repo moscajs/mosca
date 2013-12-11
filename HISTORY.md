@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.14.3
+
+* Fixed retained messages support in windows
+  [#75](https://github.com/mcollina/mosca/pull/75).
+
 ## 0.14.2
 
 * README fixes.
