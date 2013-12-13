@@ -97,11 +97,9 @@ client.on("message", function(topic, payload) {
 
 * MQTT.js can be tunnelled inside WebSocket/Engine.io/any binary stream
 * The previous example runned inside the browser using WebSocket
+* MQTT over Websocket is 'standard' and supported by IBM MQ, Mosquitto
+  and Hive [link](http://mqtt.org/wiki/doku.php/mqtt_over_websockets).
 * Thanks @substack for Browserify
-* Not yet released (sorry :/), but coming later this month (see:
-  [adamvr/MQTT.js#130](https://github.com/adamvr/MQTT.js/pull/130)
-  and
-  [mcollina/mqtt.js-over-websockets](https://github.com/mcollina/mqtt.js-over-websockets))
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
