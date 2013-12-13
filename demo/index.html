@@ -194,6 +194,7 @@ order.</p>
 <span class="p">});</span>
 
 <span class="nx">client</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">payload</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">arguments</span><span class="p">);</span>
   <span class="nx">alert</span><span class="p">([</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">payload</span><span class="p">.</span><span class="nx">toString</span><span class="p">()].</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">));</span>
 
   <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">client</span><span class="p">.</span><span class="nx">end</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">client</span><span class="p">),</span> <span class="mi">1000</span><span class="p">);</span>

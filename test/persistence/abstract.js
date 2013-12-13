@@ -518,6 +518,18 @@ module.exports = function(create, buildOpts) {
       });
     });
 
+    it("should support multiple subscription command", function(done) {
+      var instance = this.instance;
+      instance.storeSubscriptions(client, function() {
+        instance.storeOfflinePacket(packet, function() {
+          instance.streamOfflinePackets(client, function(err, p) {
+            expect(p).to.eql(packet);
+            done();
+          });
+        });
+      });
+    });
+
     it("should delete the offline packets once streamed", function(done) {
       var instance = this.instance;
       instance.storeOfflinePacket(packet, function() {

@@ -181,6 +181,7 @@ var client = mqtt.createClient({
 });
 
 client.on("message", function(topic, payload) {
+  console.log(arguments);
   alert([topic, payload.toString()].join(": "));
 
   setTimeout(client.end.bind(client), 1000);
