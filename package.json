@@ -76,7 +76,7 @@
     "mows": "~0.0.2",
     "connect": "~2.8.8",
     "express": "~3.3.8",
-    "browserify-middleware": "~1.19.0",
+    "browserify-middleware": "~2.1.0",
     "json-buffer": "~2.0.7",
     "brfs": "0.0.8",
     "pre-commit": "0.0.4"
