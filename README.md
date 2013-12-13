@@ -21,6 +21,9 @@ Find out more about Mosca reading the
 If you plan to use Mosca in production
 [let us know](http://twitter.com/matteocollina), we'll be more than happy to help
 you getting started and solve any issue you'll find out.
+Also, check out our [Usage in the
+Wild](https://github.com/mcollina/mosca/wiki/Usage-in-the-Wild) wiki
+page! Feel free to add yourself! :)
 
 Mosca can be used:
 * <a href="#standalone">Standalone</a>
