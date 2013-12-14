@@ -310,6 +310,28 @@ module.exports = function(create, buildOpts) {
       });
     });
 
+    it("should remove the subscriptions after lookup", function(done) {
+      var instance = this.instance;
+      var client = {
+        id: "my client id - 42",
+        logger: globalLogger,
+        subscriptions: {
+          hello: {
+            qos: 1
+          }
+        }
+      };
+
+      instance.storeSubscriptions(client, function() {
+        instance.lookupSubscriptions(client, function() {
+          instance.lookupSubscriptions(client, function(err, results) {
+            expect(results).to.eql({});
+            done();
+          });
+        });
+      });
+    });
+
     it("should allow a clean client to connect", function(done) {
       var instance = this.instance;
       var client = {
