@@ -649,6 +649,23 @@ module.exports = function(moscaSettings, createConnection) {
     client.connect(buildOpts());
   });
 
+  it("should emit an event when a client is disconnected without a disconnect", function(done) {
+    var client = createConnection(settings.port, settings.host);
+
+    instance.once('clientDisconnected', function(serverClient) {
+      expect(serverClient).not.to.be.equal(undefined);
+      done();
+    });
+
+    client.on('error', done);
+
+    client.on('connack', function() {
+      client.stream.end();
+    });
+
+    client.connect(buildOpts());
+  });
+
   it("should emit a ready and closed events", function(done) {
     var server = new mosca.Server(moscaSettings());
     async.series([
