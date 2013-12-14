@@ -612,6 +612,27 @@ module.exports = function(create, buildOpts) {
       });
     });
 
+    it("should not store any offline packet for a client after lookup", function(done) {
+      var instance = this.instance;
+      var client = {
+        id: "my client id - 42",
+        clean: false,
+        logger: globalLogger,
+        subscriptions: {
+          hello: 1
+        }
+      };
+
+      instance.lookupSubscriptions(client, function(err, results) {
+        instance.storeOfflinePacket(packet, function() {
+          instance.streamOfflinePackets(client, function(err, p) {
+            done(new Error("this should never be called"));
+          });
+          done();
+        });
+      });
+    });
+
     it("should not stream any offline packet to a clean client", function(done) {
       var instance = this.instance;
       var client = {
