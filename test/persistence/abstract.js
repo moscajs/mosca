@@ -310,6 +310,28 @@ module.exports = function(create, buildOpts) {
       });
     });
 
+    it("should remove the subscriptions after lookup", function(done) {
+      var instance = this.instance;
+      var client = {
+        id: "my client id - 42",
+        logger: globalLogger,
+        subscriptions: {
+          hello: {
+            qos: 1
+          }
+        }
+      };
+
+      instance.storeSubscriptions(client, function() {
+        instance.lookupSubscriptions(client, function() {
+          instance.lookupSubscriptions(client, function(err, results) {
+            expect(results).to.eql({});
+            done();
+          });
+        });
+      });
+    });
+
     it("should allow a clean client to connect", function(done) {
       var instance = this.instance;
       var client = {
@@ -518,6 +540,18 @@ module.exports = function(create, buildOpts) {
       });
     });
 
+    it("should support multiple subscription command", function(done) {
+      var instance = this.instance;
+      instance.storeSubscriptions(client, function() {
+        instance.storeOfflinePacket(packet, function() {
+          instance.streamOfflinePackets(client, function(err, p) {
+            expect(p).to.eql(packet);
+            done();
+          });
+        });
+      });
+    });
+
     it("should delete the offline packets once streamed", function(done) {
       var instance = this.instance;
       instance.storeOfflinePacket(packet, function() {
@@ -570,6 +604,27 @@ module.exports = function(create, buildOpts) {
       instance.lookupSubscriptions(client, function(err, results) {
         instance.storeOfflinePacket(packet, function() {
           client.clean = false;
+          instance.streamOfflinePackets(client, function(err, p) {
+            done(new Error("this should never be called"));
+          });
+          done();
+        });
+      });
+    });
+
+    it("should not store any offline packet for a client after lookup", function(done) {
+      var instance = this.instance;
+      var client = {
+        id: "my client id - 42",
+        clean: false,
+        logger: globalLogger,
+        subscriptions: {
+          hello: 1
+        }
+      };
+
+      instance.lookupSubscriptions(client, function(err, results) {
+        instance.storeOfflinePacket(packet, function() {
           instance.streamOfflinePackets(client, function(err, p) {
             done(new Error("this should never be called"));
           });
