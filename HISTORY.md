@@ -1,6 +1,13 @@
 History
 =======
 
+## 0.14.4
+
+* Restored 'clientDisconnected' event in case of errors
+  [#79](https://github.com/mcollina/mosca/pull/79).
+* Fixed multiple offline message delivery
+  [#80](https://github.com/mcollina/mosca/pull/80).
+
 ## 0.14.3
 
 * Fixed retained messages support in windows
