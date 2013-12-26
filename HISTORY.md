@@ -1,6 +1,10 @@
 History
 =======
 
+## 0.14.5
+
+* Increased MQTT client identifier to support 65536-byte IDs as recommended in next spec.
+
 ## 0.14.4
 
 * Restored 'clientDisconnected' event in case of errors
