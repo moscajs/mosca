@@ -398,7 +398,7 @@ module.exports = function(create, buildOpts) {
       });
     });
 
-    it("should wire itself up to the restoreClient method of a Server", function(done) {
+    it("should wire itself up to the restoreClientSubscriptions method of a Server", function(done) {
       var server = new EventEmitter();
       var instance = this.instance;
 
@@ -422,7 +422,7 @@ module.exports = function(create, buildOpts) {
       instance.wire(server);
 
       instance.storeSubscriptions(client, function() {
-        server.restoreClient(client);
+        server.restoreClientSubscriptions(client);
       });
     });
 
@@ -668,7 +668,7 @@ module.exports = function(create, buildOpts) {
       });
     });
 
-    it("should wire itself up to the restoreClient method of a Server", function(done) {
+    it("should wire itself up to the forwardOfflinePackets method of a Server", function(done) {
       var server = new EventEmitter();
       var instance = this.instance;
 
@@ -685,7 +685,7 @@ module.exports = function(create, buildOpts) {
       client.handleAuthorizeSubscribe = function(a, b, c, cb) { cb(); };
 
       instance.storeOfflinePacket(packet, function() {
-        server.restoreClient(client);
+        server.forwardOfflinePackets(client);
       });
     });
   });

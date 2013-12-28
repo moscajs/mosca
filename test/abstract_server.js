@@ -1428,64 +1428,6 @@ module.exports = function(moscaSettings, createConnection) {
     ], done);
   });
 
-  it("should support unclean clients", function(done) {
-    var pers = new mosca.persistence.Memory();
-    var opts = buildOpts();
-
-    opts.clientId = "mosca-unclean-clients-test";
-    opts.clean = false;
-
-    pers.wire(instance);
-
-    async.series([
-
-      function(cb) {
-        buildAndConnect(cb, opts, function(client) {
-          var subscriptions = [{
-            topic: "hello",
-            qos: 1
-          }];
-
-          client.subscribe({
-            subscriptions: subscriptions,
-            messageId: 42
-          });
-
-          client.on("suback", function() {
-            client.stream.end();
-          });
-        });
-      },
-
-      function(cb) {
-        // some time to let the write settle
-        setTimeout(cb, 5);
-      },
-
-      function(cb) {
-        buildAndConnect(cb, function(client) {
-          client.publish({
-            topic: "hello",
-            qos: 0,
-            payload: "world",
-            messageId: 42
-          });
-          client.stream.end();
-        });
-      },
-
-      function(cb) {
-        buildAndConnect(cb, opts, function(client) {
-          client.on("publish", function(packet) {
-            expect(packet.topic).to.be.eql("hello");
-            expect(packet.payload).to.be.eql("world");
-            client.disconnect();
-          });
-        });
-      }
-    ], done);
-  });
-
   it("should restore subscriptions for uncleaned clients", function(done) {
     var pers = new mosca.persistence.Memory();
     var opts = buildOpts();
@@ -1516,19 +1458,69 @@ module.exports = function(moscaSettings, createConnection) {
       },
 
       function(cb) {
-        // some time to let the write settle
-        setTimeout(cb, 5);
-      },
-
-      function(cb) {
         buildAndConnect(cb, opts, function(client) {
           client.publish({
             topic: "hello",
-            qos: 0,
+            qos: 1,
             payload: "world",
             messageId: 42
           });
 
+          client.on("publish", function(packet) {
+            expect(packet.topic).to.be.eql("hello");
+            expect(packet.payload).to.be.eql("world");
+            client.disconnect();
+          });
+        });
+      }
+    ], done);
+  });
+
+  it("should restore subscriptions for uncleaned clients (bis)", function(done) {
+    var pers = new mosca.persistence.Memory();
+    var opts = buildOpts();
+
+    opts.clientId = "mosca-unclean-client-test";
+    opts.clean = false;
+
+    pers.wire(instance);
+
+    async.series([
+
+      function(cb) {
+        buildAndConnect(cb, opts, function(client) {
+          var subscriptions = [{
+            topic: "hello",
+            qos: 1
+          }];
+
+          client.subscribe({
+            subscriptions: subscriptions,
+            messageId: 42
+          });
+
+          client.on("suback", function() {
+            client.stream.end();
+          });
+        });
+      },
+
+      function(cb) {
+        buildAndConnect(cb, buildOpts(), function(client) {
+          client.publish({
+            topic: "hello",
+            qos: 1,
+            payload: "world",
+            messageId: 24
+          });
+          client.on("puback", function() {
+            client.disconnect();
+          });
+        });
+      },
+
+      function(cb) {
+        buildAndConnect(cb, opts, function(client) {
           client.on("publish", function(packet) {
             expect(packet.topic).to.be.eql("hello");
             expect(packet.payload).to.be.eql("world");
