@@ -91,12 +91,12 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
-  it("should send a connack packet with returnCode 2 if the clientId is longer than 23 chars", function(done) {
+  it("should send a connack packet with returnCode 0 if the clientId is 65535 chars", function(done) {
     buildClient(done, function(client) {
 
       var opts = buildOpts(), clientId = [];
 
-      for(var i=0; i < 25; i++) {
+      for(var i=0; i < 65535; i++) {
         clientId.push("i");
       }
       opts.clientId = clientId.join("");
@@ -104,7 +104,23 @@ module.exports = function(moscaSettings, createConnection) {
       client.connect(opts);
 
       client.on('connack', function(packet) {
-        expect(packet.returnCode).to.eql(2);
+        client.disconnect();
+        expect(packet.returnCode).to.eql(0);
+      });
+    });
+  });
+
+  it("should send a connack packet with returnCode 0 if the clientId is 1 char", function(done) {
+    buildClient(done, function(client) {
+
+      var opts = buildOpts();
+      opts.clientId = "i";
+
+      client.connect(opts);
+
+      client.on('connack', function(packet) {
+        client.disconnect();
+        expect(packet.returnCode).to.eql(0);
       });
     });
   });
