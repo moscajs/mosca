@@ -29,6 +29,9 @@ Mosca can be used:
 * <a href="#standalone">Standalone</a>
 * <a href="#embedded">Embedded in another Node.js application</a>
 
+Mosca officially support only node v0.10 but v0.11.x should work too.
+Node v0.8 is not supported.
+
 ## Features
 
 * MQTT 3.1 compliant.

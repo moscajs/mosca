@@ -1,6 +1,6 @@
 {
   "name": "mosca",
-  "version": "0.14.4",
+  "version": "0.15.0",
   "description": "The multi-transport MQTT broker for node.js. It supports AMQP, Redis, ZeroMQ, MongoDB or just MQTT.",
   "main": "index.js",
   "bin": {
@@ -12,7 +12,8 @@
     "coverage": "rm -rf coverage; istanbul cover _mocha -- --recursive --reporter spec --bail",
     "publish-coverage": "npm run coverage && (cat coverage/lcov.info | coveralls)",
     "jshint-lib": "jshint lib/*.js",
-    "jshint-test": "jshint test/*.js"
+    "jshint-test": "jshint test/*.js",
+    "start": "./bin/mosca -v | bunyan"
   },
   "pre-commit": [
     "jshint-lib",
@@ -25,6 +26,9 @@
   },
   "bugs": {
     "url": "http://github.com/mcollina/mosca/issues"
+  },
+  "engines": {
+    "node": "0.10.x"
   },
   "keywords": [
     "mqtt",

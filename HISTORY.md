@@ -1,6 +1,18 @@
 History
 =======
 
+## 0.15.0
+
+* Removed limit of 23 bytes for the client id as in MQTT 3.1.1.
+* Removed two possible race conditions for offline messages.
+  The race conditions were:
+  1. the restoration of all subscriptions was done after connack,
+     which
+     means that there was a tiny window were a message could be lost.
+  2. the puback for a QoS 1 packet was sent before the write was
+     concluded.
+* Dumped node v0.8 support forever.
+
 ## 0.14.4
 
 * Restored 'clientDisconnected' event in case of errors
