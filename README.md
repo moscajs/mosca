@@ -132,7 +132,7 @@ module.exports = {
     port: 6379,
     host: 'localhost'
   },
-  persistence = {
+  persistence: {
     factory: mosca.persistence.Redis,
     port: 6379,
     host: 'localhost'
