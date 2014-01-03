@@ -253,4 +253,34 @@ describe("mosca.Server - MQTT backend", function() {
       }
     ]);
   });
+
+  it("should build the correct persistence", function(done) {
+    var newSettings = moscaSettings();
+
+    newSettings.persistence = {
+      factory: mosca.persistence.Redis,
+      port: 6379,
+      host: 'localhost'
+    };
+
+    var spy = sinon.spy(newSettings.persistence, 'factory');
+
+    var server = new mosca.Server(newSettings);
+
+    async.series([
+
+      function(cb) {
+        server.on("ready", cb);
+      },
+
+      function(cb) {
+        expect(spy).to.have.been.calledWith(newSettings.persistence);
+        cb();
+      },
+
+      function(cb) {
+        server.close(cb);
+      }
+    ], done);
+  });
 });

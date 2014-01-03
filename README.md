@@ -120,14 +120,22 @@ broker is defined. Here follows an example using Redis.
 
 A configuration file is structured in the following way:
 ```javascript
+var mosca = require('mosca');
+
 module.exports = {
   port: 4883,
+  logger: {
+    level: 'info'
+  },
   backend: {
     type: 'redis',
-    redis: require('redis'),
-    db: 12,
     port: 6379,
-    host: localhost
+    host: 'localhost'
+  },
+  persistence = {
+    factory: mosca.persistence.Redis,
+    port: 6379,
+    host: 'localhost'
   },
   secure: {
     keyPath: "/path/to/key",
