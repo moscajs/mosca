@@ -476,7 +476,7 @@ httpServer.listen(3000);
 It is also possible to server the browserified bundle for the mqtt
 client:
 ```
-var http     = require('http)
+var http     = require('http')
   , express  = require('express')
   , app      = express();
   , httpServ = http.createServer(app)
