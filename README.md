@@ -1,6 +1,9 @@
 Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.png)](https://travis-ci.org/mcollina/mosca)&nbsp;&nbsp;[![Coverage Status](https://coveralls.io/repos/mcollina/mosca/badge.png)](https://coveralls.io/r/mcollina/mosca)
 ====================
 
+
+[![MOSCA](http://cloud.dynamatik.com/image/3I3I0q1M1x0E/mosca_small.png)](https://github.com/mcollina/mosca)
+
 [![NPM](https://nodei.co/npm/mosca.png)](https://nodei.co/npm/mosca/)
 
 [![NPM](https://nodei.co/npm-dl/mosca.png)](https://nodei.co/npm/mosca/)
@@ -542,6 +545,9 @@ href="https://github.com/samirnaik">GitHub/samirnaik</a></td>
 <tr><th align="left">Leo Steiner</th><td><a
 href="https://github.com/ldstein">GitHub/ldstein</a></td>
 </tbody></table>
+
+## Logo
+[Sam Beck](http://two-thirty.tumblr.com)
 
 ## LICENSE - "MIT License"
 
