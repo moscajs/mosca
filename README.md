@@ -500,24 +500,6 @@ mqttServ.serveBundle(app);
 httpServer.listen(3000);
 ```
 
-## Contributing
-
-Fork the repo on github and send a pull requests with topic branches.
-Do not forget to provide specs to your contribution.
-
-
-### Running specs
-
-* Fork and clone the repository
-* Run `npm install`
-* Run `npm test`
-
-
-## Coding guidelines
-
-Follow [felix](http://nodeguide.com/style.html) guidelines.
-
-
 ## Feedback
 
 Use the [issue tracker](http://github.com/mcollina/mosca/issues) for bugs.
