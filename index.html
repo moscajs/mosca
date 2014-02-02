@@ -29,9 +29,10 @@
       </header>
       <section>
         <h1>
-<a name="mosca" class="anchor" href="#mosca"><span class="octicon octicon-link"></span></a>Mosca</h1>
+<a name="mosca" class="anchor" href="#mosca"><span class="octicon octicon-link"></span></a>Mosca   <a href="https://travis-ci.org/mcollina/mosca"><img src="https://travis-ci.org/mcollina/mosca.png" alt="Build Status"></a>  <a href="https://coveralls.io/r/mcollina/mosca"><img src="https://coveralls.io/repos/mcollina/mosca/badge.png" alt="Coverage Status"></a>
+</h1>
 
-<p><a href="https://travis-ci.org/mcollina/mosca"><img src="https://travis-ci.org/mcollina/mosca.png" alt="Build Status"></a></p>
+<p><a href="https://github.com/mcollina/mosca"><img src="http://cloud.dynamatik.com/image/3I3I0q1M1x0E/mosca_small.png" alt="MOSCA"></a></p>
 
 <p><a href="https://nodei.co/npm/mosca/"><img src="https://nodei.co/npm/mosca.png" alt="NPM"></a></p>
 
@@ -56,14 +57,20 @@ supporting the following brokers/protocols.</p>
 
 <p>If you plan to use Mosca in production
 <a href="http://twitter.com/matteocollina">let us know</a>, we'll be more than happy to help
-you getting started and solve any issue you'll find out.</p>
+you getting started and solve any issue you'll find out.
+Also, check out our <a href="https://github.com/mcollina/mosca/wiki/Usage-in-the-Wild">Usage in the
+Wild</a> wiki
+page! Feel free to add yourself! :)</p>
 
 <p>Mosca can be used:</p>
 
 <ul>
 <li><a href="#standalone">Standalone</a></li>
 <li><a href="#embedded">Embedded in another Node.js application</a></li>
-</ul><h2>
+</ul><p>Mosca officially support only node v0.10 but v0.11.x should work too.
+Node v0.8 is not supported.</p>
+
+<h2>
 <a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
 
 <ul>
@@ -149,14 +156,22 @@ broker is defined. Here follows an example using Redis.</p>
 
 <p>A configuration file is structured in the following way:</p>
 
-<div class="highlight highlight-javascript"><pre><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">mosca</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'mosca'</span><span class="p">);</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
   <span class="nx">port</span><span class="o">:</span> <span class="mi">4883</span><span class="p">,</span>
+  <span class="nx">logger</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">level</span><span class="o">:</span> <span class="s1">'info'</span>
+  <span class="p">},</span>
   <span class="nx">backend</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">type</span><span class="o">:</span> <span class="s1">'redis'</span><span class="p">,</span>
-    <span class="nx">redis</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'redis'</span><span class="p">),</span>
-    <span class="nx">db</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
     <span class="nx">port</span><span class="o">:</span> <span class="mi">6379</span><span class="p">,</span>
-    <span class="nx">host</span><span class="o">:</span> <span class="nx">localhost</span>
+    <span class="nx">host</span><span class="o">:</span> <span class="s1">'localhost'</span>
+  <span class="p">},</span>
+  <span class="nx">persistence</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">factory</span><span class="o">:</span> <span class="nx">mosca</span><span class="p">.</span><span class="nx">persistence</span><span class="p">.</span><span class="nx">Redis</span><span class="p">,</span>
+    <span class="nx">port</span><span class="o">:</span> <span class="mi">6379</span><span class="p">,</span>
+    <span class="nx">host</span><span class="o">:</span> <span class="s1">'localhost'</span>
   <span class="p">},</span>
   <span class="nx">secure</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">keyPath</span><span class="o">:</span> <span class="s2">"/path/to/key"</span><span class="p">,</span>
@@ -255,8 +270,7 @@ the command line.</p>
 
 <span class="kd">var</span> <span class="nx">ascoltatore</span> <span class="o">=</span> <span class="p">{</span>
   <span class="nx">type</span><span class="o">:</span> <span class="s1">'mongo'</span><span class="p">,</span>
-  <span class="nx">uri</span><span class="o">:</span> <span class="s1">'mongodb://localhost:27017/'</span><span class="p">,</span>
-  <span class="nx">db</span><span class="o">:</span> <span class="s1">'mqtt'</span><span class="p">,</span>
+  <span class="nx">url</span><span class="o">:</span> <span class="s1">'mongodb://localhost:27017/mqtt'</span><span class="p">,</span>
   <span class="nx">pubsubCollection</span><span class="o">:</span> <span class="s1">'ascoltatori'</span><span class="p">,</span>
   <span class="nx">mongo</span><span class="o">:</span> <span class="p">{}</span>
 <span class="p">};</span>
@@ -508,7 +522,7 @@ like so:</p>
 <p>It is also possible to server the browserified bundle for the mqtt
 client:</p>
 
-<pre><code>var http     = require('http)
+<pre><code>var http     = require('http')
   , express  = require('express')
   , app      = express();
   , httpServ = http.createServer(app)
@@ -520,26 +534,6 @@ mqttServ.serveBundle(app);
 
 httpServer.listen(3000);
 </code></pre>
-
-<h2>
-<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
-
-<p>Fork the repo on github and send a pull requests with topic branches.
-Do not forget to provide specs to your contribution.</p>
-
-<h3>
-<a name="running-specs" class="anchor" href="#running-specs"><span class="octicon octicon-link"></span></a>Running specs</h3>
-
-<ul>
-<li>Fork and clone the repository</li>
-<li>Run <code>npm install</code>
-</li>
-<li>Run <code>npm test</code>
-</li>
-</ul><h2>
-<a name="coding-guidelines" class="anchor" href="#coding-guidelines"><span class="octicon octicon-link"></span></a>Coding guidelines</h2>
-
-<p>Follow <a href="http://nodeguide.com/style.html">felix</a> guidelines.</p>
 
 <h2>
 <a name="feedback" class="anchor" href="#feedback"><span class="octicon octicon-link"></span></a>Feedback</h2>
@@ -577,7 +571,20 @@ Do not forget to provide specs to your contribution.</p>
 <th align="left">Chris Wiggins</th>
 <td><a href="https://github.com/chriswiggins">GitHub/chriswiggins</a></td>
 </tr>
+<tr>
+<th align="left">Samir Naik</th>
+<td><a href="https://github.com/samirnaik">GitHub/samirnaik</a></td>
+</tr>
+<tr>
+<th align="left">Leo Steiner</th>
+<td><a href="https://github.com/ldstein">GitHub/ldstein</a></td>
+</tr>
 </tbody></table><h2>
+<a name="logo" class="anchor" href="#logo"><span class="octicon octicon-link"></span></a>Logo</h2>
+
+<p><a href="http://two-thirty.tumblr.com">Sam Beck</a></p>
+
+<h2>
 <a name="license---mit-license" class="anchor" href="#license---mit-license"><span class="octicon octicon-link"></span></a>LICENSE - "MIT License"</h2>
 
 <p>Copyright (c) 2013 Matteo Collina, <a href="http://matteocollina.com">http://matteocollina.com</a></p>
