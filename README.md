@@ -1,7 +1,6 @@
 Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.png)](https://travis-ci.org/mcollina/mosca)&nbsp;&nbsp;[![Coverage Status](https://coveralls.io/repos/mcollina/mosca/badge.png)](https://coveralls.io/r/mcollina/mosca)
 ====================
 
-
 [![MOSCA](http://cloud.dynamatik.com/image/3I3I0q1M1x0E/mosca_small.png)](https://github.com/mcollina/mosca)
 
 [![NPM](https://nodei.co/npm/mosca.png)](https://nodei.co/npm/mosca/)
@@ -17,13 +16,16 @@ supporting the following brokers/protocols.
 * [RabbitMQ](http://www.rabbitmq.com/) and all implementations of the [AMQP](http://www.amqp.org/) protocol.
 * [ZeroMQ](http://www.zeromq.org/) to use Mosca in a P2P fashion.
 
+NEW: you can find a test version of mosca at test.mosca.io.
+You can use ws://test.mosca.io/ to connect to the WebSocket tunnel.
+This is powered by the [docker image](#docker-support).
 
 Find out more about Mosca reading the
 [dox generated documentation](http://mcollina.github.io/mosca/docs).
 
 If you plan to use Mosca in production
 [let us know](http://twitter.com/matteocollina), we'll be more than happy to help
-you getting started and solve any issue you'll find out.
+you getting started and solve any issue you will find out.
 Also, check out our [Usage in the
 Wild](https://github.com/mcollina/mosca/wiki/Usage-in-the-Wild) wiki
 page! Feel free to add yourself! :)
@@ -486,6 +488,7 @@ httpServer.listen(3000);
 
 It is also possible to server the browserified bundle for the mqtt
 client:
+
 ```
 var http     = require('http')
   , express  = require('express')
@@ -498,6 +501,50 @@ mqttServ.attachHttpServer(httpServ);
 mqttServ.serveBundle(app);
 
 httpServer.listen(3000);
+```
+
+## Docker Support
+
+If you want a [Docker](http://docker.io) image, just clone this
+repository and run `$ docker build .`.
+This will create a container that run Mosca with a levelup-based
+database.
+
+In order to build the container, you should:
+
+```
+$ git clone https://github.com/mcollina/mosca.git
+$ cd mosca
+$ docker build -t mosca:dev .
+```
+
+In order to run the Mosca container you should:
+
+```
+$ docker run -p 1883:1883 -p 80:80 -v /var/db/mosca:/db mosca:dev
+```
+
+The command line above will persist your data in the `/var/db/mosca`
+directory of the host.
+
+Then, you can put the following upstart script in `/etc/init/mosca.conf`
+to automatically start mosca at boot:
+
+```
+description "Mosca container"
+author "Matteo Collina"
+start on filesystem and started docker
+stop on runlevel [!2345]
+respawn
+script
+  # Wait for docker to finish starting up first.
+  FILE=/var/run/docker.sock
+  while [ ! -e $FILE ] ; do
+    inotifywait -t 2 -e create $(dirname $FILE)
+  done
+  /usr/bin/docker run -d -p 80:80 -p 1883:1883 -v /var/db/mosca/:/db
+mosca:dev
+end script
 ```
 
 ## Feedback
