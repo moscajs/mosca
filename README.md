@@ -500,6 +500,20 @@ mqttServ.serveBundle(app);
 httpServer.listen(3000);
 ```
 
+## Docker Support
+
+If you want a [Docker](http://docker.io) image, just clone this
+repository and run `$ docker build .`.
+This will create a container that run Mosca with a levelup-based
+database.
+In order to run the Mosca container you should:
+```
+$ docker run -p 1883:1883 -p 80:80 -v /var/db/mosca:/db
+```
+
+The command line above will persist your data in the `/var/db/mosca`
+directory of the host.
+
 ## Feedback
 
 Use the [issue tracker](http://github.com/mcollina/mosca/issues) for bugs.
