@@ -52,12 +52,16 @@ supporting the following brokers/protocols.</p>
 <a href="http://www.rabbitmq.com/">RabbitMQ</a> and all implementations of the <a href="http://www.amqp.org/">AMQP</a> protocol.</li>
 <li>
 <a href="http://www.zeromq.org/">ZeroMQ</a> to use Mosca in a P2P fashion.</li>
-</ul><p>Find out more about Mosca reading the
+</ul><p>NEW: you can find a test version of mosca at test.mosca.io.
+You can use ws://test.mosca.io/ to connect to the WebSocket tunnel.
+This is powered by the <a href="#docker-support">docker image</a>.</p>
+
+<p>Find out more about Mosca reading the
 <a href="http://mcollina.github.io/mosca/docs">dox generated documentation</a>.</p>
 
 <p>If you plan to use Mosca in production
 <a href="http://twitter.com/matteocollina">let us know</a>, we'll be more than happy to help
-you getting started and solve any issue you'll find out.
+you getting started and solve any issue you will find out.
 Also, check out our <a href="https://github.com/mcollina/mosca/wiki/Usage-in-the-Wild">Usage in the
 Wild</a> wiki
 page! Feel free to add yourself! :)</p>
@@ -533,6 +537,48 @@ mqttServ.attachHttpServer(httpServ);
 mqttServ.serveBundle(app);
 
 httpServer.listen(3000);
+</code></pre>
+
+<h2>
+<a name="docker-support" class="anchor" href="#docker-support"><span class="octicon octicon-link"></span></a>Docker Support</h2>
+
+<p>If you want a <a href="http://docker.io">Docker</a> image, just clone this
+repository and run <code>$ docker build .</code>.
+This will create a container that run Mosca with a levelup-based
+database.</p>
+
+<p>In order to build the container, you should:</p>
+
+<pre><code>$ git clone https://github.com/mcollina/mosca.git
+$ cd mosca
+$ docker build -t mosca:dev .
+</code></pre>
+
+<p>In order to run the Mosca container you should:</p>
+
+<pre><code>$ docker run -p 1883:1883 -p 80:80 -v /var/db/mosca:/db mosca:dev
+</code></pre>
+
+<p>The command line above will persist your data in the <code>/var/db/mosca</code>
+directory of the host.</p>
+
+<p>Then, you can put the following upstart script in <code>/etc/init/mosca.conf</code>
+to automatically start mosca at boot:</p>
+
+<pre><code>description "Mosca container"
+author "Matteo Collina"
+start on filesystem and started docker
+stop on runlevel [!2345]
+respawn
+script
+  # Wait for docker to finish starting up first.
+  FILE=/var/run/docker.sock
+  while [ ! -e $FILE ] ; do
+    inotifywait -t 2 -e create $(dirname $FILE)
+  done
+  /usr/bin/docker run -d -p 80:80 -p 1883:1883 -v /var/db/mosca/:/db
+mosca:dev
+end script
 </code></pre>
 
 <h2>
