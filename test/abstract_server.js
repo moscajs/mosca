@@ -1600,4 +1600,34 @@ module.exports = function(moscaSettings, createConnection) {
     buildTest("/test//topic", "/test//topic");
     buildTest("/test/+/topic", "/test//topic", false);
   });
+
+  it("should allow plugin authors to publish", function(done) {
+    buildAndConnect(done, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+      var subscriptions = [{
+          topic: "hello",
+          qos: 1
+        }, {
+          topic: "hello2",
+          qos: 0
+        }
+      ];
+
+      client.on("suback", function(packet) {
+        instance.publish({ topic: "hello", payload: "world" });
+      });
+
+      client.on("publish", function(packet) {
+        expect(packet).to.have.property("topic", "hello");
+        expect(packet).to.have.property("payload", "world");
+        client.disconnect();
+      });
+
+      client.subscribe({
+        subscriptions: subscriptions,
+        messageId: messageId
+      });
+    });
+  });
 };
