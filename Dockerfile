@@ -1,6 +1,6 @@
 # Mosca
 #
-# VERSION 0.0.1
+# VERSION 0.0.2
 
 FROM dockerfile/nodejs
 MAINTAINER Matteo Collina <hello@matteocollina.com>
@@ -14,7 +14,7 @@ RUN cd /src; rm -rf node_modules/; npm install
 
 RUN mkdir /db
 
-CMD ["/usr/bin/node", "/src/bin/mosca", "-d", "/db", "--http-port", "80", "--http-bundle", "-v"]
-
-EXPOSE 1883
 EXPOSE 80
+EXPOSE 1883
+
+ENTRYPOINT ["/usr/bin/node", "/src/bin/mosca", "-d", "/db", "--http-port", "80", "--http-bundle", "-v"]

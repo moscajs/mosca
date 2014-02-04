@@ -505,10 +505,43 @@ httpServer.listen(3000);
 
 ## Docker Support
 
-If you want a [Docker](http://docker.io) image, just clone this
-repository and run `$ docker build .`.
-This will create a container that run Mosca with a levelup-based
-database.
+In order to use the prebuilt [Docker](http://docker.io) container
+published on the Docker Index, just run:
+
+```
+$ docker pull mattecollina/mosca
+$ docker run -p 1883:1883 -p 80:80 -v /var/db/mosca:/db mattecollina/mosca
+````
+
+The command line above will persist your data in the `/var/db/mosca`
+directory of the host. You should create that folder.
+
+### Upstart
+
+You can put the following upstart script in `/etc/init/mosca.conf`
+to automatically start mosca at boot:
+
+```
+description "Mosca container"
+author "Matteo Collina"
+start on filesystem and started docker
+stop on runlevel [!2345]
+respawn
+script
+  # Wait for docker to finish starting up first.
+  FILE=/var/run/docker.sock
+  while [ ! -e $FILE ] ; do
+    inotifywait -t 2 -e create $(dirname $FILE)
+  done
+  /usr/bin/docker run -d -p 80:80 -p 1883:1883 -v /var/db/mosca/:/db matteocollina/mosca
+end script
+```
+
+### Build
+
+If you want to build your Mosca container, just clone this repository
+and run `$ docker build .`. This will create a container that run Mosca
+with a levelup-based database.
 
 In order to build the container, you should:
 
@@ -526,26 +559,6 @@ $ docker run -p 1883:1883 -p 80:80 -v /var/db/mosca:/db mosca:dev
 
 The command line above will persist your data in the `/var/db/mosca`
 directory of the host.
-
-Then, you can put the following upstart script in `/etc/init/mosca.conf`
-to automatically start mosca at boot:
-
-```
-description "Mosca container"
-author "Matteo Collina"
-start on filesystem and started docker
-stop on runlevel [!2345]
-respawn
-script
-  # Wait for docker to finish starting up first.
-  FILE=/var/run/docker.sock
-  while [ ! -e $FILE ] ; do
-    inotifywait -t 2 -e create $(dirname $FILE)
-  done
-  /usr/bin/docker run -d -p 80:80 -p 1883:1883 -v /var/db/mosca/:/db
-mosca:dev
-end script
-```
 
 ## Feedback
 
