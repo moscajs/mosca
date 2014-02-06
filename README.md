@@ -259,6 +259,24 @@ server.on('published', function(packet, client) {
 });
 ```
 
+### mosca.Server#publish()
+
+The `publish()` function allows to programatically publish a value to
+MQTT clients with full support of all distinctive MQTT features:
+offline, quality of server, and retained messages.
+
+```javascript
+var message = {
+  topic: '/hello/world',
+  payload: 'abcde', // or a Buffer
+  qos: 0, // 0, 1, or 2
+  retain: false // or true
+};
+
+server.publish(message, function() {
+  console.log('done!');
+});
+```
 
 ### How Mosca works
 
