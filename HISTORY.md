@@ -1,6 +1,10 @@
 History
 =======
 
+## 0.16.1
+
+* Pass the client to the published event and callback.
+
 ## 0.16.0
 
 * Added the `mosca.Server#publish()` function.
