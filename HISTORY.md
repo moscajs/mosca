@@ -1,6 +1,10 @@
 History
 =======
 
+## 0.16.0
+
+* Added the `mosca.Server#publish()` function.
+
 ## 0.15.0
 
 * Removed limit of 23 bytes for the client id as in MQTT 3.1.1.
