@@ -44,6 +44,7 @@ module.exports = function(moscaSettings, createConnection) {
     }
 
     buildClient(done, function(client) {
+      client.opts = opts;
 
       client.connect(opts);
 
@@ -594,10 +595,12 @@ module.exports = function(moscaSettings, createConnection) {
   it("should emit an event on every newly published packet", function(done) {
     buildAndConnect(done, function(client) {
 
+      var clientId = client.opts.clientId;
+
       instance.on("published", function(packet, serverClient) {
         expect(packet.topic).to.be.equal("hello");
         expect(packet.payload.toString()).to.be.equal("some data");
-        expect(serverClient).not.to.be.equal(undefined);
+        expect(serverClient.id).to.be.equal(clientId);
         client.disconnect();
       });
 
@@ -610,18 +613,21 @@ module.exports = function(moscaSettings, createConnection) {
 
   it("should call onPublished on every newly published packet", function(done) {
     var onPublishedCalled = false;
+    var clientId;
 
     instance.published = function(packet, serverClient, callback) {
       onPublishedCalled = true;
 
       expect(packet.topic).to.be.equal("hello");
       expect(packet.payload.toString()).to.be.equal("some data");
-      expect(serverClient).not.to.be.equal(undefined);
+      expect(serverClient.id).to.be.equal(clientId);
 
       callback();
     };
 
     buildAndConnect(done, function(client) {
+      clientId = client.opts.clientId;
+
       client.publish({
         messageId: 42,
         topic: "hello",
@@ -1608,19 +1614,17 @@ module.exports = function(moscaSettings, createConnection) {
       var subscriptions = [{
           topic: "hello",
           qos: 1
-        }, {
-          topic: "hello2",
-          qos: 0
         }
       ];
 
       client.on("suback", function(packet) {
-        instance.publish({ topic: "hello", payload: "world" });
+        instance.publish({ topic: "hello", payload: "world", qos: 1 });
       });
 
       client.on("publish", function(packet) {
         expect(packet).to.have.property("topic", "hello");
         expect(packet).to.have.property("payload", "world");
+        expect(packet).to.have.property("qos", 1);
         client.disconnect();
       });
 
