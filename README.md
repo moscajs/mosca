@@ -619,7 +619,7 @@ href="https://github.com/ldstein">GitHub/ldstein</a></td>
 
 ## LICENSE - "MIT License"
 
-Copyright (c) 2013 Matteo Collina, http://matteocollina.com
+Copyright (c) 2013-2014 Matteo Collina, http://matteocollina.com
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
