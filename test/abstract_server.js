@@ -1605,6 +1605,11 @@ module.exports = function(moscaSettings, createConnection) {
     buildTest("/test//topic", "/test/topic");
     buildTest("/test//topic", "/test//topic");
     buildTest("/test/+/topic", "/test//topic", false);
+    buildTest("#", "$SYS/hello", false);
+    buildTest("/#", "/$SYS/hello", false);
+    buildTest("/+/hello", "/$SYS/hello", false);
+    buildTest("$SYS/hello", "$SYS/hello");
+    buildTest("/$SYS/hello", "/$SYS/hello");
   });
 
   it("should allow plugin authors to publish", function(done) {
