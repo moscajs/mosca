@@ -1646,4 +1646,31 @@ module.exports = function(moscaSettings, createConnection) {
     var id = uuid.unparse(uuid.parse(instance.id));
     expect(id).to.eql(instance.id);
   });
+
+  it("should maintain a counter of all connected clients", function(done) {
+    var d = donner(2, done);
+    buildAndConnect(d, function(client1) {
+      expect(instance.connectedClients).to.eql(1);
+      buildAndConnect(d, function(client2) {
+        // disconnect will happen after the next tick, has it's an I/O operation
+        client1.disconnect();
+        client2.disconnect();
+        expect(instance.connectedClients).to.eql(2);
+      });
+    });
+  });
+
+  it("should maintain a counter of all connected clients (bis)", function(done) {
+    var d = donner(2, done);
+    buildAndConnect(d, function(client1) {
+      buildAndConnect(d, function(client2) {
+        // disconnect will happen after the next tick, has it's an I/O operation
+        client2.disconnect();
+      });
+      instance.once("clientDisconnected", function() {
+        client1.disconnect();
+        expect(instance.connectedClients).to.eql(1);
+      });
+    });
+  });
 };
