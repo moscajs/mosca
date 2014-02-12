@@ -1,6 +1,7 @@
 var async = require("async");
 var mqtt = require("mqtt");
 var ascoltatori = require("ascoltatori");
+var uuid = require("node-uuid");
 
 module.exports = function(moscaSettings, createConnection) {
   var instance;
@@ -1638,5 +1639,11 @@ module.exports = function(moscaSettings, createConnection) {
         messageId: messageId
       });
     });
+  });
+
+  it("should have an id which is an uuid", function() {
+    // validate an uuid with a mirror test
+    var id = uuid.unparse(uuid.parse(instance.id));
+    expect(id).to.eql(instance.id);
   });
 };
