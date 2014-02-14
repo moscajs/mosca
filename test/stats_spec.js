@@ -35,8 +35,26 @@ describe("mosca.Stats", function() {
     });
   });
 
+  describe("counting published messages", function() {
+
+    it("should start from zero", function() {
+      expect(instance.publishedMessages).to.eql(0);
+    });
+
+    it("should increase when published is emitted", function() {
+      server.emit("published");
+      expect(instance.publishedMessages).to.eql(1);
+    });
+
+    it("should increase when published is emitted (two)", function() {
+      server.emit("published");
+      server.emit("published");
+      expect(instance.publishedMessages).to.eql(2);
+    });
+  });
+
   describe("on closed", function() {
-    ["clientConnected", "clientDisconnected"].forEach(function(event) {
+    ["clientConnected", "clientDisconnected", "published"].forEach(function(event) {
       it("should remove the " + event + " event from the server", function() {
         server.emit("closed");
         expect(server.listeners(event).length).to.eql(0);
