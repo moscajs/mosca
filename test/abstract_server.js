@@ -1681,5 +1681,23 @@ module.exports = function(moscaSettings, createConnection) {
         });
       });
     });
+
+    it("should maintain a counter of all published messages", function(done) {
+      buildAndConnect(done, function(client1) {
+        expect(stats.publishedMessages).to.eql(0);
+
+        client1.publish({
+          topic: "hello",
+          payload: "some data",
+          messageId: 42,
+          qos: 1
+        });
+
+        client1.on("puback", function() {
+          client1.disconnect();
+          expect(stats.publishedMessages).to.eql(1);
+        });
+      });
+    });
   });
 };
