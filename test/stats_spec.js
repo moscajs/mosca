@@ -3,11 +3,18 @@ var EventEmitter = require("events").EventEmitter;
 describe("mosca.Stats", function() {
   var instance;
   var server;
+  var clock;
 
   beforeEach(function() {
+    clock = sinon.useFakeTimers();
     server = new EventEmitter();
     instance = new mosca.Stats();
     instance.wire(server);
+  });
+
+  afterEach(function() {
+    clock.restore();
+    server.emit("closed");
   });
 
   describe("counting connected clients", function() {
@@ -50,6 +57,33 @@ describe("mosca.Stats", function() {
       server.emit("published");
       server.emit("published");
       expect(instance.publishedMessages).to.eql(2);
+    });
+  });
+
+  describe("tracking load", function() {
+
+    describe("published messages", function() {
+
+      it("should start from zero", function() {
+        server.emit("published");
+        server.emit("published");
+        expect(instance.load.m15.publishedMessages).to.eql(0);
+      });
+
+      it("should cover the last 15 minutes", function() {
+        server.emit("published");
+        server.emit("published");
+        clock.tick(15 * 60 * 1000 + 1);
+        expect(instance.load.m15.publishedMessages).to.eql(2);
+      });
+
+      it("should show only the data in the previous interval", function() {
+        server.emit("published");
+        server.emit("published");
+        clock.tick(16 * 60 * 1000);
+        clock.tick(16 * 60 * 1000);
+        expect(instance.load.m15.publishedMessages).to.eql(0);
+      });
     });
   });
 
