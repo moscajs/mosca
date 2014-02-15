@@ -64,25 +64,52 @@ describe("mosca.Stats", function() {
 
     describe("published messages", function() {
 
-      it("should start from zero", function() {
-        server.emit("published");
-        server.emit("published");
-        expect(instance.load.m15.publishedMessages).to.eql(0);
+      describe("m15", function() {
+
+        it("should start from zero", function() {
+          server.emit("published");
+          server.emit("published");
+          expect(instance.load.m15.publishedMessages).to.eql(0);
+        });
+
+        it("should cover the last 15 minutes", function() {
+          server.emit("published");
+          server.emit("published");
+          clock.tick(15 * 60 * 1000 + 1);
+          expect(instance.load.m15.publishedMessages).to.eql(2);
+        });
+
+        it("should show only the data in the previous interval", function() {
+          server.emit("published");
+          server.emit("published");
+          clock.tick(16 * 60 * 1000);
+          clock.tick(16 * 60 * 1000);
+          expect(instance.load.m15.publishedMessages).to.eql(0);
+        });
       });
 
-      it("should cover the last 15 minutes", function() {
-        server.emit("published");
-        server.emit("published");
-        clock.tick(15 * 60 * 1000 + 1);
-        expect(instance.load.m15.publishedMessages).to.eql(2);
-      });
+      describe("m1", function() {
 
-      it("should show only the data in the previous interval", function() {
-        server.emit("published");
-        server.emit("published");
-        clock.tick(16 * 60 * 1000);
-        clock.tick(16 * 60 * 1000);
-        expect(instance.load.m15.publishedMessages).to.eql(0);
+        it("should start from zero", function() {
+          server.emit("published");
+          server.emit("published");
+          expect(instance.load.m1.publishedMessages).to.eql(0);
+        });
+
+        it("should cover the last minute", function() {
+          server.emit("published");
+          server.emit("published");
+          clock.tick(60 * 1000 + 1);
+          expect(instance.load.m1.publishedMessages).to.eql(2);
+        });
+
+        it("should show only the data in the previous interval", function() {
+          server.emit("published");
+          server.emit("published");
+          clock.tick(60 * 1000);
+          clock.tick(60 * 1000);
+          expect(instance.load.m1.publishedMessages).to.eql(0);
+        });
       });
     });
   });
