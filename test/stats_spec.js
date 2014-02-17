@@ -199,4 +199,34 @@ describe("mosca.Stats", function() {
       });
     });
   });
+
+  describe("memory", function() {
+    var stub;
+
+    beforeEach(function() {
+      stub = sinon.stub(process, "memoryUsage");
+      stub.returns({ rss: 4201, heapUsed: 4202, heapTotal: 4203 });
+    });
+
+    afterEach(function() {
+      stub.restore();
+    });
+
+    ["rss", "heapTotal", "heapUsed"].forEach(function(event) {
+      it("should publish " + event + " every minute", function(done) {
+        server.emit(event);
+        server.emit(event);
+
+        server.on("testPublished", function(packet) {
+          var mem = process.memoryUsage();
+          if (packet.topic === "/$SYS/42/memory/" + event) {
+            expect(packet.payload).to.eql("" + mem[event]);
+            done();
+          }
+        });
+
+        clock.tick(60 * 1000);
+      });
+    });
+  });
 });
