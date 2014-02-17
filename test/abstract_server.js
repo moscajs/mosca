@@ -1647,12 +1647,19 @@ module.exports = function(moscaSettings, createConnection) {
     expect(id).to.eql(instance.id);
   });
 
-  describe("with a stats object wired", function() {
+  describe("stats", function() {
+    var clock;
     var stats;
 
-    beforeEach(function() {
-      stats = new mosca.Stats();
-      stats.wire(instance);
+    beforeEach(function(done) {
+      clock = sinon.useFakeTimers();
+      instance.close();
+      instance = new mosca.Server(settings, done);
+      stats = instance.stats;
+    });
+
+    afterEach(function() {
+      clock.restore();
     });
 
     it("should maintain a counter of all connected clients", function(done) {
@@ -1697,6 +1704,17 @@ module.exports = function(moscaSettings, createConnection) {
           client1.disconnect();
           expect(stats.publishedMessages).to.eql(1);
         });
+      });
+    });
+
+    it("should publish data each minute", function(done) {
+      buildAndConnect(done, function(client1) {
+        var topic = "/$SYS/" + instance.id + "/connectedClients";
+        instance.ascoltatore.subscribe(topic, function(topic, value) {
+          expect(value).to.eql("1");
+          client1.disconnect();
+        });
+        clock.tick(60 * 1000);
       });
     });
   });
