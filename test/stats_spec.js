@@ -134,7 +134,7 @@ describe("mosca.Stats", function() {
             var count = 0;
 
             server.on("testPublished", function(packet) {
-              if (packet.topic === "/$SYS/42/15m/" + events[event]) {
+              if (packet.topic === "/$SYS/42/load/15m/" + events[event]) {
                 count++;
 
                 if (++count % 15 === 0) {
@@ -178,7 +178,7 @@ describe("mosca.Stats", function() {
             server.emit(event);
 
             server.on("testPublished", function(packet) {
-              if (packet.topic === "/$SYS/42/1m/" + events[event]) {
+              if (packet.topic === "/$SYS/42/load/1m/" + events[event]) {
                 expect(packet.payload).to.eql("2");
                 done();
               }
