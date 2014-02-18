@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.17.1
+
+* From /$SYS to $SYS, removed the '/' prefix for the metadata
+  [#94](https://github.com/mcollina/mosca/pull/94).
+
 ## 0.17.0
 
 * Added /$SYS/ topic and some monitoring data
