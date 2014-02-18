@@ -1,6 +1,6 @@
 var EventEmitter = require("events").EventEmitter;
 
-describe("mosca.Stats", function() {
+describe.only("mosca.Stats", function() {
   var instance;
   var server;
   var clock;
@@ -200,6 +200,35 @@ describe("mosca.Stats", function() {
     });
   });
 
+  it("should publish the uptime", function(done) {
+    server.on("testPublished", function(packet) {
+      if (packet.topic === "$SYS/42/uptime") {
+        expect(packet.payload).to.eql("a minute");
+        done();
+      }
+    });
+
+    clock.tick(60 * 1000);
+  });
+
+  it("should publish the uptime (bis)", function(done) {
+    var count = 0;
+    server.on("testPublished", function(packet) {
+      count++;
+      if (count < 3) {
+        clock.tick(60 * 1000);
+        return;
+      }
+
+      if (packet.topic === "$SYS/42/uptime") {
+        expect(packet.payload).to.eql("3 minutes");
+        done();
+      }
+    });
+
+    clock.tick(60 * 1000);
+  });
+
   describe("memory", function() {
     var stub;
 
@@ -214,9 +243,6 @@ describe("mosca.Stats", function() {
 
     ["rss", "heapTotal", "heapUsed"].forEach(function(event) {
       it("should publish " + event + " every minute", function(done) {
-        server.emit(event);
-        server.emit(event);
-
         server.on("testPublished", function(packet) {
           var mem = process.memoryUsage();
           if (packet.topic === "$SYS/42/memory/" + event) {
