@@ -648,7 +648,7 @@ module.exports = function(moscaSettings, createConnection) {
 
       instance.on("clientConnected", function(serverClient) {
         expect(serverClient).not.to.be.equal(undefined);
-        client.disconnect();
+        client.stream.end();
       });
 
       client.connect(buildOpts());
