@@ -549,4 +549,16 @@ describe("mosca.cli", function() {
     });
   });
 
+  it("should have stats enabled by default", function(done) {
+    var s = startServer(done, function(server) {
+      expect(server.opts.stats).to.equal(true);
+    });
+  });
+
+  it("should allow to disable stats", function(done) {
+    args.push("--disable-stats");
+    var s = startServer(done, function(server) {
+      expect(server.opts.stats).to.equal(false);
+    });
+  });
 });

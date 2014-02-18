@@ -1,6 +1,7 @@
 var async = require("async");
 var mqtt = require("mqtt");
 var ascoltatori = require("ascoltatori");
+var uuid = require("node-uuid");
 
 module.exports = function(moscaSettings, createConnection) {
   var instance;
@@ -1605,6 +1606,11 @@ module.exports = function(moscaSettings, createConnection) {
     buildTest("/test//topic", "/test/topic");
     buildTest("/test//topic", "/test//topic");
     buildTest("/test/+/topic", "/test//topic", false);
+    buildTest("#", "$SYS/hello", false);
+    buildTest("/#", "/$SYS/hello", false);
+    buildTest("/+/hello", "/$SYS/hello", false);
+    buildTest("$SYS/hello", "$SYS/hello");
+    buildTest("/$SYS/hello", "/$SYS/hello");
   });
 
   it("should allow plugin authors to publish", function(done) {
@@ -1631,6 +1637,84 @@ module.exports = function(moscaSettings, createConnection) {
       client.subscribe({
         subscriptions: subscriptions,
         messageId: messageId
+      });
+    });
+  });
+
+  it("should have an id which is an uuid", function() {
+    // validate an uuid with a mirror test
+    var id = uuid.unparse(uuid.parse(instance.id));
+    expect(id).to.eql(instance.id);
+  });
+
+  describe("stats", function() {
+    var clock;
+    var stats;
+
+    beforeEach(function(done) {
+      clock = sinon.useFakeTimers();
+      instance.close();
+      instance = new mosca.Server(settings, done);
+      stats = instance.stats;
+    });
+
+    afterEach(function() {
+      clock.restore();
+    });
+
+    it("should maintain a counter of all connected clients", function(done) {
+      var d = donner(2, done);
+      buildAndConnect(d, function(client1) {
+        expect(stats.connectedClients).to.eql(1);
+        buildAndConnect(d, function(client2) {
+          // disconnect will happen after the next tick, has it's an I/O operation
+          client1.disconnect();
+          client2.disconnect();
+          expect(stats.connectedClients).to.eql(2);
+        });
+      });
+    });
+
+    it("should maintain a counter of all connected clients (bis)", function(done) {
+      var d = donner(2, done);
+      buildAndConnect(d, function(client1) {
+        buildAndConnect(d, function(client2) {
+          // disconnect will happen after the next tick, has it's an I/O operation
+          client2.disconnect();
+        });
+        instance.once("clientDisconnected", function() {
+          client1.disconnect();
+          expect(stats.connectedClients).to.eql(1);
+        });
+      });
+    });
+
+    it("should maintain a counter of all published messages", function(done) {
+      buildAndConnect(done, function(client1) {
+        expect(stats.publishedMessages).to.eql(0);
+
+        client1.publish({
+          topic: "hello",
+          payload: "some data",
+          messageId: 42,
+          qos: 1
+        });
+
+        client1.on("puback", function() {
+          client1.disconnect();
+          expect(stats.publishedMessages).to.eql(1);
+        });
+      });
+    });
+
+    it("should publish data each minute", function(done) {
+      buildAndConnect(done, function(client1) {
+        var topic = "/$SYS/" + instance.id + "/connectedClients";
+        instance.ascoltatore.subscribe(topic, function(topic, value) {
+          expect(value).to.eql("1");
+          client1.disconnect();
+        });
+        clock.tick(60 * 1000);
       });
     });
   });
