@@ -1040,28 +1040,17 @@ module.exports = function(moscaSettings, createConnection) {
   });
 
   it("should pass mosca options to backend when publishing", function(done) {
-    instance.authenticate = function(client, username, password, callback) {
-      expect(username).to.be.eql("matteo");
-      expect(password).to.be.eql("collina");
-      client.user = username;
-      callback(null, true);
-    };
-
     buildClient(done, function(client) {
 
       var messageId = Math.floor(65535 * Math.random());
 
       instance.ascoltatore.subscribe("hello", function (topic, message, options) {
         expect(options.mosca.packet).to.have.property("messageId", messageId);
-        expect(options.mosca.client).to.have.property("user", "matteo");
+        expect(options.mosca.packet).to.have.property("qos", 1);
         client.disconnect();
       });
 
-      var options = buildOpts();
-      options.username = "matteo";
-      options.password = "collina";
-
-      client.connect(options);
+      client.connect(buildOpts());
 
       client.on('connack', function(packet) {
         expect(packet.returnCode).to.eql(0);
