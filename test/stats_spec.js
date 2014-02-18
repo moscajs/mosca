@@ -51,7 +51,7 @@ describe("mosca.Stats", function() {
       server.emit("clientConnected");
 
       server.on("testPublished", function(packet) {
-        if (packet.topic === "/$SYS/42/connectedClients") {
+        if (packet.topic === "$SYS/42/connectedClients") {
           expect(packet.payload).to.eql("2");
           done();
         }
@@ -84,7 +84,7 @@ describe("mosca.Stats", function() {
       server.emit("published");
 
       server.on("testPublished", function(packet) {
-        if (packet.topic === "/$SYS/42/publishedMessages") {
+        if (packet.topic === "$SYS/42/publishedMessages") {
           expect(packet.payload).to.eql("3");
           done();
         }
@@ -134,7 +134,7 @@ describe("mosca.Stats", function() {
             var count = 0;
 
             server.on("testPublished", function(packet) {
-              if (packet.topic === "/$SYS/42/load/15m/" + events[event]) {
+              if (packet.topic === "$SYS/42/load/15m/" + events[event]) {
                 count++;
 
                 if (++count % 15 === 0) {
@@ -178,7 +178,7 @@ describe("mosca.Stats", function() {
             server.emit(event);
 
             server.on("testPublished", function(packet) {
-              if (packet.topic === "/$SYS/42/load/1m/" + events[event]) {
+              if (packet.topic === "$SYS/42/load/1m/" + events[event]) {
                 expect(packet.payload).to.eql("2");
                 done();
               }
@@ -219,7 +219,7 @@ describe("mosca.Stats", function() {
 
         server.on("testPublished", function(packet) {
           var mem = process.memoryUsage();
-          if (packet.topic === "/$SYS/42/memory/" + event) {
+          if (packet.topic === "$SYS/42/memory/" + event) {
             expect(packet.payload).to.eql("" + mem[event]);
             done();
           }
