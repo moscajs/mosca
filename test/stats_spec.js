@@ -200,6 +200,18 @@ describe("mosca.Stats", function() {
     });
   });
 
+  it("should publish the version", function(done) {
+    var version = require("../package").version;
+    server.on("testPublished", function(packet) {
+      if (packet.topic === "$SYS/42/version") {
+        expect(packet.payload).to.eql("mosca " + version);
+        done();
+      }
+    });
+
+    clock.tick(60 * 1000);
+  });
+
   it("should publish the uptime", function(done) {
     server.on("testPublished", function(packet) {
       if (packet.topic === "$SYS/42/uptime") {
@@ -213,13 +225,10 @@ describe("mosca.Stats", function() {
 
   it("should publish the uptime (bis)", function(done) {
     var count = 0;
-    server.on("testPublished", function(packet) {
-      count++;
-      if (count < 3) {
-        clock.tick(60 * 1000);
-        return;
-      }
 
+    clock.tick(60 * 1000 * 2);
+
+    server.on("testPublished", function(packet) {
       if (packet.topic === "$SYS/42/uptime") {
         expect(packet.payload).to.eql("3 minutes");
         done();
