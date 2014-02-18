@@ -111,6 +111,7 @@ $ mosca --help
     --https-bundle                   serve a MQTT.js-based client at /mqtt.js on HTTPS
     --only-http                      start only an mqtt-over-websocket server
     --disable-stats                  disable the publishing of stats under /$SYS
+    --broker-id <id>                 the id of the broker in the $SYS/<id> namespace
     -c, --config <c>                 the config file to use (override every other option)
     -d, --db <path>                  the path were to store the database
     -v, --verbose                    set the bunyan log to INFO
@@ -127,6 +128,8 @@ var mosca = require('mosca');
 
 module.exports = {
   port: 4883,
+  id: 'mymosca', // used to publish in the $SYS/<id> topicspace
+  stats: true, // publish stats in the $SYS/<id> topicspace
   logger: {
     level: 'info'
   },

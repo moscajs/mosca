@@ -561,4 +561,12 @@ describe("mosca.cli", function() {
       expect(server.opts.stats).to.equal(false);
     });
   });
+
+  it("should allow to specify a broker id", function(done) {
+    args.push("--broker-id");
+    args.push("44cats");
+    var s = startServer(done, function(server) {
+      expect(server.id).to.equal("44cats");
+    });
+  });
 });

@@ -1,6 +1,6 @@
 var EventEmitter = require("events").EventEmitter;
 
-describe.only("mosca.Stats", function() {
+describe("mosca.Stats", function() {
   var instance;
   var server;
   var clock;
