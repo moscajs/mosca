@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.17.2
+
+* Added $SYS/&lt;broker_id&gt;/version, $SYS/&lt;broker_id&gt;/uptime
+  and simplified the broker id.
+  [#95](https://github.com/mcollina/mosca/pull/95).
+
 ## 0.17.1
 
 * From /$SYS to $SYS, removed the '/' prefix for the metadata
