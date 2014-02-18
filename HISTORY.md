@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.17.0
+
+* Added /$SYS/ topic and some monitoring data
+  [#89](https://github.com/mcollina/mosca/pull/89).
+
 ## 0.16.1
 
 * Pass the client to the published event and callback.
