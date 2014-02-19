@@ -51,7 +51,7 @@ describe("mosca.Stats", function() {
       server.emit("clientConnected");
 
       server.on("testPublished", function(packet) {
-        if (packet.topic === "$SYS/42/connectedClients") {
+        if (packet.topic === "$SYS/42/connections") {
           expect(packet.payload).to.eql("2");
           done();
         }
@@ -84,7 +84,7 @@ describe("mosca.Stats", function() {
       server.emit("published");
 
       server.on("testPublished", function(packet) {
-        if (packet.topic === "$SYS/42/publishedMessages") {
+        if (packet.topic === "$SYS/42/publish/received") {
           expect(packet.payload).to.eql("3");
           done();
         }
@@ -99,6 +99,11 @@ describe("mosca.Stats", function() {
     var events = {
       published: "publishedMessages",
       clientConnected: "connectedClients"
+    };
+
+    var topics = {
+      published: "/load/publish/received/",
+      clientConnected: "/load/connections/",
     };
 
     Object.keys(events).forEach(function(event) {
@@ -134,10 +139,10 @@ describe("mosca.Stats", function() {
             var count = 0;
 
             server.on("testPublished", function(packet) {
-              if (packet.topic === "$SYS/42/load/15m/" + events[event]) {
+              if (packet.topic === "$SYS/42" + topics[event] + "15m") {
                 count++;
 
-                if (++count % 15 === 0) {
+                if (count % 15 === 0) {
                   expect(packet.payload).to.eql("2");
                   done();
                 } else {
@@ -180,10 +185,10 @@ describe("mosca.Stats", function() {
             var count = 0;
 
             server.on("testPublished", function(packet) {
-              if (packet.topic === "$SYS/42/load/5m/" + events[event]) {
+              if (packet.topic === "$SYS/42" + topics[event] + "5m") {
                 count++;
 
-                if (++count % 5 === 0) {
+                if (count % 5 === 0) {
                   expect(packet.payload).to.eql("2");
                   done();
                 } else {
@@ -224,7 +229,7 @@ describe("mosca.Stats", function() {
             server.emit(event);
 
             server.on("testPublished", function(packet) {
-              if (packet.topic === "$SYS/42/load/1m/" + events[event]) {
+              if (packet.topic === "$SYS/42" + topics[event] + "1m") {
                 expect(packet.payload).to.eql("2");
                 done();
               }
