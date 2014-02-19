@@ -84,7 +84,8 @@
     "json-buffer": "~2.0.7",
     "brfs": "0.0.8",
     "pre-commit": "0.0.4",
-    "moment": "~2.5.1"
+    "moment": "~2.5.1",
+    "moving-average": "0.0.4"
   },
   "optionalDependencies": {
     "leveldown": "~0.10.0",
