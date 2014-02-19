@@ -4,6 +4,7 @@ describe("mosca.Stats", function() {
   var instance;
   var server;
   var clock;
+  var interval = 10;
 
   beforeEach(function() {
     clock = sinon.useFakeTimers();
@@ -46,18 +47,18 @@ describe("mosca.Stats", function() {
       expect(instance.connectedClients).to.eql(3);
     });
 
-    it("should publish it every minute", function(done) {
+    it("should publish it every 10s", function(done) {
       server.emit("clientConnected");
       server.emit("clientConnected");
 
       server.on("testPublished", function(packet) {
-        if (packet.topic === "$SYS/42/connections") {
+        if (packet.topic === "$SYS/42/clients/connected") {
           expect(packet.payload).to.eql("2");
           done();
         }
       });
 
-      clock.tick(60 * 1000);
+      clock.tick(interval * 1000);
     });
   });
 
@@ -78,7 +79,7 @@ describe("mosca.Stats", function() {
       expect(instance.publishedMessages).to.eql(2);
     });
 
-    it("should publish it every minute", function(done) {
+    it("should publish it every 10s", function(done) {
       server.emit("published");
       server.emit("published");
       server.emit("published");
@@ -90,11 +91,19 @@ describe("mosca.Stats", function() {
         }
       });
 
-      clock.tick(60 * 1000);
+      clock.tick(interval * 1000);
     });
   });
 
   describe("tracking load", function() {
+
+    var toBeCleared;
+
+    afterEach(function() {
+      if (toBeCleared) {
+        clearInterval(toBeCleared);
+      }
+    });
 
     var events = {
       published: "publishedMessages",
@@ -104,6 +113,22 @@ describe("mosca.Stats", function() {
     var topics = {
       published: "/load/publish/received/",
       clientConnected: "/load/connections/",
+    };
+
+    var buildTimer = {
+      published: function() {
+        return setInterval(function() {
+          server.emit("published");
+          server.emit("published");
+        }, interval * 1000);
+      },
+      clientConnected: function(minutes) {
+        server.emit("clientConnected");
+        server.emit("clientConnected");
+
+        return setInterval(function() {
+        }, interval * 1000);
+      }
     };
 
     Object.keys(events).forEach(function(event) {
@@ -118,35 +143,23 @@ describe("mosca.Stats", function() {
           });
 
           it("should cover the last 15 minutes", function() {
-            server.emit(event);
-            server.emit(event);
+            toBeCleared = buildTimer[event](15);
             clock.tick(15 * 60 * 1000 + 1);
             expect(instance.load.m15[events[event]]).to.eql(2);
           });
 
-          it("should show only the data in the previous interval", function() {
-            server.emit(event);
-            server.emit(event);
-            clock.tick(16 * 60 * 1000);
-            clock.tick(16 * 60 * 1000);
-            expect(instance.load.m15[events[event]]).to.eql(0);
-          });
-
-          it("should publish it every minute", function(done) {
-            server.emit(event);
-            server.emit(event);
+          it("should publish it", function(done) {
+            toBeCleared = buildTimer[event](15);
 
             var count = 0;
 
             server.on("testPublished", function(packet) {
-              if (packet.topic === "$SYS/42" + topics[event] + "15m") {
+              if (packet.topic === "$SYS/42" + topics[event] + "15min") {
                 count++;
 
-                if (count % 15 === 0) {
+                if (count % (15 * 6) === 0) {
                   expect(packet.payload).to.eql("2");
                   done();
-                } else {
-                  expect(packet.payload).to.eql("0");
                 }
               }
             });
@@ -164,35 +177,23 @@ describe("mosca.Stats", function() {
           });
 
           it("should cover the last 15 minutes", function() {
-            server.emit(event);
-            server.emit(event);
+            toBeCleared = buildTimer[event](5);
             clock.tick(5 * 60 * 1000 + 1);
             expect(instance.load.m5[events[event]]).to.eql(2);
           });
 
-          it("should show only the data in the previous interval", function() {
-            server.emit(event);
-            server.emit(event);
-            clock.tick(5 * 60 * 1000);
-            clock.tick(5 * 60 * 1000);
-            expect(instance.load.m5[events[event]]).to.eql(0);
-          });
-
-          it("should publish it every minute", function(done) {
-            server.emit(event);
-            server.emit(event);
+          it("should publish it", function(done) {
+            toBeCleared = buildTimer[event](5);
 
             var count = 0;
 
             server.on("testPublished", function(packet) {
-              if (packet.topic === "$SYS/42" + topics[event] + "5m") {
+              if (packet.topic === "$SYS/42" + topics[event] + "5min") {
                 count++;
 
-                if (count % 5 === 0) {
+                if (count % (5 * 6) === 0) {
                   expect(packet.payload).to.eql("2");
                   done();
-                } else {
-                  expect(packet.payload).to.eql("0");
                 }
               }
             });
@@ -210,28 +211,24 @@ describe("mosca.Stats", function() {
           });
 
           it("should cover the last minute", function() {
-            server.emit(event);
-            server.emit(event);
+            toBeCleared = buildTimer[event](1);
             clock.tick(60 * 1000 + 1);
             expect(instance.load.m1[events[event]]).to.eql(2);
           });
 
-          it("should show only the data in the previous interval", function() {
-            server.emit(event);
-            server.emit(event);
-            clock.tick(60 * 1000);
-            clock.tick(60 * 1000);
-            expect(instance.load.m1[events[event]]).to.eql(0);
-          });
+          it("should publish it", function(done) {
+            toBeCleared = buildTimer[event](1);
 
-          it("should publish it every minute", function(done) {
-            server.emit(event);
-            server.emit(event);
+            var count = 0;
 
             server.on("testPublished", function(packet) {
-              if (packet.topic === "$SYS/42" + topics[event] + "1m") {
-                expect(packet.payload).to.eql("2");
-                done();
+              if (packet.topic === "$SYS/42" + topics[event] + "1min") {
+                count++;
+
+                if (count % 6 === 0) {
+                  expect(packet.payload).to.eql("2");
+                  done();
+                }
               }
             });
 
@@ -251,7 +248,7 @@ describe("mosca.Stats", function() {
     });
   });
 
-  it("should publish the version", function(done) {
+  it("should publish the version every 10s", function(done) {
     var version = require("../package").version;
     server.on("testPublished", function(packet) {
       if (packet.topic === "$SYS/42/version") {
@@ -260,28 +257,38 @@ describe("mosca.Stats", function() {
       }
     });
 
-    clock.tick(60 * 1000);
+    clock.tick(interval * 1000);
   });
 
-  it("should publish the uptime", function(done) {
+  it("should publish the start time", function(done) {
     server.on("testPublished", function(packet) {
-      if (packet.topic === "$SYS/42/uptime") {
-        expect(packet.payload).to.eql("a minute");
+      if (packet.topic === "$SYS/42/started_at") {
+        expect(packet.payload).to.eql(instance.started.toISOString());
         done();
       }
     });
 
-    clock.tick(60 * 1000);
+    clock.tick(interval * 1000);
+  });
+
+  it("should publish the uptime every 10s", function(done) {
+    server.on("testPublished", function(packet) {
+      if (packet.topic === "$SYS/42/uptime") {
+        expect(packet.payload).to.eql("a few seconds");
+        done();
+      }
+    });
+
+    clock.tick(interval * 1000);
   });
 
   it("should publish the uptime (bis)", function(done) {
-    var count = 0;
-
     clock.tick(60 * 1000 * 2);
 
-    server.on("testPublished", function(packet) {
-      if (packet.topic === "$SYS/42/uptime") {
-        expect(packet.payload).to.eql("3 minutes");
+    server.on("testPublished", function func(packet) {
+      if (packet.topic === "$SYS/42/uptime" &&
+         packet.payload === "3 minutes") {
+        server.removeListener("testPublished", func);
         done();
       }
     });
@@ -301,17 +308,23 @@ describe("mosca.Stats", function() {
       stub.restore();
     });
 
-    ["rss", "heapTotal", "heapUsed"].forEach(function(event) {
-      it("should publish " + event + " every minute", function(done) {
+    var stats = {
+      rss: "rss",
+      heapTotal: "heap/maximum",
+      heapUsed: "heap/current"
+    };
+
+    Object.keys(stats).forEach(function(stat) {
+      it("should publish " + stat + " every minute", function(done) {
         server.on("testPublished", function(packet) {
           var mem = process.memoryUsage();
-          if (packet.topic === "$SYS/42/memory/" + event) {
-            expect(packet.payload).to.eql("" + mem[event]);
+          if (packet.topic === "$SYS/42/memory/" + stats[stat]) {
+            expect(packet.payload).to.eql("" + mem[stat]);
             done();
           }
         });
 
-        clock.tick(60 * 1000);
+        clock.tick(interval * 1000);
       });
     });
   });
