@@ -150,6 +150,52 @@ describe("mosca.Stats", function() {
           });
         });
 
+        describe("m5", function() {
+
+          it("should start from zero", function() {
+            server.emit(event);
+            server.emit(event);
+            expect(instance.load.m5[events[event]]).to.eql(0);
+          });
+
+          it("should cover the last 15 minutes", function() {
+            server.emit(event);
+            server.emit(event);
+            clock.tick(5 * 60 * 1000 + 1);
+            expect(instance.load.m5[events[event]]).to.eql(2);
+          });
+
+          it("should show only the data in the previous interval", function() {
+            server.emit(event);
+            server.emit(event);
+            clock.tick(5 * 60 * 1000);
+            clock.tick(5 * 60 * 1000);
+            expect(instance.load.m5[events[event]]).to.eql(0);
+          });
+
+          it("should publish it every minute", function(done) {
+            server.emit(event);
+            server.emit(event);
+
+            var count = 0;
+
+            server.on("testPublished", function(packet) {
+              if (packet.topic === "$SYS/42/load/5m/" + events[event]) {
+                count++;
+
+                if (++count % 5 === 0) {
+                  expect(packet.payload).to.eql("2");
+                  done();
+                } else {
+                  expect(packet.payload).to.eql("0");
+                }
+              }
+            });
+
+            clock.tick(60 * 1000 * 5);
+          });
+        });
+
         describe("m1", function() {
 
           it("should start from zero", function() {
