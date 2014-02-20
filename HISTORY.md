@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.17.3
+
+* Alignment with Mosquitto $SYS topicspace
+  [#95](https://github.com/mcollina/mosca/pull/95).
+
 ## 0.17.2
 
 * Added $SYS/&lt;broker_id&gt;/version, $SYS/&lt;broker_id&gt;/uptime
