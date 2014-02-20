@@ -1705,7 +1705,7 @@ module.exports = function(moscaSettings, createConnection) {
 
     it("should publish data each minute", function(done) {
       buildAndConnect(done, function(client1) {
-        var topic = "$SYS/" + instance.id + "/connectedClients";
+        var topic = "$SYS/" + instance.id + "/clients/connected";
         instance.ascoltatore.subscribe(topic, function(topic, value) {
           expect(value).to.eql("1");
           client1.disconnect();

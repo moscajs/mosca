@@ -6,4 +6,6 @@ services:
   - redis-server
   - mongodb
 script:
+  - npm run coverage
+after_success:
   - npm run publish-coverage
