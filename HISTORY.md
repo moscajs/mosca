@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.17.4
+
+* Updated MOWS (Mqtt Over WebSockets) to v0.0.4
+  [#99](https://github.com/mcollina/mosca/pull/99).
+
 ## 0.17.3
 
 * Alignment with Mosquitto $SYS topicspace
