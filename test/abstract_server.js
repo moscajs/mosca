@@ -997,7 +997,9 @@ module.exports = function(moscaSettings, createConnection) {
 
       function(client1, cb) {
         var subscriptions = [{
-            topic: "hello/world",
+            // it should not have issues
+            // in handling this kind of subscription
+            topic: "hello/died",
             qos: 0
           }
         ];
