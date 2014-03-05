@@ -9,7 +9,7 @@ module.exports = function(create, buildOpts) {
   if (typeof buildOpts !== "function") {
     _opts = buildOpts;
     buildOpts = function(cb) {
-      cb(null, _opts); 
+      cb(null, _opts);
     };
   }
 
@@ -149,7 +149,7 @@ module.exports = function(create, buildOpts) {
       ], done);
     });
 
-    it("should match and load with a pattern", function(done) {
+    it("should match and load with a 'some' pattern", function(done) {
       var packet1 = {
         topic: "hello/1",
         qos: 0,
@@ -177,6 +177,41 @@ module.exports = function(create, buildOpts) {
         },
         function(cb) {
           instance.lookupRetained("hello/#", function(err, results) {
+            expect(results).to.eql([packet1, packet2]);
+            cb();
+          });
+        }
+      ], done);
+    });
+
+    it("should match and load with a 'one' pattern", function(done) {
+      var packet1 = {
+        topic: "hello/1",
+        qos: 0,
+        payload: new Buffer("world"),
+        messageId: 42,
+        retain: true
+      };
+
+      var packet2 = {
+        topic: "hello/2",
+        qos: 0,
+        payload: new Buffer("world"),
+        messageId: 43,
+        retain: true
+      };
+
+      var instance = this.instance;
+
+      async.series([
+        function(cb) {
+          instance.storeRetained(packet1, cb);
+        },
+        function(cb) {
+          instance.storeRetained(packet2, cb);
+        },
+        function(cb) {
+          instance.lookupRetained("hello/+", function(err, results) {
             expect(results).to.eql([packet1, packet2]);
             cb();
           });

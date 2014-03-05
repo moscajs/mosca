@@ -7,7 +7,7 @@ var async = require("async");
 
 describe("mosca.persistence.Mongo", function() {
 
-  var opts = { 
+  var opts = {
     url: "mongodb://localhost:27017/moscatests",
     autoClose: false,
     ttl: {
