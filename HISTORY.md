@@ -1,6 +1,10 @@
 History
 =======
 
+## 0.17.6
+
+* Added missing `'unsubscribed'` event in the Server.
+
 ## 0.17.5
 
 * Fixed an infinite loop during will messages delivery if the client was
