@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.17.5
+
+* Fixed an infinite loop during will messages delivery if the client was
+  connected through mqtt31ws.js
+  [#100](https://github.com/mcollina/mosca/pull/100).
+
 ## 0.17.4
 
 * Updated MOWS (Mqtt Over WebSockets) to v0.0.4
