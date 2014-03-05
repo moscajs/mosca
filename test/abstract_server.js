@@ -379,6 +379,34 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
+  it("should emit an event for each subscribe", function(done) {
+    var d = donner(2, done);
+    buildAndConnect(d, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+      var subscriptions = [{
+          topic: "hello",
+          qos: 1
+        }
+      ];
+
+      client.on("suback", function(packet) {
+        client.disconnect();
+      });
+
+      client.subscribe({
+        subscriptions: subscriptions,
+        messageId: messageId
+      });
+    });
+
+    instance.on("subscribed", function(topic, client) {
+      expect(topic).to.eql("hello");
+      expect(client).to.exist;
+      d();
+    });
+  });
+
   it("should support subscribing to multiple topics", function(done) {
     buildAndConnect(done, function(client) {
 
@@ -590,6 +618,42 @@ module.exports = function(moscaSettings, createConnection) {
         subscriptions: subscriptions,
         messageId: messageId
       });
+    });
+  });
+
+  it("should emit an event for each unsubscribe", function(done) {
+    var d = donner(2, done);
+    buildAndConnect(d, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+      var subscriptions = [{
+          topic: "hello",
+          qos: 1
+        }
+      ];
+
+
+      client.on("unsuback", function(packet) {
+        client.disconnect();
+      });
+
+      client.on("suback", function(packet) {
+        client.unsubscribe({
+          unsubscriptions: ["hello"],
+          messageId: messageId
+        });
+      });
+
+      client.subscribe({
+        subscriptions: subscriptions,
+        messageId: messageId
+      });
+    });
+
+    instance.on("unsubscribed", function(topic, client) {
+      expect(topic).to.eql("hello");
+      expect(client).to.exist;
+      d();
     });
   });
 
