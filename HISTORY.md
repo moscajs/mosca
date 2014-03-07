@@ -1,6 +1,10 @@
 History
 =======
 
+## 0.17.7
+
+* Fixed '+' subscriptions with retained messages.
+
 ## 0.17.6
 
 * Added missing `'unsubscribed'` event in the Server.
