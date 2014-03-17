@@ -81,6 +81,31 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
+  it("should support connecting and disconnecting with a zero keepalive", function(done) {
+    var client = createConnection(settings.port, settings.host);
+    var disconnect = false;
+
+    client.once('error', done);
+    client.stream.once('close', function() {
+      expect(disconnect).to.be.true;
+      done();
+    });
+
+    client.on("connected", function() {
+      var opts = buildOpts();
+      opts.keepalive = 0;
+
+      client.connect(opts);
+    });
+
+    client.on("connack", function() {
+      setTimeout(function() {
+        disconnect = true;
+        client.disconnect();
+      }, 5);
+    });
+  });
+
   it("should send a connack packet with returnCode 0", function(done) {
     buildClient(done, function(client) {
 
