@@ -532,7 +532,7 @@ published on the Docker Index, just run:
 
 ```
 $ docker pull mattecollina/mosca
-$ docker run -p 1883:1883 -p 80:80 -v /var/db/mosca:/db mattecollina/mosca
+$ docker run -p 1883:1883 -p 80:80 -v /var/db/mosca:/db matteocollina/mosca
 ````
 
 The command line above will persist your data in the `/var/db/mosca`
