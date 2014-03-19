@@ -531,7 +531,6 @@ In order to use the prebuilt [Docker](http://docker.io) container
 published on the Docker Index, just run:
 
 ```
-$ docker pull mattecollina/mosca
 $ docker run -p 1883:1883 -p 80:80 -v /var/db/mosca:/db matteocollina/mosca
 ````
 
