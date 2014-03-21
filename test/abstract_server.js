@@ -496,6 +496,43 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
+  it("should support publishing big messages", function(done) {
+    var d = donner(2, done);
+    var bigPayload = new Buffer(5 * 1024);
+    bigPayload.fill("42");
+    buildAndConnect(d, function(client1) {
+
+      var messageId = Math.floor(65535 * Math.random());
+      var subscriptions = [{
+          topic: "hello",
+          qos: 0
+        }
+      ];
+
+      client1.on("publish", function(packet) {
+        expect(packet.topic).to.be.equal("hello");
+        expect(packet.payload.length).to.be.equal(bigPayload.length);
+        client1.disconnect();
+      });
+
+      client1.on("suback", function() {
+        buildAndConnect(d, function(client2) {
+          client2.publish({
+            topic: "hello",
+            payload: bigPayload,
+            messageId: messageId
+          });
+          client2.disconnect();
+        });
+      });
+
+      client1.subscribe({
+        subscriptions: subscriptions,
+        messageId: messageId
+      });
+    });
+  });
+
   it("should support subscribing with overlapping topics and receiving message only once", function(done) {
     var d = donner(2, done);
     buildAndConnect(d, function(client1) {
