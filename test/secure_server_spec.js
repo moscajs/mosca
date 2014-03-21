@@ -7,6 +7,7 @@ var SECURE_CERT = __dirname + '/secure/tls-cert.pem';
 var moscaSettings = function() {
   var port = nextPort();
   var settings = {
+    stats: false,
     logger: {
       childOf: globalLogger.child({ port: port }),
       level: 60

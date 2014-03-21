@@ -182,7 +182,6 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
-
   describe("timers", function() {
     var clock;
 
@@ -196,8 +195,9 @@ module.exports = function(moscaSettings, createConnection) {
 
     function fastForward(increase, max) {
       clock.tick(increase);
-      if (increase < max)
-        async.setImmediate(fastForward.bind(null, increase, max - increase));
+      if (increase < max) {
+        setImmediate(fastForward.bind(null, increase, max - increase));
+      }
     }
 
     it("should close the connection after the keepalive interval", function(done) {
@@ -1741,6 +1741,7 @@ module.exports = function(moscaSettings, createConnection) {
     beforeEach(function(done) {
       clock = sinon.useFakeTimers();
       instance.close();
+      settings.stats = true;
       instance = new mosca.Server(settings, done);
       stats = instance.stats;
     });

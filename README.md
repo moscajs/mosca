@@ -206,6 +206,7 @@ It is very easy to use, just prepare an index.html file:
   </head>
   <body>
     <script>
+      var mqtt   = require("mows");
       var client = mqtt.createClient();
 
       client.subscribe("mqtt/demo");

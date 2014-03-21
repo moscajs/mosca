@@ -6,6 +6,7 @@ var request = require('supertest');
 
 var moscaSettings = function() {
   var settings = {
+    stats: false,
     logger: {
       childOf: globalLogger,
       level: 60

@@ -6,6 +6,7 @@ var abstractServerTests = require("./abstract_server");
 var moscaSettings = function() {
   return {
     port: nextPort(),
+    stats: false,
     logger: {
       childOf: globalLogger,
       level: 60
