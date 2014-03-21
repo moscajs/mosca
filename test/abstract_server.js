@@ -1670,16 +1670,21 @@ module.exports = function(moscaSettings, createConnection) {
         not = "not ";
       }
 
+      if (!(subscribed instanceof Array)) {
+        subscribed = [subscribed];
+      }
+
       it("should " + not + "support forwarding to " + subscribed + " when publishing " + published, function(done) {
         var d = donner(2, done);
         buildAndConnect(d, function(client1) {
 
           var messageId = Math.floor(65535 * Math.random());
-          var subscriptions = [{
-              topic: subscribed,
+          var subscriptions = subscribed.map(function(topic) {
+            return {
+              topic: topic,
               qos: 0
-            }
-          ];
+            };
+          });
 
           client1.on("publish", function(packet) {
             client1.disconnect();
@@ -1730,6 +1735,7 @@ module.exports = function(moscaSettings, createConnection) {
     buildTest("/+/hello", "$SYS/hello", false);
     buildTest("$SYS/hello", "$SYS/hello");
     buildTest("$SYS/hello", "$SYS/hello");
+    buildTest(["#", "$SYS/#"], "$SYS/hello");
   });
 
   it("should allow plugin authors to publish", function(done) {
