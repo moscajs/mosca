@@ -1,6 +1,17 @@
 History
 =======
 
+## 0.18.0
+
+* Updated dependencies.
+* Fixed keepalive=0 according to MQTT 3.1.1 spec.
+* Downgraded logging of publish and forwarding to 'debug' and 'trace'
+  respectively.
+* Fixed # and $SYS/# subscribtions and $SYS/ topic delivery
+  [#105](https://github.com/mcollina/mosca/pull/105).
+* Expose `require("mows")` in the browserify bundle instead of the
+  standalone `mqtt`.
+
 ## 0.17.7
 
 * Fixed '+' subscriptions with retained messages.
