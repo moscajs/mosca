@@ -1,8 +1,15 @@
 Contributing
 ============
 
-Fork the repo on github and send a pull requests with topic branches.
-Do not forget to provide specs to your contribution.
+The main development is on GitHub at http://github.com/mcollina/mosca.
+In order to contribute, fork the repo on github and send a pull requests with topic branches.
+Do not forget to provide specs for your contribution.
+
+Contact the lead dev
+--------------------
+
+You can reach [@matteocollina](http://twitter.com/matteocollina) on
+twitter of via email at hello@matteocollina.com.
 
 
 Running specs
