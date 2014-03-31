@@ -42,8 +42,15 @@ describe("mosca.Server - Websocket", function() {
     var curPort = nextPort() - 1;
     var req = request("http://localhost:" + curPort);
 
-    req.get('/mqtt.js')
-       .expect('Content-Type', /javascript/)
+    req.get("/mqtt.js")
+       .expect("Content-Type", /javascript/)
        .expect(200).end(done);
+  });
+
+  it("should return a 404 on a missing file", function(done) {
+    var curPort = nextPort() - 1;
+    var req = request("http://localhost:" + curPort);
+
+    req.get("/missing").expect(404, "Not Found\n").end(done);
   });
 });
