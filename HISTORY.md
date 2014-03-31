@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.19.0
+
+* Expose only the standalone `mqtt` in the browserified bundle.
+* Generate the bundle in the `postinstall` NPM hook.
+* Removed express dependency.
+
 ## 0.18.0
 
 * Updated dependencies.
