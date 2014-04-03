@@ -831,7 +831,7 @@ module.exports = function(moscaSettings, createConnection) {
       },
 
       function(cb) {
-        server.close();
+        server.close(cb);
       }
     ]);
   });
@@ -1785,10 +1785,11 @@ module.exports = function(moscaSettings, createConnection) {
 
     beforeEach(function(done) {
       clock = sinon.useFakeTimers();
-      instance.close();
-      settings.stats = true;
-      instance = new mosca.Server(settings, done);
-      stats = instance.stats;
+      instance.close(function() {
+        settings.stats = true;
+        instance = new mosca.Server(settings, done);
+        stats = instance.stats;
+      });
     });
 
     afterEach(function() {
