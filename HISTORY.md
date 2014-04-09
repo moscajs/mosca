@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.19.1
+
+* Correctly remove the resend timer.
+* Serve the mqtt.js bundle when installed globally.
+* Added loggers for HTTP requests.
+
 ## 0.19.0
 
 * Expose only the standalone `mqtt` in the browserified bundle.
