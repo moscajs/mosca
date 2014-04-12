@@ -347,41 +347,6 @@ module.exports = function(moscaSettings, createConnection) {
         fastForward(100, keepalive * 2 * 1000);
       });
     });
-
-    it("should resend messages if a subscription is done with QoS 1", function(done) {
-      buildAndConnect(done, function(client) {
-
-        client.once("publish", function(packet1) {
-
-          fastForward(100, 4 * 1000);
-
-          client.once("publish", function(packet2) {
-            packet1.dup = true;
-            expect(packet2).to.be.deep.equal(packet1);
-            client.disconnect();
-          });
-        });
-
-        client.on("suback", function(packet) {
-          client.publish({
-            topic: "hello",
-            qos: 1,
-            messageId: 24
-          });
-        });
-
-        var subscriptions = [{
-            topic: "hello",
-            qos: 1
-          }
-        ];
-
-        client.subscribe({
-          subscriptions: subscriptions,
-          messageId: 42
-        });
-      });
-    });
   });
 
   it("should support subscribing", function(done) {
@@ -1067,6 +1032,56 @@ module.exports = function(moscaSettings, createConnection) {
       client.subscribe({
         subscriptions: subscriptions,
         messageId: 42
+      });
+    });
+  });
+
+  function maxInflightMessageTest(max, done) {
+    buildAndConnect(done, function (client) {
+
+      var counter = max + 1;
+
+      function doPublish() {
+        if (counter-- === 0) {
+          return;
+        }
+
+        client.publish({
+          topic: "hello/foo",
+          qos: 1,
+          messageId: counter
+        });
+
+        setImmediate(doPublish);
+      }
+
+      // we are not replaying with any pubacks
+
+      client.on("suback", function(packet) {
+        doPublish();
+      });
+
+      var subscriptions = [{
+        topic: "hello/#",
+        qos: 1
+      }];
+
+      client.subscribe({
+        subscriptions: subscriptions,
+        messageId: 42
+      });
+    });
+  }
+
+  it("should disconnect a client if it has more thant 1024 inflight messages", function (done) {
+    maxInflightMessageTest(1024, done);
+  });
+
+  it("should have the max inflight message limit configurable", function (done) {
+    instance.close(function() {
+      settings.maxInflightMessages = 512;
+      instance = new mosca.Server(settings, function() {
+        maxInflightMessageTest(512, done);
       });
     });
   });
