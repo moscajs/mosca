@@ -776,7 +776,7 @@ module.exports = function(create, buildOpts) {
         }
       },
       inflight: {
-        42: { packet: packet }
+        42: packet
       }
     };
 
