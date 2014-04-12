@@ -1036,6 +1036,43 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
+  it("a client must be disconnected if it has more thant 1024 inflight messages", function (done) {
+    buildAndConnect(done, function (client) {
+
+      var counter = 1025;
+
+      function doPublish() {
+        if (counter-- === 0) {
+          return;
+        }
+
+        client.publish({
+          topic: "hello/foo",
+          qos: 1,
+          messageId: counter
+        });
+
+        setImmediate(doPublish);
+      }
+
+      // we are not replaying with any pubacks
+
+      client.on("suback", function(packet) {
+        doPublish();
+      });
+
+      var subscriptions = [{
+        topic: "hello/#",
+        qos: 1
+      }];
+
+      client.subscribe({
+        subscriptions: subscriptions,
+        messageId: 42
+      });
+    });
+  });
+
   it("QoS 1 wildcard subscriptions should receive QoS 1 messages at QoS 1", function (done) {
     buildAndConnect(done, function (client) {
       client.on("publish", function(packet) {
