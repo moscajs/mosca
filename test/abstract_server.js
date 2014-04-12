@@ -1036,10 +1036,10 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
-  it("a client must be disconnected if it has more thant 1024 inflight messages", function (done) {
+  function maxInflightMessageTest(max, done) {
     buildAndConnect(done, function (client) {
 
-      var counter = 1025;
+      var counter = max + 1;
 
       function doPublish() {
         if (counter-- === 0) {
@@ -1069,6 +1069,19 @@ module.exports = function(moscaSettings, createConnection) {
       client.subscribe({
         subscriptions: subscriptions,
         messageId: 42
+      });
+    });
+  }
+
+  it("should disconnect a client if it has more thant 1024 inflight messages", function (done) {
+    maxInflightMessageTest(1024, done);
+  });
+
+  it("should have the max inflight message limit configurable", function (done) {
+    instance.close(function() {
+      settings.maxInflightMessages = 512;
+      instance = new mosca.Server(settings, function() {
+        maxInflightMessageTest(512, done);
       });
     });
   });
