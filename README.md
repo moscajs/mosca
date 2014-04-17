@@ -136,7 +136,8 @@ module.exports = {
   backend: {
     type: 'redis',
     port: 6379,
-    host: 'localhost'
+    host: 'localhost',
+    return_buffers: true
   },
   persistence: {
     factory: mosca.persistence.Redis,
