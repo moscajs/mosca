@@ -592,9 +592,9 @@ module.exports = function(create, buildOpts) {
       instance.storeOfflinePacket(packet, function() {
         instance.streamOfflinePackets(client, function(err, p) {
           instance.streamOfflinePackets(client, function(err, p2) {
-            done(new Error("this should never be called"));
+            expect(p2).to.eql(p);
+            done();
           });
-          done();
         });
       });
     });
@@ -604,10 +604,23 @@ module.exports = function(create, buildOpts) {
       instance.storeOfflinePacket(packet, function() {
         instance.deleteOfflinePacket(client, packet.messageId, function(err) {
           instance.streamOfflinePackets(client, function(err, p2) {
-            console.log(p2);
             done(new Error("this should never be called"));
           });
           done();
+        });
+      });
+    });
+
+    it("should update the id of an offline packet", function(done) {
+      var instance = this.instance;
+      instance.storeOfflinePacket(packet, function() {
+        instance.streamOfflinePackets(client, function(err, p3) {
+          instance.updateOfflinePacket(client, p3, 12345, function(err) {
+            instance.streamOfflinePackets(client, function(err, p2) {
+              expect(p2.messageId).to.equal(12345);
+              done();
+            });
+          });
         });
       });
     });
@@ -725,6 +738,9 @@ module.exports = function(create, buildOpts) {
       client.forward = function(topic, payload, options, pattern) {
         expect(topic).to.eql(packet.topic);
         expect(payload).to.eql(packet.payload);
+        delete options.payload;
+        delete packet.payload;
+        packet.offline = true;
         expect(options).to.eql(packet);
         expect(pattern).to.eql("hello");
         done();
@@ -807,14 +823,14 @@ module.exports = function(create, buildOpts) {
       });
     });
 
-    it("should delete the offline packets once streamed", function(done) {
+    it("should not delete the offline packets once streamed", function(done) {
       var instance = this.instance;
       instance.storeInflightPackets(client, function() {
         instance.streamOfflinePackets(client, function(err, p) {
           instance.streamOfflinePackets(client, function(err, p2) {
-            done(new Error("this should never be called"));
+            expect(p2).to.eql(p);
+            done();
           });
-          done();
         });
       });
     });

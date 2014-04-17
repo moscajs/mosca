@@ -1670,6 +1670,66 @@ module.exports = function(moscaSettings, createConnection) {
     ], done);
   });
 
+  it("should remove already pubacked messages from the offline store", function(done) {
+    var pers = new mosca.persistence.Memory();
+    var opts = buildOpts();
+
+    opts.clientId = "mosca-unclean-clients-test";
+    opts.clean = false;
+    opts.keepalive = 0;
+
+    pers.wire(instance);
+
+    async.series([
+
+      function(cb) {
+        buildAndConnect(cb, opts, function(client) {
+          var subscriptions = [{
+            topic: "hello",
+            qos: 1
+          }];
+
+          client.subscribe({
+            subscriptions: subscriptions,
+            messageId: 42
+          });
+
+          client.on("suback", function() {
+            client.publish({
+              topic: "hello",
+              qos: 1,
+              payload: "world",
+              messageId: 42
+            });
+          });
+
+          client.on("publish", function(packet) {
+            client.puback({ messageId: packet.messageId });
+            setImmediate(function() {
+              client.disconnect();
+            });
+          });
+        });
+      },
+
+      function(cb) {
+        buildClient(cb, function(client) {
+          client.opts = opts;
+
+          client.connect(opts);
+
+          client.on("publish", function(packet) {
+            done(new Error("not expected"));
+          });
+
+          setTimeout(function() {
+            client.disconnect();
+          }, 50);
+        });
+      }
+    ], done);
+  });
+
   describe("pattern matching", function() {
 
     var buildTest = function(subscribed, published, expected) {
