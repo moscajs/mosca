@@ -64,13 +64,12 @@
   },
   "dependencies": {
     "mqtt": "~0.3.8",
-    "async": "~0.2.10",
+    "async": "~0.7.0",
     "ascoltatori": "~0.14.0",
-    "debug": "~0.7.2",
     "commander": "~2.1.0",
     "minimatch": "~0.2.11",
     "bunyan": "~0.22.1",
-    "memdown": "~0.5.1",
+    "memdown": "~0.7.1",
     "levelup": "~0.18.2",
     "level-sublevel": "~5.2.0",
     "level-ttl": "~0.5.0",
@@ -82,16 +81,16 @@
     "json-buffer": "~2.0.7",
     "brfs": "0.0.8",
     "pre-commit": "0.0.4",
-    "moment": "~2.5.1",
+    "moment": "~2.6.0",
     "moving-average": "0.0.4",
-    "browserify": "~3.33.0",
+    "browserify": "~3.43.0",
     "st": "~0.4.1"
   },
   "optionalDependencies": {
     "leveldown": "~0.10.0",
     "zmq": "~2.6.0",
-    "amqp": "~0.1.8",
+    "amqp": "~0.2.0",
     "redis": "~0.10.1",
-    "mongodb": "~1.3.23"
+    "mongodb": "~1.3.0"
   }
 }
