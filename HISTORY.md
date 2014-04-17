@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.20.0
+
+* No more duplicates over the same TCP connection.
+* Do not loose data on crashes.
+* Updated dependencies.
+
 ## 0.19.1
 
 * Correctly remove the resend timer.
