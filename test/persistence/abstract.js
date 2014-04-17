@@ -250,7 +250,7 @@ module.exports = function(create, buildOpts) {
         retain: true
       };
 
-      var client = { 
+      var client = {
         logger: globalLogger,
         forward: function(topic, payload, options, pattern) {
           expect(topic).to.eql(packet1.topic);
@@ -437,7 +437,7 @@ module.exports = function(create, buildOpts) {
       var server = new EventEmitter();
       var instance = this.instance;
 
-      var client = { 
+      var client = {
         id: "my client id - 42",
         clean: false,
         logger: globalLogger,
@@ -465,7 +465,7 @@ module.exports = function(create, buildOpts) {
       var server = new EventEmitter();
       var instance = this.instance;
 
-      var client = { 
+      var client = {
         id: "my client id - 42",
         clean: false,
         logger: globalLogger,
@@ -532,7 +532,7 @@ module.exports = function(create, buildOpts) {
   });
 
   describe("offline packets", function() {
-    var client = { 
+    var client = {
       id: "my client id - 42",
       clean: false,
       logger: globalLogger,
@@ -545,7 +545,7 @@ module.exports = function(create, buildOpts) {
 
     var packet = {
       topic: "hello",
-      qos: 0,
+      qos: 1,
       payload: new Buffer("world"),
       messageId: 42
     };
@@ -592,6 +592,19 @@ module.exports = function(create, buildOpts) {
       instance.storeOfflinePacket(packet, function() {
         instance.streamOfflinePackets(client, function(err, p) {
           instance.streamOfflinePackets(client, function(err, p2) {
+            done(new Error("this should never be called"));
+          });
+          done();
+        });
+      });
+    });
+
+    it("should delete an offline packet if said so", function(done) {
+      var instance = this.instance;
+      instance.storeOfflinePacket(packet, function() {
+        instance.deleteOfflinePacket(client, packet.messageId, function(err) {
+          instance.streamOfflinePackets(client, function(err, p2) {
+            console.log(p2);
             done(new Error("this should never be called"));
           });
           done();
@@ -726,7 +739,7 @@ module.exports = function(create, buildOpts) {
   });
 
   describe("offline packets pattern", function() {
-    var client = { 
+    var client = {
       id: "my client id - 42",
       clean: false,
       logger: globalLogger,
@@ -766,7 +779,7 @@ module.exports = function(create, buildOpts) {
       payload: new Buffer("world"),
       messageId: 42
     };
-    var client = { 
+    var client = {
       id: "my client id - 42",
       clean: false,
       logger: globalLogger,
