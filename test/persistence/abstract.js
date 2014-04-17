@@ -149,6 +149,37 @@ module.exports = function(create, buildOpts) {
       ], done);
     });
 
+    it("should remove a retained message if the payload is empty", function(done) {
+      var packet = {
+        topic: "hello",
+        qos: 0,
+        payload: new Buffer("world"),
+        messageId: 42,
+        retain: true
+      };
+
+      var packet2 = {
+        topic: "hello",
+        qos: 0,
+        payload: new Buffer(0),
+        messageId: 43,
+        retain: true
+      };
+
+      var instance = this.instance;
+
+      async.series([
+        instance.storeRetained.bind(instance, packet),
+        instance.storeRetained.bind(instance, packet2),
+        function(cb) {
+          instance.lookupRetained("hello", function(err, results) {
+            expect(results).to.have.property("length", 0);
+            cb();
+          });
+        }
+      ], done);
+    });
+
     it("should match and load with a 'some' pattern", function(done) {
       var packet1 = {
         topic: "hello/1",
