@@ -802,7 +802,40 @@ module.exports = function(moscaSettings, createConnection) {
   });
 
 
-  it("should support subscribing to wildcards", function(done) {
+  it("should support subscribing to # wildcard", function(done) {
+    var d = donner(2, done);
+    buildAndConnect(d, function(client1) {
+
+      client1.on("publish", function(packet) {
+        expect(packet.topic).to.be.equal("hello/world");
+        expect(packet.payload).to.be.equal("some data");
+        client1.disconnect();
+      });
+
+      client1.on("suback", function() {
+        buildAndConnect(d, function(client2) {
+          client2.publish({
+            topic: "hello/world",
+            payload: "some data"
+          });
+
+          client2.disconnect();
+        });
+      });
+
+      var subscriptions = [{
+          topic: "hello/#",
+          qos: 0
+        }
+      ];
+      client1.subscribe({
+        subscriptions: subscriptions,
+        messageId: 42
+      });
+    });
+  });
+
+  it("should support subscribing to + wildcard", function(done) {
     var d = donner(2, done);
     buildAndConnect(d, function(client1) {
 
@@ -823,7 +856,7 @@ module.exports = function(moscaSettings, createConnection) {
       });
 
       var subscriptions = [{
-          topic: "hello/#",
+          topic: "hello/+",
           qos: 0
         }
       ];

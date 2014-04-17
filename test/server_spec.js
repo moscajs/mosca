@@ -88,7 +88,9 @@ describe("mosca.Server - MQTT backend", function() {
       port: settings.port,
       keepalive: 3000,
       host: "127.0.0.1",
-      mqtt: require("mqtt")
+      mqtt: require("mqtt"),
+      wildcardSome: '#',
+      wildcardOne: '+'
     };
 
     var server = new mosca.Server(newSettings);
