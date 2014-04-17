@@ -16,7 +16,10 @@ supporting the following brokers/protocols.
 * [RabbitMQ](http://www.rabbitmq.com/) and all implementations of the [AMQP](http://www.amqp.org/) protocol.
 * [ZeroMQ](http://www.zeromq.org/) to use Mosca in a P2P fashion.
 
-NEW: you can find a test version of mosca at test.mosca.io.
+See the slides of my talk ["MQTT and Node.js - Messaging in the Internet
+of Things"](http://mcollina.github.io/mqtt_and_nodejs/).
+
+You can find a test version of mosca at test.mosca.io.
 You can use ws://test.mosca.io/ to connect to the WebSocket tunnel.
 This is powered by the [docker image](#docker-support).
 
