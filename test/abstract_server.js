@@ -153,7 +153,7 @@ module.exports = function(moscaSettings, createConnection) {
       });
     });
   });
-  
+
   it("should close the first client if a second client with the same clientId connects", function(done) {
     var d = donner(2, done);
     var opts = buildOpts(), clientId = "123456789";
@@ -251,14 +251,14 @@ module.exports = function(moscaSettings, createConnection) {
 
         var opts = buildOpts();
         opts.keepalive = keepalive;
-        
+
         var messageId = Math.floor(65535 * Math.random());
         var subscriptions = [{
             topic: "hello",
             qos: 0
           }
         ];
-        
+
         client.connect(opts);
 
         client.stream.on("close", function() {
@@ -284,7 +284,7 @@ module.exports = function(moscaSettings, createConnection) {
 
         var opts = buildOpts();
         opts.keepalive = keepalive;
-        
+
         var messageId = Math.floor(65535 * Math.random());
         var subscriptions = [{
             topic: "hello",
@@ -318,7 +318,7 @@ module.exports = function(moscaSettings, createConnection) {
 
         var opts = buildOpts();
         opts.keepalive = keepalive;
-        
+
         var messageId = Math.floor(65535 * Math.random());
         var subscriptions = [{
             topic: "hello",
@@ -1109,7 +1109,7 @@ module.exports = function(moscaSettings, createConnection) {
           var opts = buildOpts();
           opts.clientId = 'client1';
           opts.will = {
-            topic: "/hello/died",
+            topic: "hello/died",
             payload: "client1 died",
             qos: 1
           };
@@ -1125,8 +1125,6 @@ module.exports = function(moscaSettings, createConnection) {
 
       function(client1, cb) {
         var subscriptions = [{
-            // it should not have issues
-            // in handling this kind of subscription
             topic: "hello/died",
             qos: 0
           }
@@ -1148,7 +1146,7 @@ module.exports = function(moscaSettings, createConnection) {
 
       function(client1, client3, cb) {
         var subscriptions = [{
-            topic: "/hello/died",
+            topic: "hello/died",
             qos: 0
           }
         ];
@@ -1157,11 +1155,11 @@ module.exports = function(moscaSettings, createConnection) {
           messageId: 42
         });
         client3.on("suback", function() {
-          client1.stream.destroy();
+          client1.stream.end();
           cb(null);
         });
         client3.on("publish", function(packet) {
-          expect(packet.topic).to.be.eql("/hello/died");
+          expect(packet.topic).to.be.eql("hello/died");
           expect(packet.payload).to.be.eql("client1 died");
           client3.disconnect();
         });
