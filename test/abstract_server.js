@@ -1007,35 +1007,6 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
-  it("should receive at QoS 0 all messages published at QoS 0 even if subscribed at QoS 1", function(done) {
-    buildAndConnect(done, function(client) {
-
-      client.once("publish", function(packet) {
-        expect(packet.qos).to.be.equal(0);
-        client.disconnect();
-      });
-
-      client.on("suback", function(packet) {
-        client.publish({
-          topic: "hello",
-          qos: 0,
-          messageId: 24
-        });
-      });
-
-      var subscriptions = [{
-          topic: "hello",
-          qos: 1
-        }
-      ];
-
-      client.subscribe({
-        subscriptions: subscriptions,
-        messageId: 42
-      });
-    });
-  });
-
   function maxInflightMessageTest(max, done) {
     buildAndConnect(done, function (client) {
 
