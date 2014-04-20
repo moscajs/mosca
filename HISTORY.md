@@ -1,6 +1,10 @@
 History
 =======
 
+## 0.20.1
+
+* Serve the 'index.html' file in the static folder as '/'.
+
 ## 0.20.0
 
 * No more duplicates over the same TCP connection.
