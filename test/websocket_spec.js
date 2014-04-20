@@ -38,6 +38,13 @@ describe("mosca.Server - Websocket", function() {
     req.get('/test').expect(200, "42").end(done);
   });
 
+  it("should serve the 'index.html' file in the static folder as '/'", function(done) {
+    var curPort = nextPort() - 1;
+    var req = request("http://localhost:" + curPort);
+
+    req.get('/').expect(200, "Hello World\n").end(done);
+  });
+
   it("should serve a browserify bundle", function(done) {
     var curPort = nextPort() - 1;
     var req = request("http://localhost:" + curPort);
