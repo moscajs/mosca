@@ -286,11 +286,6 @@ module.exports = function(moscaSettings, createConnection) {
         opts.keepalive = keepalive;
 
         var messageId = Math.floor(65535 * Math.random());
-        var subscriptions = [{
-            topic: "hello",
-            qos: 0
-          }
-        ];
 
         client.connect(opts);
 
@@ -306,6 +301,56 @@ module.exports = function(moscaSettings, createConnection) {
             messageId: messageId
           });
         }, keepalive * 1000 / 2);
+
+        fastForward(100, 4000);
+      });
+    });
+
+    it("should correctly renew the keepalive window after a puback", function(done) {
+      buildClient(done, function(client) {
+        var keepalive = 1;
+
+        var opts = buildOpts();
+        opts.keepalive = keepalive;
+        var closed = false;
+        var timer;
+
+        var messageId = Math.floor(65535 * Math.random());
+        var subscriptions = [{
+            topic: "hello",
+            qos: 1
+          }
+        ];
+
+        client.connect(opts);
+
+        client.on("connack", function() {
+          client.subscribe({
+            subscriptions: subscriptions,
+            messageId: messageId
+          });
+        });
+
+        client.on("suback", function() {
+          timer = Date.now();
+          instance.publish({ topic: "hello", payload: "world" });
+        });
+
+        client.stream.on("close", function() {
+          closed = true;
+          var interval = (Date.now() - timer) / 1000;
+          expect(interval).to.be.least(keepalive + keepalive / 2);
+        });
+
+        client.on("publish", function(packet) {
+          if (closed) {
+            return;
+          }
+
+          setTimeout(function() {
+            client.puback({ messageId: packet.messageId });
+          }, keepalive * 1000 / 2);
+        });
 
         fastForward(100, 4000);
       });
