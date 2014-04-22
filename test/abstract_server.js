@@ -214,7 +214,7 @@ module.exports = function(moscaSettings, createConnection) {
 
         client.stream.on("close", function() {
           var interval = (Date.now() - timer) / 1000;
-          expect(interval).to.be.least(keepalive * 5 / 4);
+          expect(interval).to.be.least(keepalive * 3 / 2);
         });
 
         fastForward(100, 4000);
