@@ -60,7 +60,8 @@
     "supertest": "~0.10.0",
     "coveralls": "~2.10.0",
     "istanbul": "~0.2.6",
-    "async_bench": "~0.3.0"
+    "async_bench": "~0.3.0",
+    "mongo-clean": "0.0.1"
   },
   "dependencies": {
     "mqtt": "~0.3.8",

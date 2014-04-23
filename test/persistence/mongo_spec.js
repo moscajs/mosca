@@ -3,6 +3,7 @@
 var abstract = require("./abstract");
 var Mongo = require("../../").persistence.Mongo;
 var MongoClient = require('mongodb').MongoClient;
+var clean = require("mongo-clean");
 var async = require("async");
 
 describe("mosca.persistence.Mongo", function() {
@@ -26,13 +27,7 @@ describe("mosca.persistence.Mongo", function() {
   });
 
   beforeEach(function(done) {
-    opts.connection.collections(function(err, collections) {
-      async.each(collections, function(coll, cb) {
-        coll.drop(function() {
-          cb();
-        });
-      }, done);
-    });
+    clean(opts.connection, done);
   });
 
   afterEach(function() {
