@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.20.2
+
+* Update keepalive timer after a PUBACK.
+* Set the 'grace' period before a keepalive disconnection to a half keepalive.
+
 ## 0.20.1
 
 * Serve the 'index.html' file in the static folder as '/'.
