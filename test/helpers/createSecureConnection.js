@@ -1,4 +1,4 @@
-var SECURE_CERT = __dirname + '/secure/tls-cert.pem';
+var SECURE_CERT = __dirname + '/../secure/tls-cert.pem';
 var fs = require("fs");
 var tls = require("tls");
 var mqtt = require("mqtt");

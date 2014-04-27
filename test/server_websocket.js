@@ -11,6 +11,9 @@ var moscaSettings = function() {
       childOf: globalLogger,
       level: 60
     },
+    persistence: {
+      factory: mosca.persistence.Memory
+    },
     http: {
       port: nextPort(),
       static: __dirname + "/static",

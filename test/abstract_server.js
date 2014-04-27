@@ -11,6 +11,7 @@ module.exports = function(moscaSettings, createConnection) {
   beforeEach(function(done) {
     settings = moscaSettings();
     instance = new mosca.Server(settings, done);
+    this.instance = instance;
     secondInstance = null;
   });
 
@@ -1231,32 +1232,6 @@ module.exports = function(moscaSettings, createConnection) {
     ]);
   });
 
-  it("should pass mosca options to backend when publishing", function(done) {
-    buildClient(done, function(client) {
-
-      var messageId = Math.floor(65535 * Math.random());
-
-      instance.ascoltatore.subscribe("hello", function (topic, message, options) {
-        expect(options.mosca.packet).to.have.property("messageId", messageId);
-        expect(options.mosca.packet).to.have.property("qos", 1);
-        client.disconnect();
-      });
-
-      client.connect(buildOpts());
-
-      client.on('connack', function(packet) {
-        expect(packet.returnCode).to.eql(0);
-
-        client.publish({
-          topic: "hello",
-          qos: 1,
-          payload: "world",
-          messageId: messageId
-        });
-      });
-    });
-  });
-
   it("should support authentication (success)", function(done) {
     instance.authenticate = function(client, username, password, callback) {
       expect(username).to.be.eql("matteo");
@@ -1451,9 +1426,6 @@ module.exports = function(moscaSettings, createConnection) {
   });
 
   it("should support retained messages", function(done) {
-    var pers = new mosca.persistence.Memory();
-
-    pers.wire(instance);
 
     async.waterfall([
 
@@ -1515,43 +1487,55 @@ module.exports = function(moscaSettings, createConnection) {
 
   it("should return only a single retained message", function(done) {
 
-    var pers = new mosca.persistence.Memory();
-
-    pers.wire(instance);
-
     async.waterfall([
 
       function(cb) {
-        var client = createConnection(settings.port, settings.host);
-        client.name = "Phase 1";
-        var defaultMessage = {
-          topic: "hello",
-          qos: 0,
-          payload: null,
-          messageId: null,
-          retain: true
-        };
+        buildClient(cb, function(client) {
 
-        client.on("connected", function() {
+          client.name = "Phase 1";
+          var defaultMessage = {
+            topic: "hello",
+            qos: 1,
+            payload: null,
+            messageId: null,
+            retain: true
+          };
+
           var opts = buildOpts();
           opts.clean = true;
 
-          var totalMessages = 10;
+          var totalMessages = 3;
           var publishCount = 0;
 
           client.connect(opts);
 
-          client.on('publish', function(packet){
+          client.on('puback', function(packet){
             publishCount++;
             if(publishCount == totalMessages) {
-              client.stream.end();
-              cb();
+              client.disconnect();
             }
-
           });
 
           client.on('connack', function(packet) {
+            for(var c = 1; c <= totalMessages; c++) {
+              defaultMessage.payload = (c == totalMessages) ? new Buffer("Final Message") : new Buffer("Message " + c);
+              defaultMessage.messageId = 40 + c;
+              client.publish(defaultMessage);
+            }
+          });
+        });
+      },
 
+      function(cb) {
+        buildClient(cb, function(client) {
+          var retainedReceivedCount = 0;
+
+          var opts = buildOpts();
+          opts.clean = true;
+
+          client.connect(opts);
+
+          client.on("connack", function(packet) {
             var subscriptions = [{
               topic: "hello",
               qos: 0
@@ -1561,46 +1545,11 @@ module.exports = function(moscaSettings, createConnection) {
               subscriptions: subscriptions,
               messageId: 20
             });
-
-            for(var c = 1 ; c <= 10 ; c++)
-            {
-              defaultMessage.payload = (c == totalMessages) ? new Buffer("Final Message") : new Buffer("Message " + c);
-              defaultMessage.messageId = 40 + c;
-              client.publish(defaultMessage);
-            }
-
-          });
-        });
-      },
-
-      function(cb) {
-        var client = createConnection(settings.port, settings.host);
-
-        var retainedReceivedCount = 0;
-
-        client.on("connected", function() {
-          var opts = buildOpts();
-          opts.clean = true;
-
-          client.connect(opts);
-
-          client.on('connack', function(packet) {
-            var subscriptions = [{
-              topic: "hello",
-              qos: 0
-            }
-            ];
-
-            client.subscribe({
-              subscriptions: subscriptions,
-              messageId: 20
-            });
           });
 
           var handleTimeout = function() {
             expect(retainedReceivedCount).to.be.equal(1);
-            client.stream.end();
-            cb();
+            client.disconnect();
           };
 
           var timeout;
@@ -1608,22 +1557,18 @@ module.exports = function(moscaSettings, createConnection) {
           client.on("publish", function(packet) {
             clearInterval(timeout);
             timeout = setTimeout(handleTimeout, 100);
-            retainedReceivedCount ++;
+            retainedReceivedCount++;
           });
-
         });
       }
     ], done);
   });
 
   it("should restore subscriptions for uncleaned clients", function(done) {
-    var pers = new mosca.persistence.Memory();
     var opts = buildOpts();
 
     opts.clientId = "mosca-unclean-clients-test";
     opts.clean = false;
-
-    pers.wire(instance);
 
     async.series([
 
@@ -1665,13 +1610,10 @@ module.exports = function(moscaSettings, createConnection) {
   });
 
   it("should restore subscriptions for uncleaned clients (bis)", function(done) {
-    var pers = new mosca.persistence.Memory();
     var opts = buildOpts();
 
     opts.clientId = "mosca-unclean-client-test";
     opts.clean = false;
-
-    pers.wire(instance);
 
     async.series([
 
@@ -1720,14 +1662,11 @@ module.exports = function(moscaSettings, createConnection) {
   });
 
   it("should remove already pubacked messages from the offline store", function(done) {
-    var pers = new mosca.persistence.Memory();
     var opts = buildOpts();
 
     opts.clientId = "mosca-unclean-clients-test";
     opts.clean = false;
     opts.keepalive = 0;
-
-    pers.wire(instance);
 
     async.series([
 

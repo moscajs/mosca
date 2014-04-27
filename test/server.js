@@ -7,6 +7,9 @@ var moscaSettings = function() {
   return {
     port: nextPort(),
     stats: false,
+    persistence: {
+      factory: mosca.persistence.Memory
+    },
     logger: {
       childOf: globalLogger,
       level: 60
@@ -16,6 +19,46 @@ var moscaSettings = function() {
 
 describe("mosca.Server", function() {
   abstractServerTests(moscaSettings, mqtt.createConnection);
+
+  function buildClient(instance, done, callback) {
+    var client = mqtt.createConnection(instance.opts.port);
+
+    client.once('error', done);
+    client.stream.once('close', function() {
+      done();
+    });
+
+    client.on("connected", function() {
+      callback(client);
+    });
+  }
+
+  it("should pass mosca options to backend when publishing", function(done) {
+    var instance = this.instance;
+    buildClient(instance, done, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+
+      instance.ascoltatore.subscribe("hello", function (topic, message, options) {
+        expect(options.mosca.packet).to.have.property("messageId", messageId);
+        expect(options.mosca.packet).to.have.property("qos", 1);
+        client.disconnect();
+      });
+
+      client.connect(buildOpts());
+
+      client.on('connack', function(packet) {
+        expect(packet.returnCode).to.eql(0);
+
+        client.publish({
+          topic: "hello",
+          qos: 1,
+          payload: "world",
+          messageId: messageId
+        });
+      });
+    });
+  });
 });
 
 // Move these tests back to abstract_server after ascoltatori change made to support MqttSecureClient

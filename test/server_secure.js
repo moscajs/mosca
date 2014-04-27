@@ -12,6 +12,9 @@ var moscaSettings = function() {
       childOf: globalLogger.child({ port: port }),
       level: 60
     },
+    persistence: {
+      factory: mosca.persistence.Memory
+    },
     secure: {
       port: port,
       keyPath: SECURE_KEY,
@@ -29,7 +32,7 @@ var moscaSettings = function() {
 };
 
 describe("mosca.Server - Secure Connection", function() {
-  abstractServerTests(moscaSettings, require("./createSecureConnection"));
+  abstractServerTests(moscaSettings, require("./helpers/createSecureConnection"));
 });
 
 describe("mosca.Server - Secure and non-secure Connection", function() {

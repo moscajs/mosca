@@ -13,6 +13,9 @@ var moscaSettings = function() {
       childOf: globalLogger,
       level: 60
     },
+    persistence: {
+      factory: mosca.persistence.Memory
+    },
     https: {
       port: nextPort(),
       static: __dirname + "/static",
@@ -38,7 +41,7 @@ var moscaSettings = function() {
 };
 
 describe("mosca.Server - Secure Websocket", function() {
-  abstractServerTests(moscaSettings, require('./createSecureWebsocketConnection'));
+  abstractServerTests(moscaSettings, require('./helpers/createSecureWebsocketConnection'));
 
   before(function(done) {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // Ignore self-signed certificate errors
