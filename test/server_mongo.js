@@ -7,7 +7,7 @@ var clean = require("mongo-clean");
 
 describe("mosca.Server with mongo persistence", function() {
   var mongoConnection;
-  var mongoUrl = "mongodb://localhost:27017/moscatests";
+  var mongoUrl = "mongodb://localhost:27017/mosca";
 
   before(function(done) {
     // Connect to the db

@@ -4,4 +4,4 @@
 --growl
 --colors
 --check-leaks
---timeout 10000
+--timeout 20000

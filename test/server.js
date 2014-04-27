@@ -33,6 +33,24 @@ describe("mosca.Server", function() {
     });
   }
 
+  function buildAndConnect(done, opts, callback) {
+
+    if (typeof opts === "function") {
+      callback = opts;
+      opts = buildOpts();
+    }
+
+    buildClient(done, function(client) {
+      client.opts = opts;
+
+      client.connect(opts);
+
+      client.on('connack', function(packet) {
+        callback(client);
+      });
+    });
+  }
+
   it("should pass mosca options to backend when publishing", function(done) {
     var instance = this.instance;
     buildClient(instance, done, function(client) {
@@ -329,4 +347,54 @@ describe("mosca.Server - MQTT backend", function() {
       }
     ], done);
   });
+
+  it("should support subscribing with overlapping topics and receiving message only once", function(done) {
+    var d = donner(2, done);
+    buildAndConnect(d, function(client1) {
+
+      var messageId = Math.floor(65535 * Math.random());
+      var subscriptions = [{
+          topic: "a/+",
+          qos: 1
+        }, {
+          topic: "+/b",
+          qos: 1
+        }, {
+          topic: "a/b",
+          qos: 1
+        }
+      ];
+      var called = 0;
+
+      client1.on("publish", function(packet) {
+        client1.puback({ messageId: packet.messageId });
+        expect(packet.topic).to.equal("a/b");
+        expect(packet.payload).to.equal("some other data");
+        expect(called++).to.equal(0);
+      });
+
+      client1.on("suback", function() {
+        buildAndConnect(d, function(client2) {
+
+          client2.on("puback", function() {
+            client1.disconnect();
+            client2.disconnect();
+          });
+
+          client2.publish({
+            topic: "a/b",
+            payload: "some other data",
+            messageId: messageId,
+            qos: 1
+          });
+        });
+      });
+
+      client1.subscribe({
+        subscriptions: subscriptions,
+        messageId: messageId
+      });
+    });
+  });
+
 });

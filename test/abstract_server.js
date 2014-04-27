@@ -22,7 +22,7 @@ module.exports = function(moscaSettings, createConnection) {
       instances.push(secondInstance);
     }
 
-    async.each(function(instance, cb) {
+    async.each(instances, function(instance, cb) {
       instance.close(cb);
     }, done);
   });
@@ -534,56 +534,6 @@ module.exports = function(moscaSettings, createConnection) {
             messageId: messageId
           });
           client2.disconnect();
-        });
-      });
-
-      client1.subscribe({
-        subscriptions: subscriptions,
-        messageId: messageId
-      });
-    });
-  });
-
-  it("should support subscribing with overlapping topics and receiving message only once", function(done) {
-    var d = donner(2, done);
-    buildAndConnect(d, function(client1) {
-
-      var messageId = Math.floor(65535 * Math.random());
-      var subscriptions = [{
-          topic: "a/+",
-          qos: 1
-        }, {
-          topic: "+/b",
-          qos: 1
-        }, {
-          topic: "a/b",
-          qos: 1
-        }
-      ];
-      var called = 0;
-
-      client1.on("publish", function(packet) {
-        expect(packet.topic).to.equal("a/b");
-        expect(packet.payload).to.equal("some other data");
-        if (!packet.dup) {
-          expect(called++).to.equal(0);
-        }
-      });
-
-      client1.on("suback", function() {
-        buildAndConnect(d, function(client2) {
-
-          client2.on("puback", function() {
-            client1.disconnect();
-            client2.disconnect();
-          });
-
-          client2.publish({
-            topic: "a/b",
-            payload: "some other data",
-            messageId: messageId,
-            qos: 1
-          });
         });
       });
 
@@ -1512,7 +1462,7 @@ module.exports = function(moscaSettings, createConnection) {
           client.on('puback', function(packet){
             publishCount++;
             if(publishCount == totalMessages) {
-              client.disconnect();
+              client.stream.end();
             }
           });
 
@@ -1524,6 +1474,10 @@ module.exports = function(moscaSettings, createConnection) {
             }
           });
         });
+      },
+
+      function(cb) {
+        setTimeout(cb, 100);
       },
 
       function(cb) {
@@ -1549,13 +1503,13 @@ module.exports = function(moscaSettings, createConnection) {
 
           var handleTimeout = function() {
             expect(retainedReceivedCount).to.be.equal(1);
-            client.disconnect();
+            client.stream.end();
           };
 
           var timeout;
 
           client.on("publish", function(packet) {
-            clearInterval(timeout);
+            clearTimeout(timeout);
             timeout = setTimeout(handleTimeout, 100);
             retainedReceivedCount++;
           });
@@ -1905,9 +1859,10 @@ module.exports = function(moscaSettings, createConnection) {
     it("should publish data each minute", function(done) {
       buildAndConnect(done, function(client1) {
         var topic = "$SYS/" + instance.id + "/clients/connected";
-        instance.ascoltatore.subscribe(topic, function(topic, value) {
+        instance.ascoltatore.subscribe(topic, function callback(topic, value) {
           expect(value).to.eql("1");
           client1.disconnect();
+          instance.ascoltatore.unsubscribe(topic, callback);
         });
         clock.tick(60 * 1000);
       });

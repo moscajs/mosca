@@ -48,8 +48,8 @@
   "author": "Matteo Collina <hello@matteocollina.com>",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "~1.17.1",
-    "chai": "~1.9.0",
+    "mocha": "~1.18.2",
+    "chai": "~1.9.1",
     "sinon": "~1.7.3",
     "sinon-chai": "~2.5.0",
     "underscore": "~1.6.0",
@@ -66,7 +66,7 @@
   "dependencies": {
     "mqtt": "~0.3.8",
     "async": "~0.7.0",
-    "ascoltatori": "~0.14.0",
+    "ascoltatori": "~0.14.1",
     "commander": "~2.2.0",
     "minimatch": "~0.2.11",
     "bunyan": "~0.22.3",

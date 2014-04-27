@@ -77,7 +77,8 @@ module.exports = function(create, buildOpts) {
         },
         function(cb) {
           instance.lookupRetained("hello", function(err, results) {
-            expect(results[0]).to.eql(packet);
+            expect(results[0].topic).to.eql(packet.topic);
+            expect(results[0].payload).to.eql(packet.payload);
             cb();
           });
         }
@@ -142,7 +143,7 @@ module.exports = function(create, buildOpts) {
         function(cb) {
           instance.lookupRetained("hello", function(err, results) {
             expect(results).to.have.property("length", 1);
-            expect(results[0]).to.eql(packet2);
+            expect(results[0].payload.toString()).to.equal("matteo");
             cb();
           });
         }
@@ -208,7 +209,10 @@ module.exports = function(create, buildOpts) {
         },
         function(cb) {
           instance.lookupRetained("hello/#", function(err, results) {
-            expect(results).to.eql([packet1, packet2]);
+            expect(results[0].topic).to.eql(packet1.topic);
+            expect(results[0].payload.toString()).to.eql(packet1.payload.toString());
+            expect(results[1].topic).to.eql(packet2.topic);
+            expect(results[1].payload.toString()).to.eql(packet2.payload.toString());
             cb();
           });
         }
@@ -243,7 +247,10 @@ module.exports = function(create, buildOpts) {
         },
         function(cb) {
           instance.lookupRetained("hello/+", function(err, results) {
-            expect(results).to.eql([packet1, packet2]);
+            expect(results[0].topic).to.eql(packet1.topic);
+            expect(results[0].payload.toString()).to.eql(packet1.payload.toString());
+            expect(results[1].topic).to.eql(packet2.topic);
+            expect(results[1].payload.toString()).to.eql(packet2.payload.toString());
             cb();
           });
         }
@@ -264,7 +271,8 @@ module.exports = function(create, buildOpts) {
       instance.wire(server);
       server.storePacket(packet1, function() {
         instance.lookupRetained(packet1.topic, function(err, results) {
-          expect(results).to.eql([packet1]);
+          expect(results[0].topic).to.eql(packet1.topic);
+          expect(results[0].payload.toString()).to.eql(packet1.payload.toString());
           done();
         });
       });
@@ -286,7 +294,9 @@ module.exports = function(create, buildOpts) {
         forward: function(topic, payload, options, pattern) {
           expect(topic).to.eql(packet1.topic);
           expect(payload).to.eql(packet1.payload);
-          expect(options).to.eql(packet1);
+          expect(options.topic).to.eql(packet1.topic);
+          expect(options.payload).to.eql(packet1.payload);
+          expect(options.qos).to.eql(packet1.qos);
           expect(pattern).to.eql("hello/#");
           done();
         }

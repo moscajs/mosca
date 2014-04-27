@@ -1,12 +1,12 @@
 "use strict";
 
 var abstract = require("./abstract");
-var Redis= require("../../").persistence.Redis;
+var Redis = require("../../").persistence.Redis;
 var redis = require("redis");
 
 describe("mosca.persistence.Redis", function() {
 
-  var opts = { 
+  var opts = {
     ttl: {
       checkFrequency: 1000,
       subscriptions: 1000,
@@ -37,7 +37,7 @@ describe("mosca.persistence.Redis", function() {
   describe("two clients", function() {
 
     it("should support restoring", function(done) {
-      var client = { 
+      var client = {
         id: "my client id - 42",
         clean: false,
         subscriptions: {
@@ -71,7 +71,7 @@ describe("mosca.persistence.Redis", function() {
     });
 
     it("should support synchronization", function(done) {
-      var client = { 
+      var client = {
         id: "my client id - 42",
         clean: false,
         subscriptions: {
