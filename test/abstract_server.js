@@ -353,7 +353,7 @@ module.exports = function(moscaSettings, createConnection) {
           }, keepalive * 1000 / 2);
         });
 
-        fastForward(100, 4000);
+        fastForward(50, 3000);
       });
     });
 
@@ -1556,6 +1556,7 @@ module.exports = function(moscaSettings, createConnection) {
           client.on("publish", function(packet) {
             expect(packet.topic).to.be.eql("hello");
             expect(packet.payload).to.be.eql("world");
+            expect(packet.qos).to.be.eql(1);
             client.disconnect();
           });
         });
@@ -1667,6 +1668,66 @@ module.exports = function(moscaSettings, createConnection) {
           setTimeout(function() {
             client.disconnect();
           }, 50);
+        });
+      }
+    ], done);
+  });
+
+  it("should support offline messaging", function(done) {
+    var opts = buildOpts();
+
+    opts.clientId = "mosca-unclean-clients-test2";
+    opts.clean = false;
+    opts.keepalive = 0;
+
+    async.series([
+
+      function(cb) {
+        buildAndConnect(cb, opts, function(client) {
+          var subscriptions = [{
+            topic: "hello",
+            qos: 1
+          }];
+
+          client.subscribe({
+            subscriptions: subscriptions,
+            messageId: 42
+          });
+
+          client.on("suback", function() {
+            client.disconnect();
+          });
+        });
+      },
+
+      function(cb) {
+        buildClient(cb, function(client) {
+          client.connect(buildOpts());
+
+          client.publish({
+            topic: "hello",
+            qos: 1,
+            payload: "world",
+            messageId: 42
+          });
+
+          client.on("puback", function(packet) {
+            client.disconnect();
+          });
+        });
+      },
+
+      function(cb) {
+        buildAndConnect(cb, opts, function(client) {
+
+          client.on("publish", function(packet) {
+            client.puback({ messageId: packet.messageId });
+            client.disconnect();
+
+            expect(packet.topic).to.eql("hello");
+            expect(packet.payload).to.eql("world");
+            expect(packet.qos).to.eql(1);
+          });
         });
       }
     ], done);
