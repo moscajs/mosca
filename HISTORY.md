@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.20.3
+
+* Fixed a packet duplication issue with Redis.
+* Fixed a MongoDB error/crash with offline subscriptions.
+* Added full MongoDB and Redis mosca.Server tests.
+
 ## 0.20.2
 
 * Update keepalive timer after a PUBACK.
