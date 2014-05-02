@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.21.0
+
+* Fixed offline messaging
+  [#30](https://github.com/mcollina/mosca/pull/130).
+* Bumped Ascoltatori to 0.15.0.
+
 ## 0.20.3
 
 * Fixed a packet duplication issue with Redis.
