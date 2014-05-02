@@ -1616,61 +1616,76 @@ module.exports = function(moscaSettings, createConnection) {
     ], done);
   });
 
-  it("should remove already pubacked messages from the offline store", function(done) {
+  it.only("should remove already pubacked messages from the offline store", function(done) {
     var opts = buildOpts();
 
     opts.clientId = "mosca-unclean-clients-test";
     opts.clean = false;
     opts.keepalive = 0;
 
-    async.series([
+    function step1(cb) {
+      buildAndConnect(function() {}, opts, function(client) {
+        var subscriptions = [{
+          topic: "hello",
+          qos: 1
+        }];
 
-      function(cb) {
-        buildAndConnect(cb, opts, function(client) {
-          var subscriptions = [{
-            topic: "hello",
-            qos: 1
-          }];
-
-          client.subscribe({
-            subscriptions: subscriptions,
-            messageId: 42
-          });
-
-          client.on("suback", function() {
-            client.publish({
-              topic: "hello",
-              qos: 1,
-              payload: "world",
-              messageId: 42
-            });
-          });
-
-          client.on("publish", function(packet) {
-            client.puback({ messageId: packet.messageId });
-            setImmediate(function() {
-              client.disconnect();
-            });
-          });
+        client.subscribe({
+          subscriptions: subscriptions,
+          messageId: 42
         });
-      },
 
-      function(cb) {
-        buildClient(cb, function(client) {
-          client.opts = opts;
-
-          client.connect(opts);
-
-          client.on("publish", function(packet) {
-            done(new Error("not expected"));
-          });
-
-          setTimeout(function() {
-            client.disconnect();
-          }, 50);
+        client.on("suback", function() {
+          cb(null, client);
         });
-      }
-    ], done);
+      });
+    }
+
+    function step2(subscriber, cb) {
+      buildAndConnect(function() {}, buildOpts(), function(client) {
+        cb(null, subscriber, client);
+      });
+    }
+
+    function step3(subscriber, publisher, cb) {
+      publisher.publish({
+        topic: "hello",
+        qos: 1,
+        payload: "world",
+        messageId: 42
+      });
+
+      publisher.on("puback", function(packet) {
+        publisher.disconnect();
+      });
+
+      subscriber.on("publish", function(packet) {
+        subscriber.puback({ messageId: packet.messageId });
+        subscriber.disconnect();
+        cb();
+      });
+    }
+
+    async.waterfall([
+      step1, step2, step3,
+      // two times!
+      step1, step2, step3
+    ], function(err) {
+
+      expect(err).to.be.falsy;
+
+      buildClient(done, function(client) {
+        client.connect(opts);
+
+        client.on("publish", function(packet) {
+          done(new Error("not expected"));
+        });
+
+        setTimeout(function() {
+          client.disconnect();
+        }, 100);
+      });
+    });
   });
 
   it("should support offline messaging", function(done) {
