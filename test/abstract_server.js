@@ -1616,7 +1616,7 @@ module.exports = function(moscaSettings, createConnection) {
     ], done);
   });
 
-  it.only("should remove already pubacked messages from the offline store", function(done) {
+  it("should remove already pubacked messages from the offline store", function(done) {
     var opts = buildOpts();
 
     opts.clientId = "mosca-unclean-clients-test";
