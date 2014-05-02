@@ -115,7 +115,7 @@ module.exports = function(create, buildOpts) {
             expect(results.length).to.be.eql(1);
             done();
           });
-      });
+        });
     });
 
     it("should overwrite a retained message", function(done) {

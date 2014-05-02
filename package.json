@@ -11,8 +11,8 @@
     "ci": "mocha --recursive --bail --watch test",
     "coverage": "rm -rf coverage; istanbul cover _mocha -- --recursive --reporter spec --bail",
     "publish-coverage": "(cat coverage/lcov.info | coveralls)",
-    "jshint-lib": "jshint lib/*.js",
-    "jshint-test": "jshint test/*.js",
+    "jshint-lib": "jshint lib",
+    "jshint-test": "jshint test",
     "start": "./bin/mosca -v | bunyan",
     "bundle": "browserify node_modules/mows/index.js -s mqtt > public/mqtt.js",
     "postinstall": "npm run bundle"
