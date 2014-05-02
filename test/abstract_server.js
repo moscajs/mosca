@@ -12,11 +12,12 @@ module.exports = function(moscaSettings, createConnection) {
     settings = moscaSettings();
     instance = new mosca.Server(settings, done);
     this.instance = instance;
+    this.settings = settings;
     secondInstance = null;
   });
 
   afterEach(function(done) {
-    var instances = [instance];
+    var instances = [this.instance];
 
     if (secondInstance) {
       instances.push(secondInstance);
@@ -182,216 +183,6 @@ module.exports = function(moscaSettings, createConnection) {
       });
 
       client.pingreq();
-    });
-  });
-
-  describe("timers", function() {
-    var clock;
-
-    beforeEach(function() {
-      clock = sinon.useFakeTimers();
-    });
-
-    afterEach(function() {
-      clock.restore();
-    });
-
-    function fastForward(increase, max) {
-      clock.tick(increase);
-      if (increase < max) {
-        setImmediate(fastForward.bind(null, increase, max - increase));
-      }
-    }
-
-    it("should close the connection after the keepalive interval", function(done) {
-      buildClient(done, function(client) {
-        var keepalive = 1;
-        var timer = Date.now();
-
-        var opts = buildOpts();
-        opts.keepalive = keepalive;
-
-        client.connect(opts);
-
-        client.stream.on("close", function() {
-          var interval = (Date.now() - timer) / 1000;
-          expect(interval).to.be.least(keepalive * 3 / 2);
-        });
-
-        fastForward(100, 4000);
-      });
-    });
-
-    it("should correctly renew the keepalive window after a pingreq", function(done) {
-      buildClient(done, function(client) {
-        var keepalive = 1;
-        var timer = Date.now();
-
-        var opts = buildOpts();
-        opts.keepalive = keepalive;
-
-        client.connect(opts);
-
-        client.stream.on("close", function() {
-          var interval = (Date.now() - timer) / 1000;
-          expect(interval).to.be.least(keepalive + keepalive / 2);
-        });
-
-        setTimeout(function() {
-          client.pingreq();
-        }, keepalive * 1000 / 2);
-
-        fastForward(100, 4000);
-      });
-    });
-
-    it("should correctly renew the keepalive window after a subscribe", function(done) {
-      buildClient(done, function(client) {
-        var keepalive = 1;
-        var timer = Date.now();
-
-        var opts = buildOpts();
-        opts.keepalive = keepalive;
-
-        var messageId = Math.floor(65535 * Math.random());
-        var subscriptions = [{
-            topic: "hello",
-            qos: 0
-          }
-        ];
-
-        client.connect(opts);
-
-        client.stream.on("close", function() {
-          var interval = (Date.now() - timer) / 1000;
-          expect(interval).to.be.least(keepalive + keepalive / 2);
-        });
-
-        setTimeout(function() {
-          client.subscribe({
-            subscriptions: subscriptions,
-            messageId: messageId
-          });
-        }, keepalive * 1000 / 2);
-
-        fastForward(100, 4000);
-      });
-    });
-
-    it("should correctly renew the keepalive window after a publish", function(done) {
-      buildClient(done, function(client) {
-        var keepalive = 1;
-        var timer = Date.now();
-
-        var opts = buildOpts();
-        opts.keepalive = keepalive;
-
-        var messageId = Math.floor(65535 * Math.random());
-
-        client.connect(opts);
-
-        client.stream.on("close", function() {
-          var interval = (Date.now() - timer) / 1000;
-          expect(interval).to.be.least(keepalive + keepalive / 2);
-        });
-
-        setTimeout(function() {
-          client.publish({
-            topic: "hello",
-            payload: "some data",
-            messageId: messageId
-          });
-        }, keepalive * 1000 / 2);
-
-        fastForward(100, 4000);
-      });
-    });
-
-    it("should correctly renew the keepalive window after a puback", function(done) {
-      buildClient(done, function(client) {
-        var keepalive = 1;
-
-        var opts = buildOpts();
-        opts.keepalive = keepalive;
-        var closed = false;
-        var timer;
-
-        var messageId = Math.floor(65535 * Math.random());
-        var subscriptions = [{
-            topic: "hello",
-            qos: 1
-          }
-        ];
-
-        client.connect(opts);
-
-        client.on("connack", function() {
-          client.subscribe({
-            subscriptions: subscriptions,
-            messageId: messageId
-          });
-        });
-
-        client.on("suback", function() {
-          timer = Date.now();
-          instance.publish({ topic: "hello", payload: "world" });
-        });
-
-        client.stream.on("close", function() {
-          closed = true;
-          var interval = (Date.now() - timer) / 1000;
-          expect(interval).to.be.least(keepalive + keepalive / 2);
-        });
-
-        client.on("publish", function(packet) {
-          if (closed) {
-            return;
-          }
-
-          setTimeout(function() {
-            client.puback({ messageId: packet.messageId });
-          }, keepalive * 1000 / 2);
-        });
-
-        fastForward(50, 3000);
-      });
-    });
-
-    it("should correctly renew the keepalive window after an unsubscribe", function(done) {
-      buildClient(done, function(client) {
-        var keepalive = 1;
-        var timer = Date.now();
-
-        var opts = buildOpts();
-        opts.keepalive = keepalive;
-
-        var messageId = Math.floor(65535 * Math.random());
-        var subscriptions = [{
-            topic: "hello",
-            qos: 0
-          }
-        ];
-
-        client.connect(opts);
-        client.subscribe({
-          subscriptions: subscriptions,
-          messageId: messageId
-        });
-
-        client.stream.on("close", function() {
-          var interval = (Date.now() - timer) / 1000;
-          expect(interval).to.be.least(keepalive + keepalive / 2);
-        });
-
-        setTimeout(function() {
-          client.unsubscribe({
-            unsubscriptions: ['hello'],
-            messageId: messageId
-          });
-        }, keepalive * 1000 / 2);
-
-        fastForward(100, keepalive * 2 * 1000);
-      });
     });
   });
 
@@ -1078,9 +869,10 @@ module.exports = function(moscaSettings, createConnection) {
   });
 
   it("should have the max inflight message limit configurable", function (done) {
+    var that = this;
     instance.close(function() {
       settings.maxInflightMessages = 512;
-      instance = new mosca.Server(settings, function() {
+      that.instance = new mosca.Server(settings, function() {
         maxInflightMessageTest(512, done);
       });
     });
@@ -1868,80 +1660,5 @@ module.exports = function(moscaSettings, createConnection) {
     newSettings.id = "4242";
     secondInstance = new mosca.Server(newSettings, done);
     expect(secondInstance.id).to.eql("4242");
-  });
-
-  describe("stats", function() {
-    var clock;
-    var stats;
-
-    beforeEach(function(done) {
-      clock = sinon.useFakeTimers();
-      instance.close(function() {
-        settings.stats = true;
-        instance = new mosca.Server(settings, done);
-        stats = instance.stats;
-      });
-    });
-
-    afterEach(function() {
-      clock.restore();
-    });
-
-    it("should maintain a counter of all connected clients", function(done) {
-      var d = donner(2, done);
-      buildAndConnect(d, function(client1) {
-        expect(stats.connectedClients).to.eql(1);
-        buildAndConnect(d, function(client2) {
-          // disconnect will happen after the next tick, has it's an I/O operation
-          client1.disconnect();
-          client2.disconnect();
-          expect(stats.connectedClients).to.eql(2);
-        });
-      });
-    });
-
-    it("should maintain a counter of all connected clients (bis)", function(done) {
-      var d = donner(2, done);
-      buildAndConnect(d, function(client1) {
-        buildAndConnect(d, function(client2) {
-          // disconnect will happen after the next tick, has it's an I/O operation
-          client2.disconnect();
-        });
-        instance.once("clientDisconnected", function() {
-          client1.disconnect();
-          expect(stats.connectedClients).to.eql(1);
-        });
-      });
-    });
-
-    it("should maintain a counter of all published messages", function(done) {
-      buildAndConnect(done, function(client1) {
-        expect(stats.publishedMessages).to.eql(0);
-
-        client1.publish({
-          topic: "hello",
-          payload: "some data",
-          messageId: 42,
-          qos: 1
-        });
-
-        client1.on("puback", function() {
-          client1.disconnect();
-          expect(stats.publishedMessages).to.eql(1);
-        });
-      });
-    });
-
-    it("should publish data each minute", function(done) {
-      buildAndConnect(done, function(client1) {
-        var topic = "$SYS/" + instance.id + "/clients/connected";
-        instance.ascoltatore.subscribe(topic, function callback(topic, value) {
-          expect(value).to.eql("1");
-          client1.disconnect();
-          instance.ascoltatore.unsubscribe(topic, callback);
-        });
-        clock.tick(60 * 1000);
-      });
-    });
   });
 };
