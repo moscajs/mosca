@@ -1,6 +1,12 @@
 History
 =======
 
+## 0.21.1
+
+* Added 'host' parameter to mosca.Server to specify the host
+  to listen to.
+* Added --host CLI option.
+
 ## 0.21.0
 
 * Fixed offline messaging
