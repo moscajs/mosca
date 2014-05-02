@@ -114,7 +114,7 @@ $ mosca --help
     --http-bundle                    serve a MQTT.js-based client at /mqtt.js on HTTP
     --https-bundle                   serve a MQTT.js-based client at /mqtt.js on HTTPS
     --only-http                      start only an mqtt-over-websocket server
-    --disable-stats                  disable the publishing of stats under /$SYS
+    --disable-stats                  disable the publishing of stats under $SYS
     --broker-id <id>                 the id of the broker in the $SYS/<id> namespace
     -c, --config <c>                 the config file to use (override every other option)
     -d, --db <path>                  the path were to store the database
