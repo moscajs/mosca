@@ -5,6 +5,10 @@ var mqtt = require("mows");
 
 module.exports = function(port, host, callback) {
 
+  // FIXME it should receive the right host from the
+  // caller
+  host = "wss://localhost";
+
   var secureOpts = {
     protocol: {
       ca: fs.readFileSync(SECURE_CERT),

@@ -34,9 +34,6 @@ var moscaSettings = function() {
   // the port as a parameter
   settings.port = settings.https.port;
 
-  // Required to set the correct paramaters for client
-  settings.host = "wss://localhost";
-
   return settings;
 };
 

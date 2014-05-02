@@ -569,4 +569,12 @@ describe("mosca.cli", function() {
       expect(server.id).to.equal("44cats");
     });
   });
+
+  it("should specify an interface to bind to", function(done) {
+    args.push("--host");
+    args.push("127.0.0.1");
+    startServer(done, function(server) {
+      expect(server.opts.host).to.eql("127.0.0.1");
+    });
+  });
 });

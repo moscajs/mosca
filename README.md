@@ -96,6 +96,7 @@ $ mosca --help
     -h, --help                       output usage information
     -V, --version                    output the version number
     -p, --port <n>                   the port to listen to
+    --host <IP>                      the host to listen to
     --parent-port <n>                the parent port to connect to
     --parent-host <s>                the parent host to connect to
     --parent-prefix <s>              the prefix to use in the parent broker
@@ -131,6 +132,7 @@ var mosca = require('mosca');
 
 module.exports = {
   port: 4883,
+  // host: "127.0.0.1", // specify an host to bind to a single interface
   id: 'mymosca', // used to publish in the $SYS/<id> topicspace
   stats: true, // publish stats in the $SYS/<id> topicspace
   logger: {
