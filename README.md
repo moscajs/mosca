@@ -1,44 +1,24 @@
 Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.png)](https://travis-ci.org/mcollina/mosca)&nbsp;&nbsp;[![Coverage Status](https://coveralls.io/repos/mcollina/mosca/badge.png)](https://coveralls.io/r/mcollina/mosca)
 ====================
 
+
+
+
 [![MOSCA](http://cloud.dynamatik.com/image/3I3I0q1M1x0E/mosca_small.png)](https://github.com/mcollina/mosca)
 
 [![NPM](https://nodei.co/npm/mosca.png)](https://nodei.co/npm/mosca/)
 
 [![NPM](https://nodei.co/npm-dl/mosca.png)](https://nodei.co/npm/mosca/)
 
-Mosca is a multi-transport [MQTT](http://mqtt.org/) broker
-supporting the following brokers/protocols.
+##About
+####Mosca is a node.js mqtt broker, which can be used:
 
-* [Redis](http://redis.io/), a key/value store created by [@antirez](https://github.com/antirez).
-* [MongoDB](http://www.mongodb.org/), a scalable, high-performance, document-oriented database.
-* [Mosquitto](http://mosquitto.org/) and all implementations of the [MQTT](http://mqtt.org/) protocol.
-* [RabbitMQ](http://www.rabbitmq.com/) and all implementations of the [AMQP](http://www.amqp.org/) protocol.
-* [ZeroMQ](http://www.zeromq.org/) to use Mosca in a P2P fashion.
-
-See the slides of my talk ["MQTT and Node.js - Messaging in the Internet
-of Things"](http://mcollina.github.io/mqtt_and_nodejs/).
-
-You can find a test version of mosca at test.mosca.io.
-You can use ws://test.mosca.io/ to connect to the WebSocket tunnel.
-This is powered by the [docker image](#docker-support).
-
-Find out more about Mosca reading the
-[dox generated documentation](http://mcollina.github.io/mosca/docs).
-
-If you like Mosca, consider supporting the project by donating via
-[Gittip](https://www.gittip.com/mcollina/), or hire [me](http://twitter.com/matteocollina)
-to get you started and solve any issue you might find.
-Also, check out our [Usage in the
-Wild](https://github.com/mcollina/mosca/wiki/Usage-in-the-Wild) wiki
-page! Feel free to add yourself! :)
-
-Mosca can be used:
-* <a href="#standalone">Standalone</a>
-* <a href="#embedded">Embedded in another Node.js application</a>
+* <a href="https://github.com/mcollina/mosca/wiki/Mosca-as-a-standalone-service.">Standalone</a>
+* <a href="https://github.com/mcollina/mosca/wiki/Mosca-basic-usage">Embedded in another Node.js application</a>
 
 Mosca officially support only node v0.10 but v0.11.x should work too.
 Node v0.8 is not supported.
+
 
 ## Features
 
@@ -49,543 +29,35 @@ Node v0.8 is not supported.
 * Usable inside ANY other node.js app.
 
 <a name="standalone"></a>
-## Using Mosca Standalone
 
-### Install
 
-Install the library using [npm](http://npmjs.org/).
+##How to's/Tutorials 
+All to be found [on our repository wiki section.](https://github.com/mcollina/mosca/wiki)
 
-```
-$ npm install mosca bunyan -g
-```
+OR
 
-Install the library using git.
 
-```
-$ git clone git://github.com/mcollina/mosca.git
-$ cd mosca
-$ npm install
-```
+or read the [dox generated documentation](http://mcollina.github.io/mosca/docs).
 
-### Usage
 
-Mosca offers an executable for running it standalone.
-Run it and connect your preferred MQTT client.
+###Learn more
+See the slides of my talk ["MQTT and Node.js - Messaging in the Internet
+of Things"](http://mcollina.github.io/mqtt_and_nodejs/).
 
-```
-$ mosca -v | bunyan
-```
+You can find a test version of mosca at test.mosca.io.
+You can use ws://test.mosca.io/ to connect to the WebSocket tunnel.
+This is powered by the [docker image](#docker-support).
 
-### Configuration
 
-Here you can see the options accepted by the command line tool:
+If you like Mosca, consider supporting the project by donating via
+[Gittip](https://www.gittip.com/mcollina/), or hire [me](http://twitter.com/matteocollina)
+to get you started and solve any issue you might find.
+Also, check out our [Usage in the
+Wild](https://github.com/mcollina/mosca/wiki/Usage-in-the-Wild) wiki
+page! Feel free to add yourself! :)
 
-```
-$ mosca --help
 
-  Usage: mosca [options] [command]
 
-  Commands:
-
-    adduser <user> <pass>  Add a user to the given credentials file
-    rmuser <user>          Removes a user from the given credentials file
-    start                  start the server (optional)
-
-  Options:
-
-    -h, --help                       output usage information
-    -V, --version                    output the version number
-    -p, --port <n>                   the port to listen to
-    --host <IP>                      the host to listen to
-    --parent-port <n>                the parent port to connect to
-    --parent-host <s>                the parent host to connect to
-    --parent-prefix <s>              the prefix to use in the parent broker
-    --credentials <file>             the file containing the credentials
-    --authorize-publish <pattern>    the pattern for publishing to topics for the added user
-    --authorize-subscribe <pattern>  the pattern for subscribing to topics for the added user
-    --key <file>                     the server's private key
-    --cert <file>                    the certificate issued to the server
-    --secure-port <n>                the TLS port to listen to
-    --non-secure                     start both a secure and non-secure server
-    --http-port <n>                  start an mqtt-over-websocket server on the specified port
-    --https-port <n>                 start an mqtt-over-secure-websocket server on the specified port
-    --http-static <directory>        serve some static files alongside the websocket client
-    --https-static <directory>       serve some static files alongside the secure websocket client
-    --http-bundle                    serve a MQTT.js-based client at /mqtt.js on HTTP
-    --https-bundle                   serve a MQTT.js-based client at /mqtt.js on HTTPS
-    --only-http                      start only an mqtt-over-websocket server
-    --disable-stats                  disable the publishing of stats under $SYS
-    --broker-id <id>                 the id of the broker in the $SYS/<id> namespace
-    -c, --config <c>                 the config file to use (override every other option)
-    -d, --db <path>                  the path were to store the database
-    -v, --verbose                    set the bunyan log to INFO
-    --very-verbose                   set the bunyan log to DEBUG
-```
-
-
-To fully use mosca you need to define a configuration file where the communication
-broker is defined. Here follows an example using Redis.
-
-A configuration file is structured in the following way:
-```javascript
-var mosca = require('mosca');
-
-module.exports = {
-  port: 4883,
-  // host: "127.0.0.1", // specify an host to bind to a single interface
-  id: 'mymosca', // used to publish in the $SYS/<id> topicspace
-  stats: true, // publish stats in the $SYS/<id> topicspace
-  logger: {
-    level: 'info'
-  },
-  backend: {
-    type: 'redis',
-    port: 6379,
-    host: 'localhost',
-    return_buffers: true
-  },
-  persistence: {
-    factory: mosca.persistence.Redis,
-    port: 6379,
-    host: 'localhost'
-  },
-  secure: {
-    keyPath: "/path/to/key",
-    certPath: "/path/to/cert"
-  }
-};
-```
-
-Ad Mosca is based on Ascoltatori, [here](http://mcollina.github.com/ascoltatori#brokers) you can
-find configuration examples covering Redis, MongoDB, AMQP, ZeroMQ and and MQTT brokers (e.g Mosquitto).
-
-
-### Authorization
-
-Mosca supports user authentication through the use of a specific json file.
-In order to create one run the following command.
-
-```javascript
-// add a user
-$ mosca adduser <user> <pass> --credentials ./credentials.json
-
-// add a user specifying the authorized topics
-$ mosca adduser myuser mypass --credentials ./credentials.json \
-  --authorize-publish 'hello/*' --authorize-subscribe 'hello/*'
-
-// remove a user
-$ mosca rmuser myuser --credentials ./credentials.json
-
-// start Mosca with a specific set of credentials:
-$ mosca --credentials ./credentials.json
-```
-
-The patterns are checked and validated using [Minimatch](https://github.com/isaacs/minimatch).
-The credentials file can be automatically reladed by Mosca if it receives a `SIGHUP`.
-
-
-### Persistence
-
-The MQTT specification requires a persistent storage for offline QoS 1
-subscription that has been done by an unclean client. Mosca offers several
-persitance options.
-
-* [Redis](http://mcollina.github.com/mosca/docs/lib/persistence/redis.js.html)
-* [MongoDB](http://mcollina.github.com/mosca/docs/lib/persistence/mongo.js.html)
-* [LevelUp](http://mcollina.github.com/mosca/docs/lib/persistence/levelup.js.html)
-* [Memory](http://mcollina.github.com/mosca/docs/lib/persistence/memory.js.html)
-
-All of them can be configured from the configuration file, under the `persistence` key.
-The only exception is LevelUp, which can be specified by using the `--db` option from
-the command line.
-
-### MQTT over Websocket
-
-Since v0.13.0 Mosca support MQTT over Websocket through the
-[mows](http://npm.im/mows) package.
-
-It is very easy to use, just prepare an index.html file:
-```
-<html>
-  <head>
-    <script src="/mqtt.js"></script>
-  </head>
-  <body>
-    <script>
-      var client = mqtt.createClient();
-
-      client.subscribe("mqtt/demo");
-
-      client.on("message", function(topic, payload) {
-        alert([topic, payload].join(": "));
-        client.end();
-      });
-
-      client.publish("mqtt/demo", "hello world!");
-    </script>
-  </body>
-</html>
-```
-
-Then serve it with Mosca:
-```
-$ mosca --http-port 3000 --http-static . --http-bundle \
-        --very-verbose | bunyan
-```
-
-And point your browser to http://localhost:3000.
-
-<a name="embedded"></a>
-## Embedding Mosca
-
-Mosca can be used into any Node.js app. Here an example that uses MongoDB as broker.
-
-```javascript
-var mosca = require('mosca')
-
-var ascoltatore = {
-  type: 'mongo',
-  url: 'mongodb://localhost:27017/mqtt',
-  pubsubCollection: 'ascoltatori',
-  mongo: {}
-};
-
-var settings = {
-  port: 1883,
-  backend: ascoltatore
-};
-
-var server = new mosca.Server(settings);
-server.on('ready', setup);
-
-// fired when the mqtt server is ready
-function setup() {
-  console.log('Mosca server is up and running')
-}
-
-// fired when a message is published
-server.on('published', function(packet, client) {
-  console.log('Published', packet.payload);
-});
-```
-
-### mosca.Server#publish()
-
-The `publish()` function allows to programatically publish a value to
-MQTT clients with full support of all distinctive MQTT features:
-offline, quality of server, and retained messages.
-
-```javascript
-var message = {
-  topic: '/hello/world',
-  payload: 'abcde', // or a Buffer
-  qos: 0, // 0, 1, or 2
-  retain: false // or true
-};
-
-server.publish(message, function() {
-  console.log('done!');
-});
-```
-
-### How Mosca works
-
-Mosca is based on [Ascoltatori](https://github.com/mcollina/ascoltatori), a simple
-publish/subscribe library supporting different brokers/protocols such as Redis,
-MongoDB, RabbitMQ, Mosquitto, and ZeroMQ. This means that you can use any of the
-listed solutions to let your MQTT client communicate with any service. Note that
-Mosca and Ascoltatore must share the same underlying broker.
-
-#### MQTT Client Publish Flow
-
-This is a Node.js MQTT client publishing on a topic.
-
-```javascript
-var mqtt = require('mqtt')
-  , host = 'localhost'
-  , port = '1883';
-
-var settings = {
-  keepalive: 1000,
-  protocolId: 'MQIsdp',
-  protocolVersion: 3,
-  clientId: 'client-1'
-}
-
-// client connection
-var client = mqtt.createClient(port, host, settings);
-
-// client publishing a sample JSON
-client.publish('hello/you', '{ "hello": "you" }');
-```
-
-This message will be received from Mosca and any Ascoltatore who has subscribed
-to this topic will automatically receive the message.
-
-```javascript
-var ascoltatori = require('ascoltatori');
-var settings = {
-  type: 'mongo',
-  uri: 'mongodb://localhost:27017/',
-  db: 'mqtt',
-  pubsubCollection: 'ascoltatori',
-  mongo: {}
-};
-
-ascoltatori.build(settings, function (ascoltatore) {
-  ascoltatore.subscribe('hello/*', function() {
-    console.log('Received message', arguments);
-  });
-});
-```
-
-#### MQTT Client Subscribe Flow
-
-With the same logics, a client subscribing to Mosca for a specific topic will
-get notified everytime an element will be published in Ascoltatori. This is a
-Node.js MQTT client subscribing a topic.
-
-```javascript
-var mqtt = require('mqtt')
-  , host = 'localhost'
-  , port = '1883';
-
-var settings = {
-  keepalive: 1000,
-  protocolId: 'MQIsdp',
-  protocolVersion: 3,
-  clientId: 'client-1'
-}
-
-// client connection
-var client = mqtt.createClient(port, host, settings);
-
-// client subscription
-client.subscribe('hello/me')
-client.on('message', function(topic, message) {
-  console.log('received', topic, message);
-});
-```
-
-When an Ascoltatore publishes a message to the topic, Mosca forwards it to the
-client who subscribed it.
-
-```javascript
-var ascoltatori = require('ascoltatori');
-var settings = {
-  type: 'mongo',
-  uri: 'mongodb://localhost:27017/',
-  db: 'mqtt',
-  pubsubCollection: 'ascoltatori',
-  mongo: {}
-};
-
-ascoltatori.build(settings, function (_ascoltatore) {
-  ascoltatore.publish('hello/me', '{ "hello": "you" }');
-});
-```
-
-
-### Authorizations
-
-With Mosca you can authorize a client defining three methods.
-
-* `#authenticate`
-* `#authorizePublish`
-* `#authorizeSubscribe`
-
-Those methods can be used to restric the accessible topics for a specific clients.
-Follows an example where a client send a username and a password during the connection
-phase and where the username will be saved and used later on to verify if a specific
-client can publish or subscribe for the specific user.
-
-```javascript
-// Accepts the connection if the username and password are valid
-var authenticate = function(client, username, password, callback) {
-  var authorized = (username === 'alice' && password === 'secret');
-  if authorized client.user = username;
-  callback(null, authorized);
-}
-
-// In this case the client authorized as alice can publish to /users/alice taking
-// the username from the topic and verifing it is the same of the authorized user
-var authorizePublish = function(client, topic, payload, callback) {
-  callback(null, client.user == topic.split('/')[1]);
-}
-
-// In this case the client authorized as alice can subscribe to /users/alice taking
-// the username from the topic and verifing it is the same of the authorized user
-var authorizeSubscribe = function(client, topic, callback) {
-  callback(null, client.user == topic.split('/')[1]);
-}
-```
-
-With this logic someone that is authorized as alice will not be able to publish to
-the topic `users/bob`. Now that we have the authorizing methods we can configure mosca.
-
-```javascript
-var server = new mosca.Server(settings);
-server.on('ready', setup);
-
-function setup() {
-  server.authenticate = authenticate;
-  server.authorizePublish = authorizePublish;
-  server.authorizeSubscribe = authorizeSubscribe;
-}
-```
-
-### Executing a callback for every published message
-
-Mosca supports two ways to execute a function after the publish of every
-message: the `'published'` event or the
-[`mosca.Server#published`](http://mcollina.github.io/mosca/docs/lib/server.js.html#published)
-function. The first is a standard node-style event, while the second is
-a single callback, to use where respecting the QoS of a callback is
-important.
-
-### Persistence
-
-The persistence is automatically configured when using the
-`mosca.Server` constructor, but it needs to be explicitly wired up.
-Here is the list of all supported database:
-
-* [Redis](http://mcollina.github.com/mosca/docs/lib/persistence/redis.js.html)
-* [MongoDB](http://mcollina.github.com/mosca/docs/lib/persistence/mongo.js.html)
-* [LevelUp](http://mcollina.github.com/mosca/docs/lib/persistence/levelup.js.html)
-* [Memory](http://mcollina.github.com/mosca/docs/lib/persistence/memory.js.html)
-
-If you would like to see one more database, feel free to submit a
-pull-request.
-
-The wiring is easy:
-```javascript
-
-var mosca = require("mosca");
-var server = new mosca.Server();
-var db = new mosca.persistence.LevelUp({ path: "/path/to/the/db" });
-db.wire(server);
-```
-
-### Encryption Support
-
-Mosca supports encrypted communication via node's TLS implementation:
-http://nodejs.org/api/tls.html#tls_tls_ssl.
-
-```javascript
-var mosca = require('mosca')
-
-var SECURE_KEY = __dirname + '/../../test/secure/tls-key.pem';
-var SECURE_CERT = __dirname + '/../../test/secure/tls-cert.pem';
-
-var settings = {
-  port: 8443,
-  logger: {
-    name: "secureExample",
-    level: 40,
-  },
-  secure : { 
-    keyPath: SECURE_KEY,
-    certPath: SECURE_CERT,
-  }
-};
-var server = new mosca.Server(settings);
-server.on('ready', setup);
-
-// fired when the mqtt server is ready
-function setup() {
-  console.log('Mosca server is up and running')
-}
-```
-
-### Websocket
-
-It is possible to augment any node application with MQTT-over-websocket
-capabilities, just call the `Server#attachHttpServer` method,
-like so:
-
-```js
-var http     = require('http)
-  , httpServ = http.createServer()
-  , mosca    = require('mosca')
-  , mqttServ = new mosca.Server();
-
-mqttServ.attachHttpServer(httpServ);
-
-httpServer.listen(3000);
-```
-
-It is also possible to server the browserified bundle for the mqtt
-client:
-
-```
-var http     = require('http')
-  , express  = require('express')
-  , app      = express();
-  , httpServ = http.createServer(app)
-  , mosca    = require('mosca')
-  , mqttServ = new mosca.Server();
-
-mqttServ.attachHttpServer(httpServ);
-mqttServ.serveBundle(app);
-
-httpServer.listen(3000);
-```
-
-## Docker Support
-
-In order to use the prebuilt [Docker](http://docker.io) container
-published on the Docker Index, just run:
-
-```
-$ docker run -p 1883:1883 -p 80:80 -v /var/db/mosca:/db matteocollina/mosca
-````
-
-The command line above will persist your data in the `/var/db/mosca`
-directory of the host. You should create that folder.
-
-### Upstart
-
-You can put the following upstart script in `/etc/init/mosca.conf`
-to automatically start mosca at boot:
-
-```
-description "Mosca container"
-author "Matteo Collina"
-start on filesystem and started docker
-stop on runlevel [!2345]
-respawn
-script
-  # Wait for docker to finish starting up first.
-  FILE=/var/run/docker.sock
-  while [ ! -e $FILE ] ; do
-    inotifywait -t 2 -e create $(dirname $FILE)
-  done
-  /usr/bin/docker run -d -p 80:80 -p 1883:1883 -v /var/db/mosca/:/db matteocollina/mosca
-end script
-```
-
-### Build
-
-If you want to build your Mosca container, just clone this repository
-and run `$ docker build .`. This will create a container that run Mosca
-with a levelup-based database.
-
-In order to build the container, you should:
-
-```
-$ git clone https://github.com/mcollina/mosca.git
-$ cd mosca
-$ docker build -t mosca:dev .
-```
-
-In order to run the Mosca container you should:
-
-```
-$ docker run -p 1883:1883 -p 80:80 -v /var/db/mosca:/db mosca:dev
-```
-
-The command line above will persist your data in the `/var/db/mosca`
-directory of the host.
 
 ## Feedback
 
@@ -621,10 +93,13 @@ href="https://github.com/chriswiggins">GitHub/chriswiggins</a></td>
 href="https://github.com/samirnaik">GitHub/samirnaik</a></td>
 <tr><th align="left">Leo Steiner</th><td><a
 href="https://github.com/ldstein">GitHub/ldstein</a></td>
+<tr><th align="left">John Kokkinidis</th><td><a
+href="https://github.com/SudoPlz">GitHub/SudoPlz</a></td>
 </tbody></table>
 
 ## Logo
 [Sam Beck](http://two-thirty.tumblr.com)
+
 
 ## LICENSE - "MIT License"
 
