@@ -108,6 +108,7 @@ page! Feel free to add yourself! :)
 
 Use the [issue tracker](http://github.com/mcollina/mosca/issues) for bugs.
 [Tweet](http://twitter.com/matteocollina) us for any idea that can improve the project.
+Chat with us on [Mosca's room](https://gitter.im/mcollina/mosca) on Gitter.
 
 
 ## Links
