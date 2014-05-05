@@ -1,9 +1,6 @@
 Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.png)](https://travis-ci.org/mcollina/mosca)&nbsp;&nbsp;[![Coverage Status](https://coveralls.io/repos/mcollina/mosca/badge.png)](https://coveralls.io/r/mcollina/mosca)
 ====================
 
-
-
-
 [![MOSCA](http://cloud.dynamatik.com/image/3I3I0q1M1x0E/mosca_small.png)](https://github.com/mcollina/mosca)
 
 [![NPM](https://nodei.co/npm/mosca.png)](https://nodei.co/npm/mosca/)
@@ -16,10 +13,6 @@ Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.png
 * <a href="https://github.com/mcollina/mosca/wiki/Mosca-as-a-standalone-service.">Standalone</a>
 * <a href="https://github.com/mcollina/mosca/wiki/Mosca-basic-usage">Embedded in another Node.js application</a>
 
-Mosca officially support only node v0.10 but v0.11.x should work too.
-Node v0.8 is not supported.
-
-
 ## Features
 
 * MQTT 3.1 compliant.
@@ -27,8 +20,23 @@ Node v0.8 is not supported.
 * Various storage options for QoS 1 offline packets, and subscriptions.
 * As fast as it is possible.
 * Usable inside ANY other node.js app.
+* Supports node v0.10.
 
 ##Quickstart
+
+### Standalone
+
+```bash
+npm install mosca bunyan -g
+mosca -v | bunyan
+```
+
+### Embedded
+
+```bash
+npm install mosca --save
+```
+
 Show me some code:
 
 ```javascript
@@ -36,7 +44,7 @@ var mosca = require('mosca')
 
 var ascoltatore = {
   //using ascoltatore
-  type: 'mongo',        
+  type: 'mongo',
   url: 'mongodb://localhost:27017/mqtt',
   pubsubCollection: 'ascoltatori',
   mongo: {}
@@ -47,9 +55,8 @@ var settings = {
   backend: ascoltatore
 };
 
-
 server.on('clientConnected', function(client) {
-    console.log('client connected', client.id);     
+    console.log('client connected', client.id);
 });
 
 // fired when a message is received
@@ -66,22 +73,16 @@ function setup() {
 }
 ```
 
-
-
 All the info to get you started is gathered [in this wiki page](https://github.com/mcollina/mosca/wiki/Mosca-basic-usage)
 
 Also there is an example using [Redis](https://github.com/mcollina/mosca/wiki/Mosca-basic-usage#in-this-example-we-will-be-using-redis)
 
-
-
-
-
-##How to's/Tutorials 
+##How to's/Tutorials
 All to be found [on our repository wiki section.](https://github.com/mcollina/mosca/wiki)
 
 OR
 
-or read the [dox generated documentation](http://mcollina.github.io/mosca/docs).
+read the [dox generated documentation](http://mcollina.github.io/mosca/docs).
 
 
 ###Learn more
