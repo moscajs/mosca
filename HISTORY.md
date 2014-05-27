@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.21.2
+
+* Upgrade to MQTT.js 0.3.9.
+* Fix authorization with binary credentials.
+
 ## 0.21.1
 
 * Added 'host' parameter to mosca.Server to specify the host
