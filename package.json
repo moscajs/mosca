@@ -64,7 +64,7 @@
     "mongo-clean": "0.0.1"
   },
   "dependencies": {
-    "mqtt": "~0.3.8",
+    "mqtt": "~0.3.9",
     "async": "~0.7.0",
     "ascoltatori": "~0.15.0",
     "commander": "~2.2.0",

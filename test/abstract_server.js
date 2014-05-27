@@ -976,8 +976,8 @@ module.exports = function(moscaSettings, createConnection) {
 
   it("should support authentication (success)", function(done) {
     instance.authenticate = function(client, username, password, callback) {
-      expect(username).to.be.eql("matteo");
-      expect(password).to.be.eql("collina");
+      expect(username.toString()).to.be.eql("matteo");
+      expect(password.toString()).to.be.eql("collina");
       callback(null, true);
     };
 
@@ -998,8 +998,8 @@ module.exports = function(moscaSettings, createConnection) {
 
   it("should support authentication (failure)", function(done) {
     instance.authenticate = function(client, username, password, callback) {
-      expect(username).to.be.eql("matteo");
-      expect(password).to.be.eql("collina");
+      expect(username.toString()).to.be.eql("matteo");
+      expect(password.toString()).to.be.eql("collina");
       callback(null, false);
     };
 
