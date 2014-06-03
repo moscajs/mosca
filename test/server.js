@@ -51,6 +51,10 @@ describe("mosca.Server", function() {
     });
   }
 
+  it("should close twice", function(done) {
+    this.instance.close(done);
+  });
+
   it("should pass mosca options to backend when publishing", function(done) {
     var instance = this.instance;
     buildClient(instance, done, function(client) {
@@ -347,14 +351,16 @@ describe("mosca.Server", function() {
       clock = sinon.useFakeTimers();
       var that = this;
       this.instance.close(function() {
+        that.settings = moscaSettings();
         that.settings.stats = true;
         that.instance = new mosca.Server(that.settings, done);
         stats = that.instance.stats;
       });
     });
 
-    afterEach(function() {
+    afterEach(function(done) {
       clock.restore();
+      this.instance.close(done)
     });
 
     it("should maintain a counter of all connected clients", function(done) {

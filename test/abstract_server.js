@@ -578,16 +578,11 @@ module.exports = function(moscaSettings, createConnection) {
       },
 
       function(cb) {
-        server.on("closed", done);
-        cb();
-      },
-
-      function(cb) {
-        server.close(cb);
+        server.on("closed", cb);
+        server.close();
       }
-    ]);
+    ], done);
   });
-
 
   it("should support subscribing to # wildcard", function(done) {
     var d = donner(2, done);
