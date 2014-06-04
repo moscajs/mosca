@@ -17,4 +17,4 @@ RUN cd /src; rm -rf node_modules/; npm install --unsafe-perm
 EXPOSE 80
 EXPOSE 1883
 
-ENTRYPOINT ["/usr/bin/node", "/src/bin/mosca", "-d", "/db", "--http-port", "80", "--http-bundle", "-v"]
+ENTRYPOINT ["/src/bin/mosca", "-d", "/db", "--http-port", "80", "--http-bundle", "-v"]
