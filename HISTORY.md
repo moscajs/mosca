@@ -3,6 +3,12 @@ History
 
 ## 0.21.2
 
+* Fixed crash when started without a persistance.
+* Emit will message if the keepalive timer fails.
+* Wrapping mows for browserify when used in embedded mode.
+
+## 0.21.2
+
 * Upgrade to MQTT.js 0.3.9.
 * Fix authorization with binary credentials.
 
