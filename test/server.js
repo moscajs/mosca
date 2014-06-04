@@ -360,7 +360,7 @@ describe("mosca.Server", function() {
 
     afterEach(function(done) {
       clock.restore();
-      this.instance.close(done)
+      this.instance.close(done);
     });
 
     it("should maintain a counter of all connected clients", function(done) {
