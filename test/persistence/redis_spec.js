@@ -6,6 +6,8 @@ var redis = require("redis");
 
 describe("mosca.persistence.Redis", function() {
 
+  this.timeout(2000);
+
   var opts = {
     ttl: {
       checkFrequency: 1000,
@@ -16,15 +18,13 @@ describe("mosca.persistence.Redis", function() {
 
   abstract(Redis, opts);
 
-  afterEach(function(cb) {
-    var flush = function() {
+  afterEach(function afterEachRedis(cb) {
+    function flush() {
       var client = redis.createClient();
-      client.on("ready", function() {
-        client.flushdb(function() {
-          client.quit(cb);
-        });
+      client.flushdb(function() {
+        client.quit(cb);
       });
-    };
+    }
 
     if (this.secondInstance) {
       this.secondInstance.close(flush);

@@ -7,6 +7,8 @@ var async = require("async");
 
 describe("mosca.persistence.LevelUp", function() {
 
+  this.timeout(2000);
+
   var opts = { 
     ttl: {
       checkFrequency: 250,

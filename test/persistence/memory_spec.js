@@ -5,6 +5,8 @@ var Memory = require("../../").persistence.Memory;
 
 describe("mosca.persistence.Memory", function() {
 
+  this.timeout(2000);
+
   var opts = { 
     ttl: {
       checkFrequency: 250,

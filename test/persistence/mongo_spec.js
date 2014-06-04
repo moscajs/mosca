@@ -8,6 +8,8 @@ var async = require("async");
 
 describe("mosca.persistence.Mongo", function() {
 
+  this.timeout(2000);
+
   var opts = {
     url: "mongodb://localhost:27017/moscatests",
     autoClose: false,

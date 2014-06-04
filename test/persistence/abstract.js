@@ -32,12 +32,12 @@ module.exports = function(create, buildOpts) {
     });
   });
 
-  afterEach(function(done) {
+  afterEach(function afterEachPersistenceAbstract(done) {
     var that = this;
-    setTimeout(function() {
+    setImmediate(function() {
       that.instance.close(done);
       that.instance = null;
-    }, 1);
+    });
   });
 
   describe("retained messages", function() {
