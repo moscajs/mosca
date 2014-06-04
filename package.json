@@ -14,7 +14,7 @@
     "jshint-lib": "jshint lib",
     "jshint-test": "jshint test",
     "start": "./bin/mosca -v | bunyan",
-    "bundle": "browserify node_modules/mows/index.js -s mqtt > public/mqtt.js",
+    "bundle": "browserify lib/webClient.js -s mqtt > public/mqtt.js",
     "postinstall": "npm run bundle"
   },
   "pre-commit": [
