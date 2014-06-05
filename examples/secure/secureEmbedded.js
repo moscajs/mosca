@@ -4,12 +4,12 @@ var SECURE_KEY = __dirname + '/../../test/secure/tls-key.pem';
 var SECURE_CERT = __dirname + '/../../test/secure/tls-cert.pem';
 
 var settings = {
-  port: 8443,
   logger: {
     name: "secureExample",
     level: 40,
   },
   secure : { 
+    port: 8443,
     keyPath: SECURE_KEY,
     certPath: SECURE_CERT,
   }
