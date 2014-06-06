@@ -538,7 +538,7 @@ module.exports = function(moscaSettings, createConnection) {
   it("should emit an event when a client is disconnected", function(done) {
     var client = createConnection(settings.port, settings.host);
 
-    instance.once('clientDisconnected', function(serverClient) {
+    instance.on('clientDisconnected', function(serverClient) {
       expect(serverClient).not.to.be.equal(undefined);
       done();
     });
@@ -552,10 +552,28 @@ module.exports = function(moscaSettings, createConnection) {
     client.connect(buildOpts());
   });
 
+  it("should emit only once clientDisconnected event per client", function(done) {
+    var client = createConnection(settings.port, settings.host);
+
+    instance.on('clientDisconnected', function(serverClient) {
+      done();
+    });
+
+    client.on('error', done);
+
+    client.on('connack', function() {
+      client.disconnect();
+      client.disconnect();
+      client.stream.end();
+    });
+
+    client.connect(buildOpts());
+  });
+
   it("should emit an event when a client is disconnected without a disconnect", function(done) {
     var client = createConnection(settings.port, settings.host);
 
-    instance.once('clientDisconnected', function(serverClient) {
+    instance.on('clientDisconnected', function(serverClient) {
       expect(serverClient).not.to.be.equal(undefined);
       done();
     });

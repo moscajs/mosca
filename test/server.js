@@ -388,6 +388,10 @@ describe("mosca.Server", function() {
         instance.once("clientDisconnected", function() {
           client1.disconnect();
           expect(stats.connectedClients).to.eql(1);
+
+          instance.once("clientDisconnected", function() {
+            expect(stats.connectedClients).to.eql(0);
+          });
         });
       });
     });
