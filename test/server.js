@@ -2,6 +2,7 @@ var mqtt = require("mqtt");
 var async = require("async");
 var ascoltatori = require("ascoltatori");
 var abstractServerTests = require("./abstract_server");
+var net = require("net");
 
 var moscaSettings = function() {
   return {
@@ -53,6 +54,17 @@ describe("mosca.Server", function() {
 
   it("should close twice", function(done) {
     this.instance.close(done);
+  });
+
+  it("should not emit 'clientDisconnected' for a non-mqtt client", function(done) {
+    var stream = net.connect({ port: this.settings.port });
+
+    this.instance.on("clientDisconnected", done);
+
+    stream.on("connect", function() {
+      stream.end();
+      done();
+    });
   });
 
   it("should pass mosca options to backend when publishing", function(done) {
