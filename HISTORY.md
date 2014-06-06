@@ -1,7 +1,12 @@
 History
 =======
 
-## 0.21.2
+## 0.21.4
+
+* Fixed wrong count of connected clients
+  [#135](https://github.com/mcollina/mosca/issues/135).
+
+## 0.21.3
 
 * Fixed crash when started without a persistance.
 * Emit will message if the keepalive timer fails.
@@ -21,7 +26,7 @@ History
 ## 0.21.0
 
 * Fixed offline messaging
-  [#30](https://github.com/mcollina/mosca/pull/130).
+  [#130](https://github.com/mcollina/mosca/pull/130).
 * Bumped Ascoltatori to 0.15.0.
 
 ## 0.20.3
