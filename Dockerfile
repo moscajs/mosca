@@ -1,11 +1,12 @@
 # Mosca
 #
-# VERSION 0.0.3
+# VERSION 0.0.4
 
 FROM dockerfile/nodejs
 MAINTAINER Matteo Collina <hello@matteocollina.com>
 
 # install tools for building binary addons
+RUN apt-get -y update
 RUN apt-get -y install build-essential libssl-dev curl python
 
 RUN mkdir /db
