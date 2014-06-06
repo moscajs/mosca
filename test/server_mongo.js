@@ -6,6 +6,8 @@ var MongoClient = require('mongodb').MongoClient;
 var clean = require("mongo-clean");
 
 describe("mosca.Server with mongo persistence", function() {
+  this.timeout(10000);
+
   var mongoConnection;
   var mongoUrl = "mongodb://localhost:27017/mosca";
 
