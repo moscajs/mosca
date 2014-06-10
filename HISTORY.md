@@ -1,6 +1,13 @@
 History
 =======
 
+## 0.21.5
+
+* `authorizePublish` can return a Buffer to change the payload
+  [#146](https://github.com/mcollina/mosca/issues/146).
+* Handled authentication errors
+  [#143](https://github.com/mcollina/mosca/issues/143).
+
 ## 0.21.4
 
 * Fixed wrong count of connected clients
