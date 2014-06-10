@@ -1026,7 +1026,25 @@ module.exports = function(moscaSettings, createConnection) {
 
       client.on('connack', function(packet) {
         expect(packet.returnCode).to.eql(5);
-        client.disconnect();
+      });
+    });
+  });
+
+  it("should support authentication (error)", function(done) {
+    instance.authenticate = function(client, username, password, callback) {
+      callback(new Error("auth error"));
+    };
+
+    buildClient(done, function(client) {
+
+      var options = buildOpts();
+      options.username = "matteo";
+      options.password = "collina";
+
+      client.connect(options);
+
+      client.on('connack', function(packet) {
+        expect(packet.returnCode).to.eql(4);
       });
     });
   });
