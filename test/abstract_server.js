@@ -1075,6 +1075,33 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
+  it("should support overriding the payload during authorization", function(done) {
+    instance.authorizePublish = function(client, topic, payload, callback) {
+      callback(null, new Buffer("rewritten"));
+    };
+
+    instance.on("published", function(packet) {
+      expect(packet.payload.toString()).to.be.equal("rewritten");
+    });
+
+    buildAndConnect(done, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+
+      client.on("puback", function(packet) {
+        expect(packet).to.have.property("messageId", messageId);
+        client.disconnect();
+      });
+
+      client.publish({
+        topic: "hello",
+        qos: 1,
+        payload: "world",
+        messageId: messageId
+      });
+    });
+  });
+
   it("should share the authenticated client during the publish authorization", function(done) {
     instance.authenticate = function(client, username, password, callback) {
       client.shared = 'message';
