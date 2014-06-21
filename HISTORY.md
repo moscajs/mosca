@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.21.6
+
+* Bumped MQTT.js dependency to v0.3.10.
+* Bumped MOWS dependency to v0.0.6.
+
 ## 0.21.5
 
 * `authorizePublish` can return a Buffer to change the payload
