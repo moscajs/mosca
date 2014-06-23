@@ -1,6 +1,14 @@
 History
 =======
 
+## 0.21.7
+
+* Added the `db` option to Redis persistance
+  [#150](https://github.com/mcollina/mosca/issues/150).
+* Fixed Redis persistence for offline messages, previously
+  only the latest offline message was delivered
+  [#151](https://github.com/mcollina/mosca/issues/151).
+
 ## 0.21.6
 
 * Bumped MQTT.js dependency to v0.3.10.
