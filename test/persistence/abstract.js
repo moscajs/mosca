@@ -795,6 +795,56 @@ module.exports = function(create, buildOpts) {
     });
   });
 
+  describe("multiple offline packets", function() {
+    var client = {
+      id: "my client id",
+      clean: false,
+      logger: globalLogger,
+      subscriptions: {
+        hello: {
+          qos: 1
+        }
+      }
+    };
+
+    var first_packet = {
+      topic: "hello",
+      qos: 1,
+      payload: new Buffer("world"),
+      messageId: 42
+    };
+
+    var second_packet = {
+      topic: "hello",
+      qos: 1,
+      payload: new Buffer("mosca"),
+      messageId: 43
+    };
+
+    beforeEach(function(done) {
+      this.instance.storeSubscriptions(client, done);
+    });
+
+    it("should store and stream multiple offline packet", function(done) {
+      var packets = [];
+      function onStreamPacket(err, packet) {
+        packets.push(packet);
+        if (packets.length === 2) {
+          expect(packets[0]).to.eql(first_packet);
+          expect(packets[1]).to.eql(second_packet);
+          done();
+        }
+      }
+
+      var instance = this.instance;
+      instance.storeOfflinePacket(first_packet, function() {
+        instance.storeOfflinePacket(second_packet, function() {
+          instance.streamOfflinePackets(client, onStreamPacket);
+        });
+      });
+    });
+  });
+
   describe("offline packets pattern", function() {
     var client = {
       id: "my client id - 42",
