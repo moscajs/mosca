@@ -104,3 +104,58 @@ describe("mosca.persistence.Redis", function() {
     });
   });
 });
+
+describe("mosca.persistence.Redis select database", function() {
+  this.timeout(2000);
+
+  var opts = {
+    ttl: {
+      checkFrequency: 1000,
+      subscriptions: 1000,
+      packets: 1000
+    },
+    db: 1 // different from default redis database
+  };
+
+  abstract(Redis, opts);
+
+  function flush(cb) {
+    var client = redis.createClient();
+    client.select(opts.db);
+    client.flushdb(function() {
+      client.quit(cb);
+    });
+  }
+
+  beforeEach(function afterEachRedis(cb) {
+    flush(cb);
+  });
+
+  afterEach(function afterEachRedis(cb) {
+    flush(cb);
+  });
+
+  it("should have persistent data in selected database", function(done) {
+    var client = {
+      id: "my client id",
+      clean: false,
+      subscriptions: {
+        "hello/#": {
+          qos: 1
+        }
+      }
+    };
+
+    var redisClientSubscriptionKey = 'client:sub:' + client.id;
+
+    this.instance.storeSubscriptions(client, function() {
+
+      var redisClient = redis.createClient();
+      redisClient.select(opts.db);
+      redisClient.exists(redisClientSubscriptionKey, function(err, existence) {
+        expect(!!existence).to.eql(true);
+        redisClient.quit(done);
+      });
+    });
+  });
+});
