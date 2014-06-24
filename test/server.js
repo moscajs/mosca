@@ -353,6 +353,32 @@ describe("mosca.Server", function() {
         fastForward(100, keepalive * 2 * 1000);
       });
     });
+
+    it("should allow unsubscription without any subscriptions", function(done) {
+      buildClient(this.instance, done, function(client) {
+        var keepalive = 1;
+        var timer = Date.now();
+
+        var opts = buildOpts();
+        opts.keepalive = keepalive;
+
+        var messageId = Math.floor(65535 * Math.random());
+        var subscriptions = [{
+            topic: "hello",
+            qos: 0
+          }
+        ];
+        client.connect(opts);
+
+        client.unsubscribe({
+            unsubscriptions: ['hello'],
+            messageId: messageId
+          });
+
+        fastForward(100, keepalive * 2 * 1000);
+      });
+    });
+
   });
 
   describe("stats", function() {
@@ -438,6 +464,7 @@ describe("mosca.Server", function() {
         clock.tick(60 * 1000);
       });
     });
+
   });
 });
 
