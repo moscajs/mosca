@@ -465,6 +465,20 @@ describe("mosca.Server", function() {
       });
     });
 
+    it("should emit stats event each publish system topic", function(done) {
+      var instance = this.instance;
+      var patt = /^\$SYS/;
+      buildAndConnect(done, instance, function(client1) {
+        instance.on("stats", function(topic, value){
+          expect(patt.test(topic)).to.eql(true);
+          client1.disconnect();
+        });
+
+        clock.tick(10 * 1000);
+      });
+
+    });
+
   });
 });
 
