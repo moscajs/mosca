@@ -388,11 +388,16 @@ describe("mosca.Server", function() {
     beforeEach(function(done) {
       clock = sinon.useFakeTimers();
       var that = this;
+      var patt = /^\$SYS/;
       this.instance.close(function() {
         that.settings = moscaSettings();
         that.settings.stats = true;
         that.instance = new mosca.Server(that.settings, done);
         stats = that.instance.stats;
+        //should emit stats event each publish system topic
+        that.instance.on("stats", function(topic, value){
+          expect(patt.test(topic)).to.eql(true);
+        });
       });
     });
 
