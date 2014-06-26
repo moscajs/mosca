@@ -388,16 +388,11 @@ describe("mosca.Server", function() {
     beforeEach(function(done) {
       clock = sinon.useFakeTimers();
       var that = this;
-      var patt = /^\$SYS/;
       this.instance.close(function() {
         that.settings = moscaSettings();
         that.settings.stats = true;
         that.instance = new mosca.Server(that.settings, done);
         stats = that.instance.stats;
-        //should emit stats event each publish system topic
-        that.instance.on("stats", function(topic, value){
-          expect(patt.test(topic)).to.eql(true);
-        });
       });
     });
 
@@ -468,6 +463,20 @@ describe("mosca.Server", function() {
         });
         clock.tick(60 * 1000);
       });
+    });
+
+    it("should emit stats event each publish system topic", function(done) {
+      var instance = this.instance;
+      var patt = /^\$SYS/;
+      buildAndConnect(done, instance, function(client1) {
+        instance.on("stats", function(topic, value){
+          expect(patt.test(topic)).to.eql(true);
+          client1.disconnect();
+        });
+
+        clock.tick(10 * 1000);
+      });
+
     });
 
   });
