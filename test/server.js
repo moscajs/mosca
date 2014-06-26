@@ -465,7 +465,7 @@ describe("mosca.Server", function() {
       });
     });
 
-    it("should emit stats event each publish system topic", function(done) {
+    it("should emit stats event when publishing system stats", function(done) {
       var instance = this.instance;
       var patt = /^\$SYS/;
       buildAndConnect(done, instance, function(client1) {
