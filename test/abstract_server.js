@@ -1238,17 +1238,17 @@ module.exports = function(moscaSettings, createConnection) {
           client.connect(opts);
 
           client.on('connack', function(packet) {
-
             client.publish({
               topic: "hello",
-              qos: 0,
+              qos: 1,
               payload: new Buffer("world world"),
               messageId: 42,
               retain: true
             });
+          });
 
+          client.on('puback', function() {
             client.stream.end();
-
             cb();
           });
         });
