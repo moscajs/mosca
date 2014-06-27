@@ -2,14 +2,16 @@
 
 var abstract = require("./abstract");
 var LevelUp = require("../../").persistence.LevelUp;
-var tmp = require("tmp");
 var async = require("async");
+var tmpdir = require("osenv").tmpdir();
+var path = require("path");
+var rimraf = require("rimraf");
 
 describe("mosca.persistence.LevelUp", function() {
 
   this.timeout(2000);
 
-  var opts = { 
+  var opts = {
     ttl: {
       checkFrequency: 250,
       subscriptions: 250,
@@ -19,14 +21,12 @@ describe("mosca.persistence.LevelUp", function() {
 
   abstract(LevelUp, function(cb) {
     var that = this;
-    tmp.dir(function (err, path) {
-      if (err) {
-        return cb(err);
-      }
+    opts.path = path.join(tmpdir, 'level_' + Date.now());
+    cb(null, opts);
+  });
 
-      opts.path = path;
-      cb(null, opts);
-    });
+  afterEach(function deleteLevel(done) {
+    rimraf(opts.path, done);
   });
 
   describe("two instances", function() {
