@@ -12,7 +12,7 @@ describe("mosca.persistence.Redis", function() {
     ttl: {
       checkFrequency: 1000,
       subscriptions: 1000,
-      packets: 1000
+      packets: 200
     }
   };
 
@@ -103,7 +103,95 @@ describe("mosca.persistence.Redis", function() {
       });
     });
   });
+
+  describe("ttl.packets", function() {
+
+    var redisClient;
+
+    beforeEach(function() {
+      redisClient = redis.createClient();
+    });
+
+    afterEach(function(done) {
+      redisClient.quit(done);
+    });
+
+    var client = {
+      id: "my client id - 46",
+      clean: false,
+      subscriptions: {
+        "hello/#": {
+          qos: 1
+        }
+      }
+    };
+
+    it("expired packet id should be removed", function(done) {
+      var that = this;
+
+      var packet = {
+        topic: "hello/46",
+        qos: 0,
+        payload: new Buffer("world"),
+        messageId: 46
+      };
+
+      that.instance.storeSubscriptions(client, function() {
+        that.instance.storeOfflinePacket(packet, function() {
+          setTimeout(function() {
+            redisClient.get("packets:" + client.id + ":" + packet.messageId, function(err, result) {
+              expect(result).to.eql(null);
+              done();
+            });
+          }, 250);
+        });
+      });
+    });
+
+    it("expired packet id should be cleaned from list key", function(done) {
+
+      var that = this;
+
+      var firstPacket = {
+        topic: "hello/46",
+        qos: 0,
+        payload: new Buffer("world"),
+        messageId: 46
+      },
+      secondPacket = {
+        topic: "hello/47",
+        qos: 0,
+        payload: new Buffer("mosca"),
+        messageId: 47
+      };
+
+      function delayStoreOfflinePacket(packet, delay, cb) {
+        setTimeout(function() {
+          that.instance.storeOfflinePacket(packet, cb);
+        }, delay);
+      }
+
+      that.instance.storeSubscriptions(client, function() {
+        delayStoreOfflinePacket(firstPacket, 1, function(err) {
+          delayStoreOfflinePacket(secondPacket, 250, function(err){
+            that.instance.streamOfflinePackets(client, function(err, p) {
+              expect(p).to.eql(secondPacket);
+            });
+
+            setTimeout(function() {
+              redisClient.llen("packets:" + client.id, function(err, length) {
+                expect(length).to.eql(1);
+                done();
+              });
+            }, 50);
+          });
+        });
+      });
+    });
+
+  });
 });
+
 
 describe("mosca.persistence.Redis select database", function() {
   this.timeout(2000);
