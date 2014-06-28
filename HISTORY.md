@@ -1,6 +1,13 @@
 History
 =======
 
+## 0.21.9
+
+* _Really_ fixed LevelUp and Memory persistence for offline messages, previously
+  only one offline message per second was allowed
+  [#160](https://github.com/mcollina/mosca/issues/160).
+* Bumped levelup, memdown, level-ttl dependencies.
+
 ## 0.21.8
 
 * Fix a crash if a client unsubscribes before subscribing
