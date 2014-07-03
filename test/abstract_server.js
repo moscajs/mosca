@@ -473,6 +473,36 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
+  it("should emit an event for unsubscribe without subscribe", function(done) {
+    var d = donner(2, done);
+    buildAndConnect(d, function(client) {
+
+      var messageId = Math.floor(65535 * Math.random());
+      var subscriptions = [{
+          topic: "hello",
+          qos: 1
+        }
+      ];
+
+      client.on("unsuback", function(packet) {
+        client.disconnect();
+      });
+
+      client.unsubscribe({
+        unsubscriptions: ["hello"],
+        messageId: messageId
+      });
+
+    });
+
+    instance.on("unsubscribed", function(topic, client) {
+      expect(topic).to.eql("hello");
+      expect(client).to.exist;
+      d();
+    });
+
+  });
+
   it("should emit an event on every newly published packet", function(done) {
     buildAndConnect(done, function(client) {
 
