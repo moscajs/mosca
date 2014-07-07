@@ -656,7 +656,9 @@ module.exports = function(create, buildOpts) {
       var instance = this.instance;
       instance.storeOfflinePacket(packet, function() {
         instance.streamOfflinePackets(client, function(err, p3) {
-          instance.updateOfflinePacket(client, p3.messageId, 12345, function(err) {
+          var p4 = Object.create(p3);
+          p4.messageId = 12345;
+          instance.updateOfflinePacket(client, p3.messageId, p4, function(err) {
             instance.streamOfflinePackets(client, function(err, p2) {
               expect(p2.messageId).to.equal(12345);
               done();

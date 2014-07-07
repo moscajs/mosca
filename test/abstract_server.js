@@ -1255,12 +1255,12 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
-  it("should not forward packet if authorizeForward returns false", function(done) {
+  it("should not forward packet if authorizeForward do not call the callback", function(done) {
     var d = donner(2, done);
     var that = this;
 
-    this.instance.authorizeForward = function(client, packet, qos, callback) {
-      callback(null, packet.topic != 'stop_forward');
+    this.instance.authorizeForward = function(client, packet, callback) {
+      callback(null, packet.topic !== 'stop_forward');
     };
 
     buildAndConnect(d, buildOpts(), function(client1) {
