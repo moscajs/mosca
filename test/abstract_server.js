@@ -1695,12 +1695,13 @@ module.exports = function(moscaSettings, createConnection) {
     buildTest("foo/+/baz", "foo/bar/baz");
     buildTest("foo/#", "foo");
     buildTest("/#", "/foo");
-    buildTest("test/topic/", "test/topic");
+    buildTest("test/topic/", "test/topic", false);
     buildTest("+/+/+/+/+/+/+/+/+/+/test", "one/two/three/four/five/six/seven/eight/nine/ten/test");
     buildTest("/test/topic", "test/topic", false);
-    buildTest("/test//topic", "/test/topic");
+    buildTest("/test//topic", "/test/topic", false);
     buildTest("/test//topic", "/test//topic");
     buildTest("/test/+/topic", "/test//topic", false);
+    buildTest("/test/#/topic", "/test//topic");
     buildTest("#", "$SYS/hello", false);
     buildTest("/#", "$SYS/hello", false);
     buildTest("/+/hello", "$SYS/hello", false);
