@@ -1,6 +1,16 @@
 History
 =======
 
+## 0.22.0
+
+* Redis packets TTL (offline).
+* Require redis > 2.6.
+* Added `server#authorizeForward` method
+  [#168](https://github.com/mcollina/mosca/issues/168).
+* Topics are no longer normalised from e.g a///topic to a/topic. This
+  matches the behaviour as clarified by the Oasis MQTT spec. This will
+  lead to unexpected behaviour if you were using topics of this form.
+
 ## 0.21.9
 
 * _Really_ fixed LevelUp and Memory persistence for offline messages, previously
