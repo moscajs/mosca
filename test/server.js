@@ -14,9 +14,6 @@ var moscaSettings = function() {
     logger: {
       childOf: globalLogger,
       level: 60
-    },
-    forwardFilter: function(client, packet, qos) {
-      return packet.topic == 'stop_forward';
     }
   };
 };
@@ -54,50 +51,6 @@ describe("mosca.Server", function() {
       });
     });
   }
-
-  it("should not forward packet if opts.forwardFilter returns false", function(done) {
-    var d = donner(2, done);
-    var that = this;
-    buildAndConnect(d, this.instance, buildOpts(), function(client1) {
-
-      var messageId = Math.floor(65535 * Math.random());
-
-      var subscriptions = [
-        { topic : "stop_forward", qos : 1 },
-        { topic : "go_forward", qos : 1 }
-      ];
-
-      client1.on("publish", function(packet) {
-        expect(packet.topic).to.equal("go_forward");
-      });
-
-      client1.on("suback", function() {
-        buildAndConnect(d, that.instance, buildOpts(), function(client2) {
-
-          client2.on("puback", function(packet) {
-            client1.disconnect();
-            client2.disconnect();
-          });
-          client2.publish({
-            topic: "stop_forward",
-            messageId: messageId,
-            qos: 1
-          });
-
-          client2.publish({
-            topic: "go_forward",
-            messageId: messageId,
-            qos: 1
-          });
-        });
-      });
-
-      client1.subscribe({
-        subscriptions: subscriptions,
-        messageId: messageId
-      });
-    });
-  });
 
   it("should close twice", function(done) {
     this.instance.close(done);
