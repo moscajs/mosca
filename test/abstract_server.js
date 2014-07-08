@@ -1204,12 +1204,14 @@ module.exports = function(moscaSettings, createConnection) {
   });
 
   it("should support subscribe authorization (failure)", function(done) {
+    var d = donner(2, done);
+
     instance.authorizeSubscribe = function(client, topic, callback) {
       expect(topic).to.be.eql("hello");
       callback(null, false);
     };
 
-    buildAndConnect(done, function(client) {
+    buildAndConnect(d, function(client) {
 
       var subscriptions = [{
           topic: "hello",
@@ -1217,7 +1219,12 @@ module.exports = function(moscaSettings, createConnection) {
         }
       ];
 
-      // it exists no negation of auth, it just disconnect the client
+      client.on("suback", function(packet) {
+        expect(packet.granted).to.be.eql([0x80]);
+        client.disconnect();
+        d();
+      });
+
       client.subscribe({
         subscriptions: subscriptions,
         messageId: 42
