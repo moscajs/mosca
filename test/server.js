@@ -741,7 +741,7 @@ describe("mosca.Server - MQTT backend", function() {
     var newSettings = moscaSettings();
 
     newSettings.persistence = {
-      factory: 'Redis',
+      factory: 'redis',
       port: 6379,
       host: 'localhost'
     };
@@ -764,5 +764,22 @@ describe("mosca.Server - MQTT backend", function() {
       }
     ], done);
   });
+
+  it("should faili if persistence string is not correct", function(done) {
+    var newSettings = moscaSettings();
+
+    newSettings.persistence = {
+      factory: 'no_such_persistence',
+      port: 6379,
+      host: 'localhost'
+    };
+
+    var server = new mosca.Server(newSettings, function(err) {
+      expect(err).to.be.a('string');
+      done();
+    });
+
+  });
+
 
 });
