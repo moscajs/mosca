@@ -765,7 +765,7 @@ describe("mosca.Server - MQTT backend", function() {
     ], done);
   });
 
-  it("should faili if persistence string is not correct", function(done) {
+  it("should fail if persistence string is not correct", function(done) {
     var newSettings = moscaSettings();
 
     newSettings.persistence = {
@@ -775,8 +775,11 @@ describe("mosca.Server - MQTT backend", function() {
     };
 
     var server = new mosca.Server(newSettings, function(err) {
-      expect(err).to.be.a('string');
-      done();
+      if(err instanceof Error) {
+        done();
+      } else {
+        expect().fail('new mosca.Server should fail');
+      }
     });
 
   });
