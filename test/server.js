@@ -736,4 +736,53 @@ describe("mosca.Server - MQTT backend", function() {
       }
     ], done);
   });
+
+  it("should build the correct persistence with string", function(done) {
+    var newSettings = moscaSettings();
+
+    newSettings.persistence = {
+      factory: 'redis',
+      port: 6379,
+      host: 'localhost'
+    };
+
+    var server = new mosca.Server(newSettings);
+
+    async.series([
+
+      function(cb) {
+        server.on("ready", cb);
+      },
+
+      function(cb) {
+        expect(server.persistence.constructor).to.match(/RedisPersistence/);
+        cb();
+      },
+
+      function(cb) {
+        server.close(cb);
+      }
+    ], done);
+  });
+
+  it("should fail if persistence string is not correct", function(done) {
+    var newSettings = moscaSettings();
+
+    newSettings.persistence = {
+      factory: 'no_such_persistence',
+      port: 6379,
+      host: 'localhost'
+    };
+
+    var server = new mosca.Server(newSettings, function(err) {
+      if(err instanceof Error) {
+        done();
+      } else {
+        expect().fail('new mosca.Server should fail');
+      }
+    });
+
+  });
+
+
 });
