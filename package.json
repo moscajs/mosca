@@ -66,7 +66,7 @@
     "underscore": "~1.6.0"
   },
   "dependencies": {
-    "mqtt": "~0.3.10",
+    "mqtt": "~0.3.11",
     "async": "~0.7.0",
     "ascoltatori": "~0.15.0",
     "commander": "~2.2.0",
@@ -86,8 +86,8 @@
     "pre-commit": "0.0.4",
     "moment": "~2.6.0",
     "moving-average": "0.0.4",
-    "browserify": "~3.43.0",
-    "st": "~0.4.1"
+    "browserify": "~4.2.0",
+    "st": "~0.5.1"
   },
   "optionalDependencies": {
     "leveldown": "~0.10.0",
