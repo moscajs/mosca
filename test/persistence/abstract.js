@@ -933,11 +933,33 @@ module.exports = function(create, buildOpts) {
       var instance = this.instance;
       instance.wire(server);
 
+      client.handleAuthorizeSubscribe = function(err, success, s, cb) {
+        return cb(null, true);
+      };
+
       server.persistClient(client, function() {
-        instance.streamOfflinePackets(client, function(err, packet) {
+        server.restoreClientSubscriptions(client, function(err) {
           done();
         });
       });
+    });
+
+    it("should not generate duplicate packets on persistClient", function(done) {
+      var server = new EventEmitter();
+      var instance = this.instance;
+      instance.wire(server);
+
+      instance.storeSubscriptions(client, function() {
+        server.storePacket(packet, function() {
+          server.persistClient(client, function() {
+            instance.streamOfflinePackets(client, function(err, packet) {
+              //should be called only once
+              done();
+            });
+          });
+        });
+      });
+
     });
   });
 };
