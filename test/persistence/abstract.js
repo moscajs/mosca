@@ -902,27 +902,18 @@ module.exports = function(create, buildOpts) {
       }
     };
 
-    it("should store one inflight packet", function(done) {
-      this.instance.storeInflightPackets(client, done);
-    });
-
-    it("should store and stream an inflight packet", function(done) {
-      var instance = this.instance;
-      instance.storeInflightPackets(client, function() {
-        instance.streamOfflinePackets(client, function(err, p) {
-          expect(p).to.eql(packet);
-          done();
-        });
-      });
-    });
-
     it("should not delete the offline packets once streamed", function(done) {
+      var server = new EventEmitter();
       var instance = this.instance;
-      instance.storeInflightPackets(client, function() {
-        instance.streamOfflinePackets(client, function(err, p) {
-          instance.streamOfflinePackets(client, function(err, p2) {
-            expect(p2).to.eql(p);
-            done();
+      instance.wire(server);
+
+      instance.storeSubscriptions(client, function() {
+        server.storePacket(packet, function() {
+          instance.streamOfflinePackets(client, function(err, p) {
+            instance.streamOfflinePackets(client, function(err, p2) {
+              expect(p2).to.eql(p);
+              done();
+            });
           });
         });
       });
@@ -933,11 +924,33 @@ module.exports = function(create, buildOpts) {
       var instance = this.instance;
       instance.wire(server);
 
+      client.handleAuthorizeSubscribe = function(err, success, s, cb) {
+        return cb(null, true);
+      };
+
       server.persistClient(client, function() {
-        instance.streamOfflinePackets(client, function(err, packet) {
+        server.restoreClientSubscriptions(client, function(err) {
           done();
         });
       });
+    });
+
+    it("should not generate duplicate packets on persistClient", function(done) {
+      var server = new EventEmitter();
+      var instance = this.instance;
+      instance.wire(server);
+
+      instance.storeSubscriptions(client, function() {
+        server.storePacket(packet, function() {
+          server.persistClient(client, function() {
+            instance.streamOfflinePackets(client, function(err, packet) {
+              //should be called only once
+              done();
+            });
+          });
+        });
+      });
+
     });
   });
 };
