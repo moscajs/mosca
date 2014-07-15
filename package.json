@@ -87,7 +87,8 @@
     "moment": "~2.6.0",
     "moving-average": "0.0.4",
     "browserify": "~4.2.0",
-    "st": "~0.5.1"
+    "st": "~0.5.1",
+    "shortid": "~2.0.1"
   },
   "optionalDependencies": {
     "leveldown": "~0.10.0",
