@@ -48,6 +48,7 @@
   "author": "Matteo Collina <hello@matteocollina.com>",
   "license": "MIT",
   "devDependencies": {
+    "pre-commit": "0.0.4",
     "async_bench": "~0.3.0",
     "chai": "~1.9.1",
     "coveralls": "~2.10.0",
@@ -82,7 +83,6 @@
     "mows": "0.0.6",
     "json-buffer": "~2.0.7",
     "brfs": "0.0.8",
-    "pre-commit": "0.0.4",
     "moment": "~2.6.0",
     "moving-average": "0.0.4",
     "browserify": "~4.2.0",
