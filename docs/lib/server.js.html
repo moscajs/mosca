@@ -238,9 +238,10 @@ var bunyan = require(&quot;bunyan&quot;);
 var extend = require(&quot;extend&quot;);
 var Client = require(&quot;./client&quot;);
 var Stats = require(&quot;./stats&quot;);
-var uuid = require(&quot;node-uuid&quot;);
+var shortid = require(&quot;shortid&quot;);
 var st = require(&quot;st&quot;);
 var url = require(&quot;url&quot;);
+var persistence = require('./persistence');
 var defaults = {
   port: 1883,
   host: null,
@@ -276,11 +277,20 @@ var nop = function() {};</code></pre></div></div></div></article><article class=
 
   this.opts = extend(true, {}, defaults, opts);
 
-  if (this.opts.persistence &amp;&amp; this.opts.persistence.factory) {
-    this.opts.persistence.factory(this.opts.persistence).wire(this);
-  }
-
   callback = callback || function() {};
+
+  var persistenceFactory = this.opts.persistence &amp;&amp; this.opts.persistence.factory;
+  if (persistenceFactory) {
+    if (typeof persistenceFactory === 'string') {
+      var factoryName = persistenceFactory;
+      persistenceFactory = persistence.getFactory(factoryName);
+      if (!persistenceFactory) {
+        return callback(new Error('No persistence factory found for ' + factoryName ));
+      }
+    }
+
+    persistenceFactory(this.opts.persistence).wire(this);
+  }
 
   this._dedupId = 0;
   this.clients = {};
@@ -308,7 +318,7 @@ var nop = function() {};</code></pre></div></div></div></article><article class=
   };
 
   // each Server has a dummy id for logging purposes
-  this.id = this.opts.id || uuid().split(&quot;-&quot;)[0];
+  this.id = this.opts.id || shortid.generate();
 
   this.ascoltatore = opts.ascoltatore || ascoltatori.build(this.opts.backend);
   this.ascoltatore.on(&quot;error&quot;, this.emit.bind(this));
@@ -421,7 +431,7 @@ Server.prototype.toString = function() {
   var newPacket = {
     topic: packet.topic,
     payload: packet.payload,
-    messageId: this.nextDedupId(),
+    messageId: this.generateUniqueId(),
     qos: packet.qos,
     retain: packet.retain
   };
@@ -577,6 +587,10 @@ Server.prototype.toString = function() {
 
 Server.prototype.nextDedupId = function() {
   return this._dedupId++;
+};
+
+Server.prototype.generateUniqueId = function() {
+  return shortid.generate();
 };</code></pre></div></div></div></article></div></div><!-- Foundation JS--><script type="text/javascript">document.write('<script src=' +
 ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min' : 'http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min') +
 '.js><\/script>')

@@ -298,16 +298,8 @@ var async = require(&quot;async&quot;);</code></pre></div></div></div></article>
   };
 
   server.persistClient = function(client, done) {
-    async.parallel([
-      function(cb) {
-        client.logger.debug(&quot;Storing offline subscriptions&quot;);
-        that.storeSubscriptions(client, cb);
-      },
-      function(cb) {
-        client.logger.debug(&quot;Storing inflight packets&quot;);
-        that.storeInflightPackets(client, cb);
-      }
-    ], done);
+    client.logger.debug(&quot;Storing offline subscriptions&quot;);
+    that.storeSubscriptions(client, done);
   };
 };</code></pre></div></div></div></article><article class="comment"><header><h1 id="close">close</h1><h5 class="subheader"><div class="label radius ctx-type">method</div>AbstractPersistence.prototype.close()</h5></header><ul class="no-bullet tags"><li class="tag"><span class="type">@param: </span><span class="types">{Function}</span><span class="name">done</span><span class="description">the callback</span></li></ul><div data-section="accordian" data-options="one_up: false;" class="section-container code auto"><div class="section"><p data-section-title class="title"><a href="#">Description</a></p><div data-section-content class="content description"><p>Close the persistance.</p></div></div><div class="section"><p data-section-title class="title"><a href="#">Source</a></p><div data-section-content class="content"><pre><code class="language-javascript">AbstractPersistence.prototype.close = function(done) {
   if (done) {

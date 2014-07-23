@@ -232,6 +232,7 @@ var util = require(&quot;util&quot;);
 var Matcher = require(&quot;./matcher&quot;);
 var async = require(&quot;async&quot;);
 var extend = require(&quot;extend&quot;);
+var shortid = require(&quot;shortid&quot;);
 var defaults = {
   channel: &quot;$SYS/moscaSync&quot;,
   ttl: {
@@ -257,7 +258,7 @@ var defaults = {
 
   this._client = this._buildClient();
   this._pubSubClient = this._buildClient();
-  this._uuid = require(&quot;node-uuid&quot;).v1();
+  this._id = shortid.generate();
 
   this._packetKeyTTL = this.options.ttl.packets;
   this._listKeyTTL = this._packetKeyTTL * 2; // list key should live longer than packet key
@@ -307,7 +308,7 @@ var defaults = {
   this._pubSubClient.subscribe(this.options.channel);
   this._pubSubClient.on(&quot;message&quot;, function(channel, message) {
     var parsed = JSON.parse(message);
-    if (parsed.process !== that._uuid) {
+    if (parsed.process !== that._id) {
       newSub(parsed.key);
     }
   });

@@ -227,7 +227,16 @@ code {
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,<br />EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES<br />OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND<br />NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT<br />HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,<br />WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING<br />FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR<br />OTHER DEALINGS IN THE SOFTWARE.</p></div></div><div class="section"><p data-section-title class="title"><a href="#">Source</a></p><div data-section-content class="content"><pre><code class="language-javascript">&quot;use strict&quot;;</code></pre></div></div></div></article><article class="comment"><header></header><ul class="no-bullet tags"></ul><div data-section="accordian" data-options="one_up: false;" class="section-container code auto"><div class="section"><p data-section-title class="title"><a href="#">Description</a></p><div data-section-content class="content description"><p>Module exports</p></div></div><div class="section"><p data-section-title class="title"><a href="#">Source</a></p><div data-section-content class="content"><pre><code class="language-javascript">module.exports.Memory = require(&quot;./memory&quot;);
 module.exports.LevelUp = require(&quot;./levelup&quot;);
 module.exports.Redis = require(&quot;./redis&quot;);
-module.exports.Mongo = require(&quot;./mongo&quot;);</code></pre></div></div></div></article></div></div><!-- Foundation JS--><script type="text/javascript">document.write('<script src=' +
+module.exports.Mongo = require(&quot;./mongo&quot;);
+
+var factories = {};
+Object.keys(module.exports).forEach(function(type) {
+  factories[type.toLowerCase()] = module.exports[type];
+});
+
+module.exports.getFactory = function(name) {
+  return factories[name.toLowerCase()];
+};</code></pre></div></div></div></article></div></div><!-- Foundation JS--><script type="text/javascript">document.write('<script src=' +
 ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min' : 'http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min') +
 '.js><\/script>')
 </script><script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/4.1.6/js/foundation.min.js"></script><script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/4.1.6/js/foundation/foundation.reveal.min.js"></script><!-- Prism js--><script>/**
