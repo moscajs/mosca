@@ -1,6 +1,24 @@
 History
 =======
 
+## 0.23.0
+
+* Use an unique id ([shortid](http://npm.im/shortid)) for server-level messageId.
+  [#176](https://github.com/mcollina/mosca/issues/176).
+* Removed node-uuid in favor of shortid.
+* Bumped browserify to v4.2.0.
+* Allow `persistence.factory` key to be a string in the configuration/options
+  [#171](https://github.com/mcollina/mosca/issues/171).
+* Do not store inflight packets on disconnection
+  [#175](https://github.com/mcollina/mosca/issues/175).
+* Send suback 0x80 if a subscription fails
+  [#170](https://github.com/mcollina/mosca/issues/170).
+* Moved pre-commit into devDependencies.
+  [#177](https://github.com/mcollina/mosca/issues/177).
+
+Thanks to [Morgan Cheng](https://github.com/mocheng) for all the work
+spent to make Mosca rock solid on Redis.
+
 ## 0.22.0
 
 * Redis packets TTL (offline).
