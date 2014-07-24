@@ -150,6 +150,15 @@ describe("mosca.Authorizer", function() {
       });
     });
 
+    it("should default the authorizePublish param to **", function(done) {
+      authorizer.addUser("user", "pass", null, function() {
+        instance(client, "other", "payload", function(err, success) {
+          expect(success).to.be.true;
+          done();
+        });
+      });
+    });
+
     it("it should authorize a publish based on a pattern", function(done) {
       authorizer.addUser("user", "pass", "/topic/*", function() {
         instance(client, "/topic/other", "payload", function(err, success) {
@@ -208,6 +217,15 @@ describe("mosca.Authorizer", function() {
       instance(client, "/long/topic", function(err, success) {
         expect(success).to.be.true;
         done();
+      });
+    });
+
+    it("should default the authorizeSubscribe param to **", function(done) {
+      authorizer.addUser("user", "pass", null, null, function() {
+        instance(client, "other", function(err, success) {
+          expect(success).to.be.true;
+          done();
+        });
       });
     });
 
