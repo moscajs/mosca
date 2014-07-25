@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.23.1
+
+* Fixed JSON-based authorizer to support generic 'authorize all'
+  catchall.
+
 ## 0.23.0
 
 * Use an unique id ([shortid](http://npm.im/shortid)) for server-level messageId.
