@@ -7,7 +7,7 @@
     "mosca": "./bin/mosca"
   },
   "scripts": {
-    "test": "mocha --recursive --bail --reporter spec test",
+    "test": "mocha --recursive --bail --reporter spec test 2>&1",
     "ci": "mocha --recursive --bail --watch test",
     "coverage": "rm -rf coverage; istanbul cover _mocha -- --recursive --reporter spec --bail",
     "publish-coverage": "(cat coverage/lcov.info | coveralls)",
