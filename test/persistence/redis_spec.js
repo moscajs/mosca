@@ -51,7 +51,7 @@ describe("mosca.persistence.Redis", function() {
         topic: "hello/42",
         qos: 0,
         payload: new Buffer("world"),
-        messageId: 42
+        messageId: "42"
       };
 
       var that = this;
@@ -85,7 +85,7 @@ describe("mosca.persistence.Redis", function() {
         topic: "hello/42",
         qos: 0,
         payload: new Buffer("world"),
-        messageId: 42
+        messageId: "42"
       };
 
       var that = this;
@@ -133,7 +133,7 @@ describe("mosca.persistence.Redis", function() {
         topic: "hello/46",
         qos: 0,
         payload: new Buffer("world"),
-        messageId: 46
+        messageId: "46"
       };
 
       that.instance.storeSubscriptions(client, function() {
@@ -156,13 +156,13 @@ describe("mosca.persistence.Redis", function() {
         topic: "hello/46",
         qos: 0,
         payload: new Buffer("world"),
-        messageId: 46
+        messageId: "46"
       },
       secondPacket = {
         topic: "hello/47",
         qos: 0,
         payload: new Buffer("mosca"),
-        messageId: 47
+        messageId: "47"
       };
 
       function delayStoreOfflinePacket(packet, delay, cb) {

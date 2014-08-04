@@ -46,7 +46,7 @@ describe("mosca.persistence.LevelUp", function() {
         topic: "hello/42",
         qos: 0,
         payload: new Buffer("world"),
-        messageId: 42
+        messageId: "42"
       };
 
       var that = this;

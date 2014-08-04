@@ -47,7 +47,7 @@ module.exports = function(create, buildOpts) {
         topic: "hello",
         qos: 0,
         payload: new Buffer("world"),
-        messageId: 42,
+        messageId: "42",
         retain: true
       };
       this.instance.storeRetained(packet, done);
@@ -65,7 +65,7 @@ module.exports = function(create, buildOpts) {
         topic: "hello",
         qos: 0,
         payload: new Buffer("world"),
-        messageId: 42,
+        messageId: "42",
         retain: true
       };
 
@@ -97,7 +97,7 @@ module.exports = function(create, buildOpts) {
           topic: "hello",
           qos: 0,
           payload: new Buffer("world"),
-          messageId: packetMessageId,
+          messageId: "packetMessageId",
           retain: true
         };
       };
@@ -123,7 +123,7 @@ module.exports = function(create, buildOpts) {
         topic: "hello",
         qos: 0,
         payload: new Buffer("world"),
-        messageId: 42,
+        messageId: "42",
         retain: true
       };
 
@@ -131,7 +131,7 @@ module.exports = function(create, buildOpts) {
         topic: "hello",
         qos: 0,
         payload: new Buffer("matteo"),
-        messageId: 43,
+        messageId: "43",
         retain: true
       };
 
@@ -155,7 +155,7 @@ module.exports = function(create, buildOpts) {
         topic: "hello",
         qos: 0,
         payload: new Buffer("world"),
-        messageId: 42,
+        messageId: "42",
         retain: true
       };
 
@@ -163,7 +163,7 @@ module.exports = function(create, buildOpts) {
         topic: "hello",
         qos: 0,
         payload: new Buffer(0),
-        messageId: 43,
+        messageId: "43",
         retain: true
       };
 
@@ -186,7 +186,7 @@ module.exports = function(create, buildOpts) {
         topic: "hello/1",
         qos: 0,
         payload: new Buffer("world"),
-        messageId: 42,
+        messageId: "42",
         retain: true
       };
 
@@ -194,7 +194,7 @@ module.exports = function(create, buildOpts) {
         topic: "hello/2",
         qos: 0,
         payload: new Buffer("world"),
-        messageId: 43,
+        messageId: "43",
         retain: true
       };
 
@@ -224,7 +224,7 @@ module.exports = function(create, buildOpts) {
         topic: "hello/1",
         qos: 0,
         payload: new Buffer("world"),
-        messageId: 42,
+        messageId: "42",
         retain: true
       };
 
@@ -232,7 +232,7 @@ module.exports = function(create, buildOpts) {
         topic: "hello/2",
         qos: 0,
         payload: new Buffer("world"),
-        messageId: 43,
+        messageId: "43",
         retain: true
       };
 
@@ -264,7 +264,7 @@ module.exports = function(create, buildOpts) {
         topic: "hello/1",
         qos: 0,
         payload: new Buffer("world"),
-        messageId: 42,
+        messageId: "42",
         retain: true
       };
 
@@ -285,7 +285,7 @@ module.exports = function(create, buildOpts) {
         topic: "hello/1",
         qos: 0,
         payload: new Buffer("world"),
-        messageId: 42,
+        messageId: "42",
         retain: true
       };
 
@@ -588,7 +588,7 @@ module.exports = function(create, buildOpts) {
       topic: "hello",
       qos: 1,
       payload: new Buffer("world"),
-      messageId: 42
+      messageId: "42"
     };
 
     beforeEach(function(done) {
@@ -657,10 +657,10 @@ module.exports = function(create, buildOpts) {
       instance.storeOfflinePacket(packet, function() {
         instance.streamOfflinePackets(client, function(err, p3) {
           var p4 = Object.create(p3);
-          p4.messageId = 12345;
+          p4.messageId = "12345";
           instance.updateOfflinePacket(client, p3.messageId, p4, function(err) {
             instance.streamOfflinePackets(client, function(err, p2) {
-              expect(p2.messageId).to.equal(12345);
+              expect(p2.messageId).to.equal("12345");
               done();
             });
           });
@@ -813,14 +813,14 @@ module.exports = function(create, buildOpts) {
       topic: "hello",
       qos: 1,
       payload: new Buffer("world"),
-      messageId: 42
+      messageId: "42"
     };
 
     var second_packet = {
       topic: "hello",
       qos: 1,
       payload: new Buffer("mosca"),
-      messageId: 43
+      messageId: "43"
     };
 
     beforeEach(function(done) {
@@ -863,7 +863,7 @@ module.exports = function(create, buildOpts) {
       topic: "hello/42",
       qos: 0,
       payload: new Buffer("world"),
-      messageId: 42
+      messageId: "42"
     };
 
     beforeEach(function(done) {
@@ -886,7 +886,7 @@ module.exports = function(create, buildOpts) {
       topic: "hello",
       qos: 0,
       payload: new Buffer("world"),
-      messageId: 42
+      messageId: "42"
     };
     var client = {
       id: "my client id - 42",

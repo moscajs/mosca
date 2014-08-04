@@ -1680,6 +1680,83 @@ module.exports = function(moscaSettings, createConnection) {
     ], done);
   });
 
+  it("should not deliver all offline messages more than once", function(done) {
+    var opts = buildOpts();
+
+    opts.clientId = "mosca-unclean-clients-test3";
+    opts.clean = false;
+    opts.keepalive = 0;
+
+    async.series([
+
+      function(cb) {
+        buildAndConnect(cb, opts, function(client) {
+          var subscriptions = [{
+            topic: "hello",
+            qos: 1
+          }];
+
+          client.subscribe({
+            subscriptions: subscriptions,
+            messageId: 42
+          });
+
+          client.on("suback", function() {
+            client.disconnect();
+          });
+        });
+      },
+
+      function(cb) {
+        buildClient(cb, function(client) {
+          client.connect(buildOpts());
+
+          client.publish({
+            topic: "hello",
+            qos: 1,
+            payload: "world",
+            messageId: 42
+          });
+
+          client.on("puback", function(packet) {
+            client.disconnect();
+          });
+        });
+      },
+
+      function(cb) {
+        buildAndConnect(cb, opts, function(client) {
+
+          client.on("publish", function(packet) {
+            client.puback({ messageId: packet.messageId });
+            client.disconnect();
+
+            expect(packet.topic).to.eql("hello");
+            expect(packet.payload).to.eql("world");
+            expect(packet.qos).to.eql(1);
+          });
+        });
+      },
+
+      function(cb) {
+        setTimeout(cb, 100);
+      },
+
+      function(cb) {
+        buildAndConnect(cb, opts, function(client) {
+
+          client.on("publish", function(packet) {
+            cb(new Error("unexpected publish"));
+          });
+
+          setTimeout(function() {
+            client.disconnect();
+          }, 50);
+        });
+      }
+    ], done);
+  });
+
   describe("pattern matching", function() {
 
     var buildTest = function(subscribed, published, expected) {
