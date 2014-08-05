@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.23.2
+
+* Fixed offline mode for Redis
+  [#128](https://github.com/mcollina/mosca/issues/128).
+
 ## 0.23.1
 
 * Fixed JSON-based authorizer to support generic 'authorize all'
