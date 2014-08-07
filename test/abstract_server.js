@@ -58,6 +58,111 @@ module.exports = function(moscaSettings, createConnection) {
     });
   }
 
+  it("should publish connected client to '$SYS/broker-id/new/clients'", function(done) {
+    settings = moscaSettings();
+    settings.publishNewClient = true;
+
+    secondInstance = new mosca.Server(settings, function(err, server) {
+      buildAndConnect(done, function(client) {
+        server.on("published", function(packet, serverClient) {
+          expect(packet.topic).to.be.equal("$SYS/broker-id/new/clients");
+          client.disconnect();
+        });
+      });
+    });
+  });
+
+  it("should publish each subscribe to '$SYS/broker-id/new/subscribes'", function(done) {
+    var d = donner(2, done);
+    buildAndConnect(d, function(client) {
+      var messageId = Math.floor(65535 * Math.random());
+      var subscriptions = [{
+          topic: "hello",
+          qos: 1
+        }
+      ];
+
+      client.on("suback", function(packet) {
+        client.disconnect();
+      });
+
+      client.subscribe({
+        subscriptions: subscriptions,
+        messageId: messageId
+      });
+    });
+
+    instance.on("published", function(packet, client) {
+      expect(packet.topic).to.be.equal("$SYS/broker-id/new/subscribes");
+      d();
+    });
+  });
+
+  describe("multi mosca servers", function() {
+    var serverOne = null,
+      serverTwo = null,
+      clientOpts = buildOpts();
+
+    afterEach(function(done) {
+      var instances = [];
+      instances.push(serverOne);
+      instances.push(serverTwo);
+
+      async.each(instances, function(instance, cb) {
+        if (instance) {
+          instance.close(cb);
+        }
+      }, done);
+    });
+
+    it("should disconnect client connected to another broker", function(done) {
+      var settingsOne = moscaSettings(),
+        settingsTwo = moscaSettings();
+
+      clientOpts.clientId = '123456';
+      clientOpts.keepalive = 0;
+
+      settingsOne.publishNewClient = settingsTwo.publishNewClient = true;
+      settingsOne.backend = settingsTwo.backend = {
+        type: 'redis'
+      };
+
+      async.series([
+        function(cb) {
+          serverOne = new mosca.Server(settingsOne, function(err, server) {
+            serverOne.on('clientDisconnected', function(serverClient) {
+              expect(serverClient).not.to.be.equal(undefined);
+              done();
+            });
+            cb();
+          });
+        },
+        function(cb) {
+          serverTwo = new mosca.Server(settingsTwo, function(err, server) {
+            cb();
+          });
+        },
+        function(cb) {
+          var clientOne = createConnection(settingsOne.port, settingsOne.host);
+          clientOne.connect(clientOpts);
+
+          clientOne.on("connected", function() {
+            cb();
+          });
+        },
+        function(cb) {
+          var clientTwo = createConnection(settingsTwo.port, settingsTwo.host);
+          clientTwo.connect(clientOpts);
+
+          clientTwo.on("connected", function() {
+            cb();
+          });
+        }
+      ]);
+    });
+
+  });
+
   it("should pass itself in the callback", function(done) {
     secondInstance = new mosca.Server(moscaSettings(), function(err, server) {
       expect(server === secondInstance).to.be.true;
