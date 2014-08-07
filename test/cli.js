@@ -334,7 +334,7 @@ describe("mosca.cli", function() {
       function(cb) {
         tmp.file(cb);
       },
-      function(path, fd, cb) {
+      function(path, fd, ignore, cb) {
         args.push(path);
         cloned = [].concat(args);
         cloned[2] = "rmuser";
