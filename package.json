@@ -67,7 +67,7 @@
     "underscore": "~1.6.0"
   },
   "dependencies": {
-    "ascoltatori": "~0.15.0",
+    "ascoltatori": "~0.16.0",
     "async": "~0.9.0",
     "brfs": "1.2.0",
     "browserify": "~5.9.1",
