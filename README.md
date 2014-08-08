@@ -97,8 +97,7 @@ This is powered by the [docker image](#docker-support).
 If you like Mosca, consider supporting the project by donating via
 [Gittip](https://www.gittip.com/mcollina/), or hire [me](http://twitter.com/matteocollina)
 to get you started and solve any issue you might find.
-Also, check out our [Usage in the
-Wild](https://github.com/mcollina/mosca/wiki/Usage-in-the-Wild) wiki
+Also, check out our [showcase](https://github.com/mcollina/mosca/wiki/Mosca-Showcase) wiki
 page! Feel free to add yourself! :)
 
 
