@@ -9,6 +9,7 @@ module.exports = function(moscaSettings, createConnection) {
 
   beforeEach(function(done) {
     settings = moscaSettings();
+    settings.publishNewClient = false;
     instance = new mosca.Server(settings, done);
     this.instance = instance;
     this.settings = settings;
