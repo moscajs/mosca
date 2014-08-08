@@ -58,22 +58,52 @@ module.exports = function(moscaSettings, createConnection) {
     });
   }
 
-  it("should publish connected client to '$SYS/broker-id/new/clients'", function(done) {
+  it("should publish connected client to '$SYS/{broker-id}/new/clients'", function(done) {
+    var connectedClient = null,
+      publishedClientId = null;
+
     settings = moscaSettings();
     settings.publishNewClient = true;
 
+    function verify() {
+      if (connectedClient && publishedClientId) {
+        expect(publishedClientId).to.be.equal(connectedClient.opts.clientId);
+        connectedClient.disconnect();
+      }
+    }
+
     secondInstance = new mosca.Server(settings, function(err, server) {
+      server.on("published", function(packet, clientId) {
+        expect(packet.topic).to.be.equal("$SYS/" + secondInstance.id + "/new/clients");
+        publishedClientId = packet.payload;
+        verify();
+      });
+
       buildAndConnect(done, function(client) {
-        server.on("published", function(packet, serverClient) {
-          expect(packet.topic).to.be.equal("$SYS/broker-id/new/clients");
-          client.disconnect();
-        });
+        connectedClient = client;
+        verify();
       });
     });
   });
 
-  it("should publish each subscribe to '$SYS/broker-id/new/subscribes'", function(done) {
-    var d = donner(2, done);
+  it("should publish each subscribe to '$SYS/{broker-id}/new/subscribes'", function(done) {
+    var d = donner(2, done),
+      connectedClient = null,
+      publishedClientId = null;
+
+    function verify() {
+      if (connectedClient && publishedClientId) {
+        expect(publishedClientId).to.be.equal(connectedClient.opts.clientId);
+        d();
+      }
+    }
+
+    instance.on("published", function(packet) {
+      expect(packet.topic).to.be.equal("$SYS/" + instance.id + "/new/subscribes");
+      publishedClientId = packet.payload;
+      verify();
+    });
+
     buildAndConnect(d, function(client) {
       var messageId = Math.floor(65535 * Math.random());
       var subscriptions = [{
@@ -81,6 +111,8 @@ module.exports = function(moscaSettings, createConnection) {
           qos: 1
         }
       ];
+
+      connectedClient = client;
 
       client.on("suback", function(packet) {
         client.disconnect();
@@ -92,10 +124,6 @@ module.exports = function(moscaSettings, createConnection) {
       });
     });
 
-    instance.on("published", function(packet, client) {
-      expect(packet.topic).to.be.equal("$SYS/broker-id/new/subscribes");
-      d();
-    });
   });
 
   describe("multi mosca servers", function() {
@@ -111,6 +139,8 @@ module.exports = function(moscaSettings, createConnection) {
       async.each(instances, function(instance, cb) {
         if (instance) {
           instance.close(cb);
+        } else {
+          cb();
         }
       }, done);
     });
@@ -119,13 +149,17 @@ module.exports = function(moscaSettings, createConnection) {
       var settingsOne = moscaSettings(),
         settingsTwo = moscaSettings();
 
+      if (!settings.backend || !settings.backend.type) {
+        // only need to validate cases with backend
+        return done();
+      }
+
       clientOpts.clientId = '123456';
       clientOpts.keepalive = 0;
 
       settingsOne.publishNewClient = settingsTwo.publishNewClient = true;
-      settingsOne.backend = settingsTwo.backend = {
-        type: 'redis'
-      };
+
+      settingsOne.backend = settingsTwo.backend = settings.backend;
 
       async.series([
         function(cb) {
