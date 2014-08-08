@@ -1,6 +1,13 @@
 History
 =======
 
+## 0.24.0
+
+* Updated dependencies (Redis, MongoDB, ecc)
+* Close clients with the same `clientId` even if they are connected to another Mosca
+  [#182](https://github.com/mcollina/mosca/issues/182)
+  [#92](https://github.com/mcollina/mosca/issues/92).
+
 ## 0.23.2
 
 * Fixed offline mode for Redis
