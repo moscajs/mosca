@@ -19,6 +19,7 @@ describe("mosca.Server with redis persistence", function() {
     return {
       port: nextPort(),
       stats: false,
+      publishNewClient: false,
       logger: {
         childOf: globalLogger,
         level: 60

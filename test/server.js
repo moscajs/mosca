@@ -8,6 +8,7 @@ var moscaSettings = function() {
   return {
     port: nextPort(),
     stats: false,
+    publishNewClient: false,
     persistence: {
       factory: mosca.persistence.Memory
     },
