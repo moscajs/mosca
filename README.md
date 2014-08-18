@@ -77,7 +77,7 @@ All the info to get you started is gathered [in this wiki page](https://github.c
 
 Also there is an example using [Redis](https://github.com/mcollina/mosca/wiki/Mosca-basic-usage#in-this-example-we-will-be-using-redis)
 
-##How to's/Tutorials
+## How to's/Tutorials
 All to be found [on our repository wiki section.](https://github.com/mcollina/mosca/wiki)
 
 OR
@@ -85,7 +85,7 @@ OR
 read the [dox generated documentation](http://mcollina.github.io/mosca/docs).
 
 
-###Learn more
+### Learn more
 See the slides of my talk ["MQTT and Node.js - Messaging in the Internet
 of Things"](http://mcollina.github.io/mqtt_and_nodejs/).
 
@@ -100,7 +100,10 @@ to get you started and solve any issue you might find.
 Also, check out our [showcase](https://github.com/mcollina/mosca/wiki/Mosca-Showcase) wiki
 page! Feel free to add yourself! :)
 
+## Security Issues
 
+__Mosca__ sits between your system and the devices: this is though role, and we did our best to secure your systems.
+However, you might find a security issue: in that case, email @mcollina at hello@matteocollina.com.
 
 
 ## Feedback
