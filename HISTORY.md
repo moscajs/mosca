@@ -1,6 +1,11 @@
 History
 =======
 
+## 0.24.1
+
+* Fix for RabbitMQ support
+  [#189](https://github.com/mcollina/mosca/issues/189).
+
 ## 0.24.0
 
 * Updated dependencies (Redis, MongoDB, ecc)
