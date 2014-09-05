@@ -25,7 +25,9 @@ module.exports = function(moscaSettings, createConnection) {
 
     async.each(instances, function(instance, cb) {
       instance.close(cb);
-    }, done);
+    }, function() {
+      setImmediate(done);
+    });
   });
 
   function buildClient(done, callback) {
@@ -33,7 +35,7 @@ module.exports = function(moscaSettings, createConnection) {
 
     client.once('error', done);
     client.stream.once('close', function() {
-      done();
+      setImmediate(done);
     });
 
     client.on("connected", function() {
@@ -143,7 +145,9 @@ module.exports = function(moscaSettings, createConnection) {
         } else {
           cb();
         }
-      }, done);
+      }, function() {
+        setImmediate(done);
+      });
     });
 
     it("should disconnect client connected to another broker", function(done) {
@@ -870,7 +874,7 @@ module.exports = function(moscaSettings, createConnection) {
 
 
   it("should support unsubscribing a single client", function(done) {
-    var d = donner(2, done);
+    var d = donner(3, done);
 
     async.waterfall([
 
@@ -1500,11 +1504,14 @@ module.exports = function(moscaSettings, createConnection) {
             expect(packet.topic).to.be.eql("hello");
             expect(packet.payload.toString()).to.be.eql("world world");
             client.stream.end();
-            cb();
           });
+
+          client.stream.on('end', cb);
         });
       }
-    ], done);
+    ], function() {
+      setImmediate(done);
+    });
   });
 
   it("should return only a single retained message", function(done) {
