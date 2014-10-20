@@ -20,3 +20,4 @@ mosquitto.db
 *rdb
 coverage/
 public/*
+data/
