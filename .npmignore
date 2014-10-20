@@ -4,3 +4,5 @@
 *conf
 benchmarks
 demo
+data/
+dump.rdb
