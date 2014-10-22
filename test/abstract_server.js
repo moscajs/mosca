@@ -1321,6 +1321,51 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
+  it("should support will authorization (success)", function(done) {
+    instance.authorizePublish = function(client, topic, payload, callback) {
+      expect(topic).to.be.eql("hello");
+      expect(payload.toString()).to.be.eql("world");
+      callback(null, true);
+    };
+
+    var opts = buildOpts();
+
+    opts.will = {
+      topic: "hello",
+      payload: "world"
+    };
+
+    buildAndConnect(function() {}, opts, function(client) {
+      client.stream.end();
+    });
+
+    instance.on('published', function(packet) {
+      expect(packet.topic).to.be.eql("hello");
+      expect(packet.payload.toString()).to.be.eql("world");
+      done();
+    });
+  });
+
+  it("should support will authorization (failure)", function(done) {
+    instance.authorizePublish = function(client, topic, payload, callback) {
+      expect(topic).to.be.eql("hello");
+      expect(payload.toString()).to.be.eql("world");
+      callback(null, false);
+      done();
+    };
+
+    var opts = buildOpts();
+
+    opts.will = {
+      topic: "hello",
+      payload: "world"
+    };
+
+    buildAndConnect(function() {}, opts, function(client) {
+      client.stream.end();
+    });
+  });
+
   it("should support subscribe authorization (success)", function(done) {
     instance.authorizeSubscribe = function(client, topic, callback) {
       expect(topic).to.be.eql("hello");
