@@ -44,6 +44,26 @@ describe("mosca.Authorizer", function() {
       });
     });
 
+    it("it should not authenticate a user without a password", function(done) {
+
+      authorizer.addUser("user", "pass", function() {
+        instance(client, "user", null, function(err, success) {
+          expect(success).to.be.false;
+          done();
+        });
+      });
+    });
+
+    it("it should not authenticate a user without a username", function(done) {
+
+      authorizer.addUser("user", "pass", function() {
+        instance(client, null, "pass", function(err, success) {
+          expect(success).to.be.false;
+          done();
+        });
+      });
+    });
+
     it("it should authenticate a user known user", function(done) {
 
       authorizer.addUser("matteo", "collina", function() {
