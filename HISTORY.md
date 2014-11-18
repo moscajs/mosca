@@ -1,6 +1,24 @@
 History
 =======
 
+## 0.26.0
+
+* Changed how Mosca is configured 
+  [#200](https://github.com/mcollina/mosca/pull/200)
+* Fail authentication without username & password
+* Changed how data is stored inside leveldb in embedded mode, with
+  simplified TTL handling
+* Updated dependencies
+
+## 0.25.1
+
+* Fixed a security bug in the will authorization handling.
+
+## 0.25.0
+
+* Fixed problematic bug with MongoDB that could lead to message loss.
+* Updated dependencies.
+
 ## 0.24.1
 
 * Fix for RabbitMQ support
