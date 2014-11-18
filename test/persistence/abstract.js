@@ -546,7 +546,7 @@ module.exports = function(create, buildOpts) {
             expect(results).to.eql({});
             done();
           });
-        }, that.opts.ttl.subscriptions);
+        }, that.opts.ttl.subscriptions * 2);
       });
     });
 

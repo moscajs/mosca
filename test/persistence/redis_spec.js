@@ -6,11 +6,8 @@ var redis = require("redis");
 
 describe("mosca.persistence.Redis", function() {
 
-  this.timeout(2000);
-
   var opts = {
     ttl: {
-      checkFrequency: 1000,
       subscriptions: 1000,
       packets: 200
     }
@@ -194,11 +191,8 @@ describe("mosca.persistence.Redis", function() {
 
 
 describe("mosca.persistence.Redis select database", function() {
-  this.timeout(2000);
-
   var opts = {
     ttl: {
-      checkFrequency: 1000,
       subscriptions: 1000,
       packets: 1000
     },
