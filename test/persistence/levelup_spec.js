@@ -13,7 +13,6 @@ describe("mosca.persistence.LevelUp", function() {
 
   var opts = {
     ttl: {
-      checkFrequency: 250,
       subscriptions: 250,
       packets: 250
     }
