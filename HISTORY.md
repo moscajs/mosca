@@ -1,6 +1,10 @@
 History
 =======
 
+## 0.26.1
+
+* Improved error handling in case of database errors.
+
 ## 0.26.0
 
 * Changed how Mosca is configured 
