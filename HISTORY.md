@@ -1,6 +1,10 @@
 History
 =======
 
+## 0.26.2
+
+* Improved error handling in case of database errors.
+
 ## 0.26.1
 
 * Improved error handling in case of database errors.
