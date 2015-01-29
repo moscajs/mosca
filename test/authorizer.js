@@ -1,6 +1,6 @@
 "use strict";
 
-var hasher = require("../lib/hasher");
+var hasher = require("pbkdf2-password")();
 var async = require("async");
 
 describe("mosca.Authorizer", function() {
