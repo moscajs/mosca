@@ -4,7 +4,7 @@
   </head>
   <body>
     <script>
-      var client = mqtt.createClient();
+      var client = mqtt.connect();
 
       client.subscribe("mqtt/demo");
 
