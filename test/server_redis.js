@@ -3,6 +3,7 @@ var async = require("async");
 var ascoltatori = require("ascoltatori");
 var abstractServerTests = require("./abstract_server");
 var redis = require("redis");
+var createConnection = require("./helpers/createConnection");
 
 describe("mosca.Server with redis persistence", function() {
 
@@ -25,7 +26,7 @@ describe("mosca.Server with redis persistence", function() {
         level: 60
       },
       backend : {
-        type: 'redis'
+        type: "redis"
         // not reusing the connection
         // because ascoltatori has not an autoClose option
         // TODO it must be handled in mosca.Server
@@ -36,5 +37,5 @@ describe("mosca.Server with redis persistence", function() {
     };
   }
 
-  abstractServerTests(moscaSettings, mqtt.createConnection);
+  abstractServerTests(moscaSettings, createConnection);
 });

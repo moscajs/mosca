@@ -1,8 +1,8 @@
-var mqtt = require("mqtt");
 var async = require("async");
 var ascoltatori = require("ascoltatori");
 var abstractServerTests = require("./abstract_server");
 var net = require("net");
+var createConnection = require("./helpers/createConnection");
 
 var moscaSettings = function() {
   return {
@@ -20,13 +20,13 @@ var moscaSettings = function() {
 };
 
 describe("mosca.Server", function() {
-  abstractServerTests(moscaSettings, mqtt.createConnection);
+  abstractServerTests(moscaSettings, createConnection);
 
   function buildClient(instance, done, callback) {
-    var client = mqtt.createConnection(instance.opts.port);
+    var client = createConnection(instance.opts.port);
 
-    client.once('error', done);
-    client.stream.once('close', function() {
+    client.once("error", done);
+    client.stream.once("close", function() {
       done();
     });
 
@@ -47,7 +47,7 @@ describe("mosca.Server", function() {
 
       client.connect(opts);
 
-      client.on('connack', function(packet) {
+      client.on("connack", function(packet) {
         callback(client);
       });
     });
@@ -57,7 +57,7 @@ describe("mosca.Server", function() {
     this.instance.close(done);
   });
 
-  it("should not emit 'clientDisconnected' for a non-mqtt client", function(done) {
+  it("should not emit \"clientDisconnected\" for a non-mqtt client", function(done) {
     var stream = net.connect({ port: this.settings.port });
 
     this.instance.on("clientDisconnected", done);
@@ -65,6 +65,10 @@ describe("mosca.Server", function() {
     stream.on("connect", function() {
       stream.end();
       done();
+    });
+
+    stream.on("error", function(err) {
+      // swallow errors
     });
   });
 
@@ -80,7 +84,7 @@ describe("mosca.Server", function() {
 
       client.connect(buildOpts());
 
-      client.on('connack', function(packet) {
+      client.on("connack", function(packet) {
         expect(packet.returnCode).to.eql(0);
 
         var messageId = Math.floor(65535 * Math.random());
@@ -117,7 +121,7 @@ describe("mosca.Server", function() {
       client1.on("publish", function(packet) {
         client1.puback({ messageId: packet.messageId });
         expect(packet.topic).to.equal("a/b");
-        expect(packet.payload).to.equal("some other data");
+        expect(packet.payload.toString()).to.equal("some other data");
         expect(called++).to.equal(0);
       });
 
@@ -346,7 +350,7 @@ describe("mosca.Server", function() {
 
         setTimeout(function() {
           client.unsubscribe({
-            unsubscriptions: ['hello'],
+            unsubscriptions: ["hello"],
             messageId: messageId
           });
         }, keepalive * 1000 / 2);
@@ -372,7 +376,7 @@ describe("mosca.Server", function() {
         client.connect(opts);
 
         client.unsubscribe({
-            unsubscriptions: ['hello'],
+            unsubscriptions: ["hello"],
             messageId: messageId
           });
 
@@ -408,7 +412,7 @@ describe("mosca.Server", function() {
       buildAndConnect(d, instance, function(client1) {
         expect(stats.connectedClients).to.eql(1);
         buildAndConnect(d, instance, function(client2) {
-          // disconnect will happen after the next tick, has it's an I/O operation
+          // disconnect will happen after the next tick, has it"s an I/O operation
           client1.disconnect();
           client2.disconnect();
           expect(stats.connectedClients).to.eql(2);
@@ -421,7 +425,7 @@ describe("mosca.Server", function() {
       var instance = this.instance;
       buildAndConnect(d, instance, function(client1) {
         buildAndConnect(d, instance, function(client2) {
-          // disconnect will happen after the next tick, has it's an I/O operation
+          // disconnect will happen after the next tick, has it"s an I/O operation
           client2.disconnect();
         });
         instance.once("clientDisconnected", function() {
@@ -500,10 +504,10 @@ describe("mosca.Server - MQTT backend", function() {
   });
 
   function buildClient(done, callback) {
-    var client = mqtt.createConnection(settings.port, settings.host);
+    var client = createConnection(settings.port);
 
-    client.once('error', done);
-    client.stream.once('close', function() {
+    client.once("error", done);
+    client.stream.once("close", function() {
       done();
     });
 
@@ -523,7 +527,7 @@ describe("mosca.Server - MQTT backend", function() {
 
       client.connect(opts);
 
-      client.on('connack', function(packet) {
+      client.on("connack", function(packet) {
         callback(client);
       });
     });
@@ -539,9 +543,16 @@ describe("mosca.Server - MQTT backend", function() {
       port: settings.port,
       keepalive: 3000,
       host: "127.0.0.1",
+      hostname: "127.0.0.1",
       mqtt: require("mqtt"),
-      wildcardSome: '#',
-      wildcardOne: '+'
+      clientId: "myclientid",
+      clean: true,
+      protocol: "mqtt",
+      protocolId: "MQTT",
+      reconnectPeriod: 1000,
+      wildcardSome: "#",
+      wildcardOne: "+",
+      protocolVersion: 4
     };
 
     var server = new mosca.Server(newSettings);
@@ -553,6 +564,8 @@ describe("mosca.Server - MQTT backend", function() {
       },
 
       function(cb) {
+        // because of a spurious "encoding" property in MQTT.js
+        delete spy.args[0][0].encoding;
         expect(spy).to.have.been.calledWith(newSettings.backend);
         cb();
       },
@@ -662,7 +675,7 @@ describe("mosca.Server - MQTT backend", function() {
 
       function(client1, cb) {
         client1.on("publish", function(packet) {
-          expect(packet.payload).to.be.eql("some data");
+          expect(packet.payload.toString()).to.be.eql("some data");
           client1.disconnect();
         });
 
@@ -714,10 +727,10 @@ describe("mosca.Server - MQTT backend", function() {
     newSettings.persistence = {
       factory: mosca.persistence.Redis,
       port: 6379,
-      host: 'localhost'
+      host: "localhost"
     };
 
-    var spy = sinon.spy(newSettings.persistence, 'factory');
+    var spy = sinon.spy(newSettings.persistence, "factory");
 
     var server = new mosca.Server(newSettings);
 
@@ -742,9 +755,9 @@ describe("mosca.Server - MQTT backend", function() {
     var newSettings = moscaSettings();
 
     newSettings.persistence = {
-      factory: 'redis',
+      factory: "redis",
       port: 6379,
-      host: 'localhost'
+      host: "localhost"
     };
 
     var server = new mosca.Server(newSettings);
@@ -770,20 +783,17 @@ describe("mosca.Server - MQTT backend", function() {
     var newSettings = moscaSettings();
 
     newSettings.persistence = {
-      factory: 'no_such_persistence',
+      factory: "no_such_persistence",
       port: 6379,
-      host: 'localhost'
+      host: "localhost"
     };
 
     var server = new mosca.Server(newSettings, function(err) {
       if(err instanceof Error) {
         done();
       } else {
-        expect().fail('new mosca.Server should fail');
+        expect().fail("new mosca.Server should fail");
       }
     });
-
   });
-
-
 });

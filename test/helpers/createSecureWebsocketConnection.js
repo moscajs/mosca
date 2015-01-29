@@ -1,25 +1,19 @@
 var SECURE_CERT = __dirname + '/../secure/tls-cert.pem';
 var fs = require("fs");
-var tls = require("tls");
-var mqtt = require("mows");
+var ws = require("websocket-stream");
+var Connection = require("mqtt-connection");
 
-module.exports = function(port, host, callback) {
+module.exports = function(port) {
 
-  // FIXME it should receive the right host from the
-  // caller
-  host = "wss://localhost";
+  var stream = ws("wss://localhost:" + port, [], {
+    ca: fs.readFileSync(SECURE_CERT),
+    rejectUnauthorized: false
+  });
 
-  var secureOpts = {
-    protocol: {
-      ca: fs.readFileSync(SECURE_CERT),
-      rejectUnauthorized: false
-    }
-  };
+  var conn = new Connection(stream);
 
-  var conn = mqtt.createConnection(port, host, secureOpts);
-
-  conn.on('error', function(err){
-    console.log(err);
+  stream.on('connect', function() {
+    conn.emit('connected');
   });
 
   return conn;

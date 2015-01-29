@@ -2,8 +2,9 @@ var mqtt = require("mqtt");
 var async = require("async");
 var ascoltatori = require("ascoltatori");
 var abstractServerTests = require("./abstract_server");
-var MongoClient = require('mongodb').MongoClient;
+var MongoClient = require("mongodb").MongoClient;
 var clean = require("mongo-clean");
+var createConnection = require("./helpers/createConnection");
 
 describe("mosca.Server with mongo persistence", function() {
   this.timeout(10000);
@@ -37,7 +38,7 @@ describe("mosca.Server with mongo persistence", function() {
         level: 60
       },
       backend : {
-        type: 'mongo'
+        type: "mongo"
         // not reusing the connection
         // because ascoltatori has not an autoClose option
         // TODO it must be handled in mosca.Server
@@ -50,5 +51,5 @@ describe("mosca.Server with mongo persistence", function() {
     };
   }
 
-  abstractServerTests(moscaSettings, mqtt.createConnection);
+  abstractServerTests(moscaSettings, createConnection);
 });

@@ -1,5 +1,4 @@
 var async = require("async");
-var mqtt = require("mqtt");
 var ascoltatori = require("ascoltatori");
 
 module.exports = function(moscaSettings, createConnection) {
@@ -78,7 +77,7 @@ module.exports = function(moscaSettings, createConnection) {
     secondInstance = new mosca.Server(settings, function(err, server) {
       server.on("published", function(packet, clientId) {
         expect(packet.topic).to.be.equal("$SYS/" + secondInstance.id + "/new/clients");
-        publishedClientId = packet.payload;
+        publishedClientId = packet.payload.toString();
         verify();
       });
 
@@ -103,7 +102,7 @@ module.exports = function(moscaSettings, createConnection) {
 
     instance.on("published", function(packet) {
       expect(packet.topic).to.be.equal("$SYS/" + instance.id + "/new/subscribes");
-      publishedClientId = packet.payload;
+      publishedClientId = packet.payload.toString();
       verify();
     });
 
@@ -419,7 +418,7 @@ module.exports = function(moscaSettings, createConnection) {
 
       client1.on("publish", function(packet) {
         expect(packet.topic).to.be.equal("hello");
-        expect(packet.payload).to.be.equal("some data");
+        expect(packet.payload.toString()).to.be.equal("some data");
         client1.disconnect();
       });
 
@@ -456,7 +455,7 @@ module.exports = function(moscaSettings, createConnection) {
 
       client1.on("publish", function(packet) {
         expect(packet.topic).to.be.equal("hello");
-        expect(packet.payload.length).to.be.equal(bigPayload.length);
+        expect(packet.payload.toString().length).to.be.equal(bigPayload.length);
         client1.disconnect();
       });
 
@@ -653,7 +652,7 @@ module.exports = function(moscaSettings, createConnection) {
 
       instance.on("published", function(packet, serverClient) {
         expect(packet.topic).to.be.equal("hello");
-        expect(packet.payload.toString()).to.be.equal("some data");
+        expect(packet.payload.toString().toString()).to.be.equal("some data");
         expect(serverClient.id).to.be.equal(clientId);
         client.disconnect();
       });
@@ -673,7 +672,7 @@ module.exports = function(moscaSettings, createConnection) {
       onPublishedCalled = true;
 
       expect(packet.topic).to.be.equal("hello");
-      expect(packet.payload.toString()).to.be.equal("some data");
+      expect(packet.payload.toString().toString()).to.be.equal("some data");
       expect(serverClient.id).to.be.equal(clientId);
 
       callback();
@@ -737,7 +736,9 @@ module.exports = function(moscaSettings, createConnection) {
     client.on('connack', function() {
       client.disconnect();
       client.disconnect();
-      client.stream.end();
+      async.setImmediate(function() {
+        client.stream.end();
+      });
     });
 
     client.connect(buildOpts());
@@ -781,7 +782,7 @@ module.exports = function(moscaSettings, createConnection) {
 
       client1.on("publish", function(packet) {
         expect(packet.topic).to.be.equal("hello/world");
-        expect(packet.payload).to.be.equal("some data");
+        expect(packet.payload.toString()).to.be.equal("some data");
         client1.disconnect();
       });
 
@@ -814,7 +815,7 @@ module.exports = function(moscaSettings, createConnection) {
 
       client1.on("publish", function(packet) {
         expect(packet.topic).to.be.equal("hello/world");
-        expect(packet.payload).to.be.equal("some data");
+        expect(packet.payload.toString()).to.be.equal("some data");
         client1.disconnect();
       });
 
@@ -846,7 +847,7 @@ module.exports = function(moscaSettings, createConnection) {
 
       client1.on("publish", function(packet) {
         expect(packet.topic).to.be.equal("hello/foo/world/bar");
-        expect(packet.payload).to.be.equal("some data");
+        expect(packet.payload.toString()).to.be.equal("some data");
         client1.disconnect();
       });
 
@@ -1153,7 +1154,7 @@ module.exports = function(moscaSettings, createConnection) {
         });
         client3.on("publish", function(packet) {
           expect(packet.topic).to.be.eql("hello/died");
-          expect(packet.payload).to.be.eql("client1 died");
+          expect(packet.payload.toString()).to.be.eql("client1 died");
           client3.disconnect();
         });
       }
@@ -1272,7 +1273,7 @@ module.exports = function(moscaSettings, createConnection) {
     };
 
     instance.on("published", function(packet) {
-      expect(packet.payload.toString()).to.be.equal("rewritten");
+      expect(packet.payload.toString().toString()).to.be.equal("rewritten");
     });
 
     buildAndConnect(done, function(client) {
@@ -1341,7 +1342,7 @@ module.exports = function(moscaSettings, createConnection) {
 
     instance.on('published', function(packet) {
       expect(packet.topic).to.be.eql("hello");
-      expect(packet.payload.toString()).to.be.eql("world");
+      expect(packet.payload.toString().toString()).to.be.eql("world");
       done();
     });
   });
@@ -1547,7 +1548,7 @@ module.exports = function(moscaSettings, createConnection) {
 
           client.on("publish", function(packet) {
             expect(packet.topic).to.be.eql("hello");
-            expect(packet.payload.toString()).to.be.eql("world world");
+            expect(packet.payload.toString().toString()).to.be.eql("world world");
             client.stream.end();
           });
 
@@ -1679,7 +1680,7 @@ module.exports = function(moscaSettings, createConnection) {
 
           client.on("publish", function(packet) {
             expect(packet.topic).to.be.eql("hello");
-            expect(packet.payload).to.be.eql("world");
+            expect(packet.payload.toString()).to.be.eql("world");
             expect(packet.qos).to.be.eql(1);
             client.disconnect();
           });
@@ -1732,7 +1733,7 @@ module.exports = function(moscaSettings, createConnection) {
         buildAndConnect(cb, opts, function(client) {
           client.on("publish", function(packet) {
             expect(packet.topic).to.be.eql("hello");
-            expect(packet.payload).to.be.eql("world");
+            expect(packet.payload.toString()).to.be.eql("world");
             client.disconnect();
           });
         });
@@ -1864,7 +1865,7 @@ module.exports = function(moscaSettings, createConnection) {
             client.disconnect();
 
             expect(packet.topic).to.eql("hello");
-            expect(packet.payload).to.eql("world");
+            expect(packet.payload.toString()).to.eql("world");
             expect(packet.qos).to.eql(1);
           });
         });
@@ -1924,7 +1925,7 @@ module.exports = function(moscaSettings, createConnection) {
             client.disconnect();
 
             expect(packet.topic).to.eql("hello");
-            expect(packet.payload).to.eql("world");
+            expect(packet.payload.toString()).to.eql("world");
             expect(packet.qos).to.eql(1);
           });
         });
@@ -2047,7 +2048,7 @@ module.exports = function(moscaSettings, createConnection) {
 
       client.on("publish", function(packet) {
         expect(packet).to.have.property("topic", "hello");
-        expect(packet).to.have.property("payload", "world");
+        expect(packet.payload.toString()).to.equal("world");
         expect(packet).to.have.property("qos", 1);
         client.disconnect();
       });

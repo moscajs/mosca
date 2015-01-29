@@ -1,8 +1,8 @@
-var mqtt = require("mqtt");
 var abstractServerTests = require("./abstract_server");
+var createConnection = require("./helpers/createConnection");
 
-var SECURE_KEY = __dirname + '/secure/tls-key.pem';
-var SECURE_CERT = __dirname + '/secure/tls-cert.pem';
+var SECURE_KEY = __dirname + "/secure/tls-key.pem";
+var SECURE_CERT = __dirname + "/secure/tls-cert.pem";
 
 var moscaSettings = function() {
   var port = nextPort();
@@ -56,8 +56,8 @@ describe("mosca.Server - Secure and non-secure Connection", function() {
     settings.secure.port = nextPort();
 
     instance = new mosca.Server(settings, function() {
-      conn = mqtt.createConnection(settings.port);
-      conn.on('error', function(err) {
+      conn = createConnection(settings.port);
+      conn.once("error", function(err) {
         conn = null;
         done();
       });
@@ -70,8 +70,9 @@ describe("mosca.Server - Secure and non-secure Connection", function() {
     settings.secure.port = nextPort();
 
     instance = new mosca.Server(settings, function() {
-      conn = mqtt.createConnection(settings.port);
-      conn.on('connected', function(err) {
+      conn = createConnection(settings.port);
+      conn.on("connected", function(err) {
+       
         done();
       });
     });

@@ -36,7 +36,7 @@ describe("mosca.cli", function() {
         servers.unshift(server);
         callback(server);
       }
-      done(err);
+      async.setImmediate(done.bind(null, err));
     });
   };
 
@@ -270,8 +270,8 @@ describe("mosca.cli", function() {
       function(server, cb) {
         servers.unshift(server);
 
-        var options = { username: "test", password: "test" };
-        var client = mqtt.createClient(1883, "localhost", options);
+        var options = { username: "test", password: "test", port: 1883 };
+        var client = mqtt.connect(options);
         client.on("error", cb);
         client.on("connect", function() {
           cb(null, client);
@@ -299,8 +299,8 @@ describe("mosca.cli", function() {
       },
       function(server, cb) {
         servers.unshift(server);
-        var options = { username: "bad", password: "bad" };
-        var client = mqtt.createClient(1883, "localhost", options);
+        var options = { port: 1883, username: "bad", password: "bad" };
+        var client = mqtt.connect(options);
         client.on("error", cb);
         client.on("connect", function() {
           cb(null, client);
@@ -356,8 +356,8 @@ describe("mosca.cli", function() {
         setTimeout(cb, 50);
       },
       function(cb) {
-        var options = { username: "myuser", password: "mypass" };
-        var client = mqtt.createClient(1883, "localhost", options);
+        var options = { port: 1883, username: "myuser", password: "mypass" };
+        var client = mqtt.connect(options);
         client.once("error", cb);
         client.once("connect", function() {
           client.once("close", cb);

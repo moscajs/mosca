@@ -1,7 +1,7 @@
 var SECURE_CERT = __dirname + '/../secure/tls-cert.pem';
 var fs = require("fs");
 var tls = require("tls");
-var mqtt = require("mqtt");
+var Connection = require("mqtt-connection");
 
 module.exports = function(port, host, callback) {
   var net_client, mqtt_conn, tls_opts = {};
@@ -37,10 +37,7 @@ module.exports = function(port, host, callback) {
     }
   });
 
-  mqtt_conn = net_client.pipe(new mqtt.MqttConnection());
-
-  // Echo net errors
-  net_client.on('error', mqtt_conn.emit.bind(mqtt_conn, 'error'));
+  mqtt_conn = new Connection(net_client);
 
   net_client.on('close', mqtt_conn.emit.bind(mqtt_conn, 'close'));
 
@@ -50,10 +47,6 @@ module.exports = function(port, host, callback) {
 
   mqtt_conn.once('connected', function() {
     callback(null, mqtt_conn);
-  });
-
-  mqtt_conn.once('error', function(err) {
-    callback(err);
   });
 
   return mqtt_conn;
