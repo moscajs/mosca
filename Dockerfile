@@ -1,21 +1,18 @@
 # Mosca
 #
-# VERSION 0.0.4
+# VERSION 0.1.0
 
-FROM dockerfile/nodejs
+FROM node:0.10
 MAINTAINER Matteo Collina <hello@matteocollina.com>
 
-# install tools for building binary addons
-RUN apt-get -y update
-RUN apt-get -y install build-essential libssl-dev curl python
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app/
 
-RUN mkdir /db
+COPY ./ /usr/src/app/
 
-ADD ./ /src
-
-RUN cd /src; rm -rf node_modules/; npm install --unsafe-perm
+RUN npm install --unsafe-perm --production
 
 EXPOSE 80
 EXPOSE 1883
 
-ENTRYPOINT ["/src/bin/mosca", "-d", "/db", "--http-port", "80", "--http-bundle", "-v"]
+ENTRYPOINT ["/usr/src/app/bin/mosca", "-d", "/db", "--http-port", "80", "--http-bundle", "-v"]
