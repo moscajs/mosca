@@ -10,7 +10,6 @@
 
       client.on("message", function(topic, payload) {
         alert([topic, payload].join(": "));
-        client.end();
       });
 
       client.publish("mqtt/demo", "hello world!");
