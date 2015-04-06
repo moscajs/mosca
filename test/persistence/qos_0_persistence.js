@@ -11,7 +11,7 @@ var emptyServer = function() {
 };
 util.inherits(emptyServer, EventEmitter);
 
-describe("mosca.persistence.store_qos0_messages", function() {
+describe("mosca.persistence.storeMessagesQos0", function() {
   
   var opts = {
     url : "mongodb://localhost:27017/moscatests",
@@ -20,7 +20,7 @@ describe("mosca.persistence.store_qos0_messages", function() {
       subscriptions : 1000,
       packets : 1000
     },
-    store_qos0_messages : false
+    storeMessagesQos0 : false
   };
   
   before(function(done) {
@@ -41,11 +41,11 @@ describe("mosca.persistence.store_qos0_messages", function() {
     
   });
   
-  describe("store_qos0_messages = false", function() {
+  describe("storeMessagesQos0 = false", function() {
     
     it("qos 0, retain false", function(done) {
       
-      opts.store_qos0_messages = false;
+      opts.storeMessagesQos0 = false;
       
       var server = new emptyServer();
       
@@ -86,7 +86,7 @@ describe("mosca.persistence.store_qos0_messages", function() {
     
     it("qos 0, retain true", function(done) {
       
-      opts.store_qos0_messages = false;
+      opts.storeMessagesQos0 = false;
       
       var server = new emptyServer();
       
@@ -127,11 +127,11 @@ describe("mosca.persistence.store_qos0_messages", function() {
     
   });
   
-  describe("store_qos0_messages = true", function() {
+  describe("storeMessagesQos0 = true", function() {
     
     it("qos 0, retain false", function(done) {
       
-      opts.store_qos0_messages = true;
+      opts.storeMessagesQos0 = true;
       
       var server = new emptyServer();
       
@@ -173,7 +173,7 @@ describe("mosca.persistence.store_qos0_messages", function() {
     
     it("qos 0, retain true", function(done) {
       
-      opts.store_qos0_messages = true;
+      opts.storeMessagesQos0 = true;
       
       var server = new emptyServer();
       
