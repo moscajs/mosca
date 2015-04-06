@@ -55,7 +55,7 @@ module.exports = function(moscaSettings, createConnection) {
       client.connect(opts);
 
       client.on('connack', function(packet) {
-        callback(client);
+        callback(client, packet);
       });
     });
   }
@@ -1652,7 +1652,11 @@ module.exports = function(moscaSettings, createConnection) {
     async.series([
 
       function(cb) {
-        buildAndConnect(cb, opts, function(client) {
+        buildAndConnect(cb, opts, function(client, connack) {
+        	
+          // sessionPresent must be false
+          expect(connack.sessionPresent).to.be.eql(false);
+        	
           var subscriptions = [{
             topic: "hello",
             qos: 1
@@ -1670,7 +1674,11 @@ module.exports = function(moscaSettings, createConnection) {
       },
 
       function(cb) {
-        buildAndConnect(cb, opts, function(client) {
+        buildAndConnect(cb, opts, function(client, connack) {
+        
+          // reconnection sessionPresent must be true
+          expect(connack.sessionPresent).to.be.eql(true);
+        	
           client.publish({
             topic: "hello",
             qos: 1,
@@ -1698,7 +1706,11 @@ module.exports = function(moscaSettings, createConnection) {
     async.series([
 
       function(cb) {
-        buildAndConnect(cb, opts, function(client) {
+        buildAndConnect(cb, opts, function(client, connack) {
+
+          // sessionPresent must be false
+          expect(connack.sessionPresent).to.be.eql(false);
+
           var subscriptions = [{
             topic: "hello",
             qos: 1
@@ -1716,7 +1728,11 @@ module.exports = function(moscaSettings, createConnection) {
       },
 
       function(cb) {
-        buildAndConnect(cb, buildOpts(), function(client) {
+        buildAndConnect(cb, buildOpts(), function(client, connack) {
+
+          // buildOpts create new id, so is new session, sessionPresent must be false
+          expect(connack.sessionPresent).to.be.eql(false);
+
           client.publish({
             topic: "hello",
             qos: 1,
@@ -1730,7 +1746,11 @@ module.exports = function(moscaSettings, createConnection) {
       },
 
       function(cb) {
-        buildAndConnect(cb, opts, function(client) {
+        buildAndConnect(cb, opts, function(client, connack) {
+
+          // reconnection sessionPresent must be true
+          expect(connack.sessionPresent).to.be.eql(true);
+
           client.on("publish", function(packet) {
             expect(packet.topic).to.be.eql("hello");
             expect(packet.payload.toString()).to.be.eql("world");
