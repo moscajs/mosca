@@ -600,10 +600,10 @@ module.exports = function(create, buildOpts) {
     });
 
     it("should not stream any offline packet", function(done) {
+      // ensure persistence engine call 'done'
       this.instance.streamOfflinePackets(client, function(err, packet) {
         done(new Error("this should never be called"));
-      });
-      done();
+      }, done);
     });
 
     it("should store and stream an offline packet", function(done) {
@@ -1170,4 +1170,83 @@ module.exports = function(create, buildOpts) {
 
   });
 
+  describe("offline packets - not send is expired", function() {
+
+    var client = {
+      id : "my client id - 42",
+      clean : false,
+      subscriptions : {
+        "hello/#" : {
+          qos : 1
+        }
+      }
+    };
+ 
+    it("do not send expires packages", function(done) {
+      var instance = this.instance;
+
+      var packet = {
+        topic : "hello/42",
+        qos : 1,
+        retain : false,
+        payload : new Buffer("world"),
+        messageId : "42"
+      };
+
+      instance.storeSubscriptions(client, function() {
+        instance.storeOfflinePacket(packet, function() {
+          setTimeout(function() {
+            instance.streamOfflinePackets(client, function(err, p) {
+              done(new Error("this should never be called"));
+            }, done);
+          }, 1500);
+        });
+      });
+    });
+
+    it("do not send expires packages - multiple", function(done) {
+      var instance = this.instance;
+
+      var packet1 = {
+        topic : "hello/42",
+        qos : 1,
+        retain : false,
+        payload : new Buffer("hello"),
+        messageId : "42"
+      };
+
+      var packet2 = {
+        topic : "hello/42",
+        qos : 1,
+        retain : false,
+        payload : new Buffer("my"),
+        messageId : "43"
+      };
+
+      var packet3 = {
+        topic : "hello/42",
+        qos : 1,
+        retain : false,
+        payload : new Buffer("world"),
+        messageId : "44"
+      };
+
+      instance.storeSubscriptions(client, function() {
+        instance.storeOfflinePacket(packet1, function() {
+          instance.storeOfflinePacket(packet2, function() {
+            instance.storeOfflinePacket(packet3, function() {
+              setTimeout(function() {
+                instance.streamOfflinePackets(client, function(err, p) {
+                  done(new Error("this should never be called"));
+                }, done);
+              }, 1500);
+            });
+          });
+        });
+      });
+    });
+
+  });
+
 };
+
