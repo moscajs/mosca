@@ -1199,7 +1199,7 @@ module.exports = function(create, buildOpts) {
             instance.streamOfflinePackets(client, function(err, p) {
               done(new Error("this should never be called"));
             }, done);
-          }, 1500);
+          }, instance.options.ttl.packets + 500);
         });
       });
     });
@@ -1239,7 +1239,7 @@ module.exports = function(create, buildOpts) {
                 instance.streamOfflinePackets(client, function(err, p) {
                   done(new Error("this should never be called"));
                 }, done);
-              }, 1500);
+              }, instance.options.ttl.packets + 500);
             });
           });
         });
