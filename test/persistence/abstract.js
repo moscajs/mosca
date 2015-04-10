@@ -738,7 +738,10 @@ module.exports = function(create, buildOpts) {
     });
 
     it("should not stream any offline packet to a clean client", function(done) {
+      var server = new EventEmitter();
       var instance = this.instance;
+      instance.wire(server);
+
       var client = {
         id: "my client id - 42",
         clean: false,
@@ -752,10 +755,7 @@ module.exports = function(create, buildOpts) {
 
       instance.storeOfflinePacket(packet, function() {
         client.clean = true;
-        instance.streamOfflinePackets(client, function(err, p) {
-          done(new Error("this should never be called"));
-        });
-        done();
+        server.forwardOfflinePackets(client, done);
       });
     });
 
