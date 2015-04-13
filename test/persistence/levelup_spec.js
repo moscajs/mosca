@@ -9,7 +9,7 @@ var rimraf = require("rimraf");
 
 describe("mosca.persistence.LevelUp", function() {
 
-  this.timeout(2000);
+  this.timeout(4000);
 
   var opts = {
     ttl: {

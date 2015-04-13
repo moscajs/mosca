@@ -6,6 +6,8 @@ var redis = require("redis");
 
 describe("mosca.persistence.Redis", function() {
 
+  this.timeout(5000);
+
   var opts = {
     ttl: {
       subscriptions: 1000,
