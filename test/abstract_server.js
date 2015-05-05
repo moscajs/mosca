@@ -664,7 +664,7 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
-  it.skip("should emit an event for puback of each published packet", function(done) {
+  it("should emit an event for puback of each published packet", function(done) {
     buildAndConnect(done, function(client) {
 
       var clientId = client.opts.clientId;
@@ -690,6 +690,9 @@ module.exports = function(moscaSettings, createConnection) {
         });
       });
 
+      client.on("publish", function(packet){
+        client.puback({ messageId: packet.messageId });
+      });
       client.subscribe({
         subscriptions: subscriptions,
         messageId: messageId
