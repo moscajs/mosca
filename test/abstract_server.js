@@ -1798,6 +1798,73 @@ module.exports = function(moscaSettings, createConnection) {
     ], done);
   });
 
+  it("cleanSession = false, on reconnect cleanSession = true", function(done) {
+    var opts = buildOpts();
+
+    opts.clientId = "mosca-unclean-client-test";
+
+    async.series([
+
+      function(cb) {
+        opts.clean = false;
+        buildAndConnect(cb, opts, function(client, connack) {
+
+          // sessionPresent must be false
+          expect(connack.sessionPresent).to.be.eql(false);
+
+          var subscriptions = [{
+            topic: "hello",
+            qos: 1
+          }];
+
+          client.subscribe({
+            subscriptions: subscriptions,
+            messageId: 42
+          });
+
+          client.on("suback", function() {
+            client.stream.end();
+          });
+        });
+      },
+
+      function(cb) {
+        buildAndConnect(cb, buildOpts(), function(client, connack) {
+
+          // buildOpts create new id, so is new session, sessionPresent must be false
+          expect(connack.sessionPresent).to.be.eql(false);
+
+          client.publish({
+            topic: "hello",
+            qos: 1,
+            payload: "world",
+            messageId: 24
+          });
+          client.on("puback", function() {
+            client.disconnect();
+          });
+        });
+      },
+
+      function(cb) {
+        opts.clean = true;
+        buildAndConnect(cb, opts, function(client, connack) {
+
+          // reconnection sessionPresent must be false, it is clean
+          expect(connack.sessionPresent).to.be.eql(false);
+          
+          client.on("publish", function(packet) {
+            cb(new Error("unexpected publish"));
+          });
+
+          setTimeout(function(){
+            client.disconnect();
+          }, 1000);
+        });
+      }
+    ], done);
+  });
+
   it("should remove already pubacked messages from the offline store", function(done) {
     var opts = buildOpts();
 
