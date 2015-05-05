@@ -664,6 +664,43 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
+  it("should emit an event for puback of each published packet", function(done) {
+    buildAndConnect(done, function(client) {
+
+      var clientId = client.opts.clientId;
+      var messageId = Math.floor(65535 * Math.random());
+
+      var subscriptions = [{
+        topic: "delivery",
+        qos: 1
+      }];
+
+      instance.on("delivered", function(packet, serverClient) {
+        expect(packet.topic).to.be.equal("delivery");
+        expect(packet.payload.toString().toString()).to.be.equal("some data");
+        expect(serverClient.id).to.be.equal(clientId);
+        client.disconnect();
+      });
+
+      instance.on("subscribed", function(topic, serverClient) {
+        instance.publish({
+          topic: "delivery",
+          payload: "some data",
+          qos: 1
+        });
+      });
+
+      client.on("publish", function(packet){
+        client.puback({ messageId: packet.messageId });
+      });
+      client.subscribe({
+        subscriptions: subscriptions,
+        messageId: messageId
+      });
+
+    });
+  });
+
   it("should call onPublished on every newly published packet", function(done) {
     var onPublishedCalled = false;
     var clientId;
