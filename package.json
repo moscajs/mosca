@@ -30,7 +30,7 @@
     "url": "http://github.com/mcollina/mosca/issues"
   },
   "engines": {
-    "node": ">=0.10.10 <0.13"
+    "node": ">=0.10.10"
   },
   "keywords": [
     "mqtt",
@@ -54,7 +54,7 @@
     "dox-foundation": "~0.5.4",
     "istanbul": "~0.3.0",
     "jshint": "~2.5.2",
-    "microtime": "~1.0.1",
+    "microtime": "~1.4.2",
     "mocha": "^2.0.1",
     "mongo-clean": "^0.1.0",
     "osenv": "^0.1.0",
@@ -77,8 +77,8 @@
     "extend": "^2.0.0",
     "json-buffer": "~2.0.7",
     "jsonschema": "^1.0.0",
-    "level-sublevel": "^6.3.15",
-    "levelup": "~0.19.0",
+    "level-sublevel": "^6.4.6",
+    "levelup": "^1.1.0",
     "lru-cache": "~2.5.0",
     "memdown": "~0.10.2",
     "minimatch": "~1.0.0",
@@ -96,10 +96,11 @@
   },
   "optionalDependencies": {
     "leveldown": "~0.10.0",
-    "zmq": "~2.8.0",
-    "amqp": "~0.2.0",
+    "nan": "~1.8.4",
+    "zmq": "~2.11.0",
+    "amqp": "~0.2.4",
     "redis": "~0.12.1",
     "hiredis": "^0.1.17",
-    "mongodb": "~1.4.18"
+    "mongodb": "~2.0.33"
   }
 }
