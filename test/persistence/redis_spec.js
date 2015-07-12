@@ -189,6 +189,48 @@ describe("mosca.persistence.Redis", function() {
     });
 
   });
+
+
+  describe("clustered.environment", function(){
+
+    it("should forward each packet once after client reconnects", function(done) {
+      var client = {
+        id: "cluster client id - 42",
+        clean: false,
+        subscriptions: {
+          "hello/#": {
+            qos: 1
+          }
+        }
+      };
+
+      var packet = {
+        topic: "hello/42",
+        qos: 0,
+        payload: new Buffer("world"),
+        messageId: "42"
+      };
+
+      var that = this;
+      that.secondInstance = new Redis(opts, function() {
+        that.instance.storeSubscriptions(client, function() {
+          // simulate client reconnect since storeSubscriptions is called on disconnect
+          // no matter client connects to instance or secondInstance
+          that.secondInstance.storeSubscriptions(client, function () {
+            setTimeout(function () {
+              that.secondInstance.storeOfflinePacket(packet, function () {
+                that.instance.streamOfflinePackets(client, function (err, p) {
+                  expect(p).to.eql(packet);
+                  done(); // should be called once
+                });
+              });
+            }, 50);
+          });
+        });
+      });
+    });
+
+  });
 });
 
 
