@@ -8,8 +8,8 @@ var pubsubSettings = {
     exchange: 'amq.topic'
 };
 
-var SECURE_KEY = 'C:\\openssl\\key.pem';
-var SECURE_CERT = 'C:\\openssl\\cert.pem';
+var SECURE_KEY = __dirname + '/../../test/secure/tls-key.pem';
+var SECURE_CERT = __dirname + '/../../test/secure/tls-cert.pem';
 
 var moscaSetting = {
     interfaces: [
