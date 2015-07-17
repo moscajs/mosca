@@ -317,6 +317,41 @@ module.exports = function(moscaSettings, createConnection) {
     ]);
   });
 
+  it("should generate a random clientId if none is supplied by the client and protocol is 3.1.1", function(done) {
+
+    var connectedClient = null,
+        publishedClientId = null,
+        opts = {
+          keepalive: 1000,
+          clientId: '',
+          protocolId: 'MQTT',
+          protocolVersion: 4
+        };
+
+    settings = moscaSettings();
+    settings.publishNewClient = true;
+
+    function verify() {
+      if (connectedClient && publishedClientId) {
+        expect(publishedClientId).to.be.ok;
+        connectedClient.disconnect();
+      }
+    }
+
+    secondInstance = new mosca.Server(settings, function(err, server) {
+      server.on("published", function(packet, clientId) {
+        expect(packet.topic).to.be.equal("$SYS/" + secondInstance.id + "/new/clients");
+        publishedClientId = packet.payload.toString();
+        verify();
+      });
+
+      buildAndConnect(done, opts, function(client) {
+        connectedClient = client;
+        verify();
+      });
+    });
+  });
+
   it("should send a pingresp when it receives a pingreq", function(done) {
     buildAndConnect(done, function(client) {
 
