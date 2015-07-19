@@ -40,6 +40,12 @@ describe("mosca.Stats", function() {
       expect(instance.connectedClients).to.eql(0);
     });
 
+    it("should track maximum clients connected", function() {
+      server.emit("clientConnected");
+      server.emit("clientDisconnected");
+      expect(instance.maxConnectedClients).to.eql(1);
+    });
+
     it("should grow past 1", function() {
       server.emit("clientConnected");
       server.emit("clientConnected");
@@ -69,20 +75,20 @@ describe("mosca.Stats", function() {
     });
 
     it("should increase when published is emitted", function() {
-      server.emit("published");
+      server.emit("published", { topic: 'mosca/stats/test/publishes' });
       expect(instance.publishedMessages).to.eql(1);
     });
 
     it("should increase when published is emitted (two)", function() {
-      server.emit("published");
-      server.emit("published");
+      server.emit("published", { topic: 'mosca/stats/test/publishes' });
+      server.emit("published", { topic: 'mosca/stats/test/publishes' });
       expect(instance.publishedMessages).to.eql(2);
     });
 
     it("should publish it every 10s", function(done) {
-      server.emit("published");
-      server.emit("published");
-      server.emit("published");
+      server.emit("published", { topic: 'mosca/stats/test/publishes' });
+      server.emit("published", { topic: 'mosca/stats/test/publishes' });
+      server.emit("published", { topic: 'mosca/stats/test/publishes' });
 
       server.on("testPublished", function(packet) {
         if (packet.topic === "$SYS/42/publish/received") {
@@ -118,15 +124,14 @@ describe("mosca.Stats", function() {
     var buildTimer = {
       published: function() {
         return setInterval(function() {
-          server.emit("published");
-          server.emit("published");
+          server.emit("published", { topic: 'mosca/stats/test/publishes' });
+          server.emit("published", { topic: 'mosca/stats/test/publishes' });
         }, interval * 1000);
       },
       clientConnected: function(minutes) {
-        server.emit("clientConnected");
-        server.emit("clientConnected");
-
         return setInterval(function() {
+          server.emit("clientConnected");
+          server.emit("clientConnected");
         }, interval * 1000);
       }
     };
@@ -176,7 +181,7 @@ describe("mosca.Stats", function() {
             expect(instance.load.m5[events[event]]).to.eql(0);
           });
 
-          it("should cover the last 15 minutes", function() {
+          it("should cover the last 5 minutes", function() {
             toBeCleared = buildTimer[event](5);
             clock.tick(5 * 60 * 1000 + 1);
             expect(instance.load.m5[events[event]]).to.eql(2);
