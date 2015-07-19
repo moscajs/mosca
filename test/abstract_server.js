@@ -147,8 +147,8 @@ module.exports = function(moscaSettings, createConnection) {
       instance.once("published", function(packet) {
         expect(packet.topic).to.be.equal("$SYS/" + instance.id + "/new/unsubscribes");
         var payload = JSON.parse( packet.payload.toString() );
-        publishedClientId = payload.clientId;
         expect(payload.topic).to.be.equal('hello');
+        publishedClientId = payload.clientId;
         verify();
       });
     });
