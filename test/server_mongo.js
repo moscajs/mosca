@@ -33,6 +33,7 @@ describe("mosca.Server with mongo persistence", function() {
       port: nextPort(),
       stats: false,
       publishNewClient: false,
+      publishClientDisconnect: false,
       logger: {
         childOf: globalLogger,
         level: 60
