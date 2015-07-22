@@ -9,6 +9,7 @@ module.exports = function(moscaSettings, createConnection) {
   beforeEach(function(done) {
     settings = moscaSettings();
     settings.publishNewClient = false;
+    settings.publishClientDisconnect = false;
     instance = new mosca.Server(settings, done);
     this.instance = instance;
     this.settings = settings;
@@ -66,6 +67,7 @@ module.exports = function(moscaSettings, createConnection) {
 
     settings = moscaSettings();
     settings.publishNewClient = true;
+    settings.publishClientDisconnect = false;
 
     function verify() {
       if (connectedClient && publishedClientId) {
@@ -84,6 +86,35 @@ module.exports = function(moscaSettings, createConnection) {
       buildAndConnect(done, function(client) {
         connectedClient = client;
         verify();
+      });
+    });
+  });
+
+  it("should publish disconnected client to '$SYS/{broker-id}/disconnect/clients'", function(done) {
+    var connectedClient = null,
+        publishedClientId = null;
+
+    settings = moscaSettings();
+    settings.publishNewClient = false;
+    settings.publishClientDisconnect = true;
+
+    function verify() {
+      if (connectedClient && publishedClientId) {
+        expect(publishedClientId).to.be.equal(connectedClient.opts.clientId);
+        done();
+      }
+    }
+
+    secondInstance = new mosca.Server(settings, function(err, server) {
+      server.on("published", function(packet, clientId) {
+        expect(packet.topic).to.be.equal("$SYS/" + secondInstance.id + "/disconnect/clients");
+        publishedClientId = packet.payload.toString();
+        verify();
+      });
+
+      buildAndConnect(function(){}, function(client) {
+        connectedClient = client;
+        connectedClient.disconnect();
       });
     });
   });
@@ -330,6 +361,7 @@ module.exports = function(moscaSettings, createConnection) {
 
     settings = moscaSettings();
     settings.publishNewClient = true;
+    settings.publishClientDisconnect = false;
 
     function verify() {
       if (connectedClient && publishedClientId) {

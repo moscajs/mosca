@@ -13,7 +13,7 @@ module.exports = function(create, buildOpts) {
     };
   }
 
-  beforeEach(function(done) {
+  beforeEach(function build(done) {
     var that = this;
     buildOpts(function(err, opts) {
       if (err) {
