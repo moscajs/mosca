@@ -131,9 +131,11 @@ module.exports = function(moscaSettings, createConnection) {
       }
     }
 
-    instance.on("published", function(packet) {
+    instance.once("published", function(packet) {
       expect(packet.topic).to.be.equal("$SYS/" + instance.id + "/new/subscribes");
-      publishedClientId = packet.payload.toString();
+      var payload = JSON.parse( packet.payload.toString() );
+      publishedClientId = payload.clientId;
+      expect(payload.topic).to.be.equal('hello');
       verify();
     });
 
@@ -157,6 +159,56 @@ module.exports = function(moscaSettings, createConnection) {
       });
     });
 
+  });
+
+  it("should publish each unsubscribe to '$SYS/{broker-id}/new/unsubscribes'", function(done) {
+    var d = donner(2, done),
+        connectedClient = null,
+        publishedClientId = null;
+
+    function verify() {
+      if (connectedClient && publishedClientId) {
+        expect(publishedClientId).to.be.equal(connectedClient.opts.clientId);
+        d();
+      }
+    }
+
+    instance.once("published", function(packet) {
+      expect(packet.topic).to.be.equal("$SYS/" + instance.id + "/new/subscribes");
+      instance.once("published", function(packet) {
+        expect(packet.topic).to.be.equal("$SYS/" + instance.id + "/new/unsubscribes");
+        var payload = JSON.parse( packet.payload.toString() );
+        expect(payload.topic).to.be.equal('hello');
+        publishedClientId = payload.clientId;
+        verify();
+      });
+    });
+
+    buildAndConnect(d, function(client) {
+      var messageId = Math.floor(65535 * Math.random());
+      var subscriptions = [{
+        topic: "hello",
+        qos: 1
+      }];
+
+      connectedClient = client;
+
+      client.on("unsuback", function(packet) {
+        client.disconnect();
+      });
+
+      client.on("suback", function(packet) {
+        client.unsubscribe({
+          unsubscriptions: ["hello"],
+          messageId: messageId
+        });
+      });
+
+      client.subscribe({
+        subscriptions: subscriptions,
+        messageId: messageId
+      });
+    });
   });
 
   describe("multi mosca servers", function() {
