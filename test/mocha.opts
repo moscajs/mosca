@@ -5,3 +5,4 @@
 --colors
 --check-leaks
 --timeout 5000
+--globals Promise

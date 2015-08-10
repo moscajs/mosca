@@ -549,6 +549,7 @@ describe("mosca.Server - MQTT backend", function() {
       clean: true,
       protocol: "mqtt",
       protocolId: "MQTT",
+      connectTimeout: 30000,
       reconnectPeriod: 1000,
       wildcardSome: "#",
       wildcardOne: "+",

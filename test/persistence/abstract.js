@@ -13,7 +13,7 @@ module.exports = function(create, buildOpts) {
     };
   }
 
-  beforeEach(function(done) {
+  beforeEach(function build(done) {
     var that = this;
     buildOpts(function(err, opts) {
       if (err) {
@@ -600,10 +600,10 @@ module.exports = function(create, buildOpts) {
     });
 
     it("should not stream any offline packet", function(done) {
+      // ensure persistence engine call 'done'
       this.instance.streamOfflinePackets(client, function(err, packet) {
         done(new Error("this should never be called"));
-      });
-      done();
+      }, done);
     });
 
     it("should store and stream an offline packet", function(done) {
@@ -738,7 +738,10 @@ module.exports = function(create, buildOpts) {
     });
 
     it("should not stream any offline packet to a clean client", function(done) {
+      var server = new EventEmitter();
       var instance = this.instance;
+      instance.wire(server);
+
       var client = {
         id: "my client id - 42",
         clean: false,
@@ -752,10 +755,7 @@ module.exports = function(create, buildOpts) {
 
       instance.storeOfflinePacket(packet, function() {
         client.clean = true;
-        instance.streamOfflinePackets(client, function(err, p) {
-          done(new Error("this should never be called"));
-        });
-        done();
+        server.forwardOfflinePackets(client, done);
       });
     });
 
@@ -953,4 +953,300 @@ module.exports = function(create, buildOpts) {
 
     });
   });
+
+  describe("storeMessagesQos0 = false", function() {
+
+    var client = {
+      id : "my client id - 42",
+      clean : false,
+      subscriptions : {
+        "hello/#" : {
+          qos : 1
+        }
+      },
+      logger : {
+        debug : function() {
+        }
+      }
+    };
+
+    it("qos 0, retain false", function(done) {
+      var server = new EventEmitter();
+      var instance = this.instance;
+      instance.wire(server);
+      instance.options.storeMessagesQos0 = false;
+
+      var packet = {
+        topic : "hello/42",
+        qos : 0,
+        retain : false,
+        payload : new Buffer("world"),
+        // TODO: if messageId is an integer then persist redis test fail !!!
+        messageId : "42"
+      };
+      
+      server.persistClient(client, function() {
+        server.storePacket(packet, function() {
+          instance.streamOfflinePackets(client, function(err, p) {
+            done(new Error("this should never be called"));
+          });
+          done();
+        });
+      });
+
+    });
+
+    it("qos 0, retain true", function(done) {
+      
+      var server = new EventEmitter();
+      var instance = this.instance;
+      instance.wire(server);
+      instance.options.storeMessagesQos0 = false;
+      
+      var packet = {
+        topic : "hello/42",
+        qos : 0,
+        retain : true,
+        payload : new Buffer("world"),
+        // TODO: if messageId is an integer then persist redis test fail !!!
+        messageId : "42"
+      };
+      
+      server.persistClient(client, function() {
+        server.storePacket(packet, function() {
+          instance.streamOfflinePackets(client, function(err, p) {
+            expect(p).to.eql(packet);
+            done();
+          });
+        });
+      });
+    });
+
+  });
+
+  describe("storeMessagesQos0 = true", function() {
+    
+    var client = {
+      id : "my client id - 42",
+      clean : false,
+      subscriptions : {
+        "hello/#" : {
+          qos : 1
+        }
+      },
+      logger : {
+        debug : function() {
+        }
+      }
+    };
+
+    it("qos 0, retain false", function(done) {
+      
+      var server = new EventEmitter();
+      var instance = this.instance;
+      instance.wire(server);
+      instance.options.storeMessagesQos0 = true;
+      
+      var packet = {
+        topic : "hello/42",
+        qos : 0,
+        retain : false,
+        payload : new Buffer("world"),
+        // TODO: if messageId is an integer then persist redis test fail !!!
+        messageId : "42"
+      };
+
+      server.persistClient(client, function() {
+        server.storePacket(packet, function() {
+          instance.streamOfflinePackets(client, function(err, p) {
+            expect(p).to.eql(packet);
+            done();
+          });
+        });
+      });
+      
+    });
+    
+    it("qos 0, retain true", function(done) {
+      
+      var server = new EventEmitter();
+      var instance = this.instance;
+      instance.wire(server);
+      instance.options.storeMessagesQos0 = true;
+      
+      var packet = {
+        topic : "hello/42",
+        qos : 0,
+        retain : true,
+        payload : new Buffer("world"),
+        // TODO: if messageId is an integer then persist redis test fail !!!
+        messageId : "42"
+      };
+
+      server.persistClient(client, function() {
+        server.storePacket(packet, function() {
+          instance.streamOfflinePackets(client, function(err, p) {
+            expect(p).to.eql(packet);
+            done();
+          });
+        });
+      });
+      
+    });
+  });
+
+  describe("storeMessagesQos0 = true, multiple", function() {
+    
+    var client = {
+      id : "my client id - 42",
+      clean : false,
+      subscriptions : {
+        "hello/#" : {
+          qos : 1
+        }
+      },
+      logger : {
+        debug : function() {
+        }
+      }
+    };
+
+    var packet1 = {
+      topic : "hello/42",
+      qos : 0,
+      retain : false,
+      payload : new Buffer("hello"),
+      // TODO: if messageId is an integer then persist redis test fail !!!
+      messageId : "42"
+    };
+
+    var packet2 = {
+      topic : "hello/42",
+      qos : 0,
+      retain : false,
+      payload : new Buffer("my"),
+      // TODO: if messageId is an integer then persist redis test fail !!!
+      messageId : "43"
+    };
+
+    var packet3 = {
+      topic : "hello/42",
+      qos : 0,
+      retain : false,
+      payload : new Buffer("world"),
+      // TODO: if messageId is an integer then persist redis test fail !!!
+      messageId : "44"
+    };
+
+    it("multiple qos 0", function(done) {
+      
+      var server = new EventEmitter();
+      var instance = this.instance;
+      instance.wire(server);
+      instance.options.storeMessagesQos0 = true;
+
+      var packets = [];
+
+      server.persistClient(client, function() {
+        server.storePacket(packet1, function() {
+          server.storePacket(packet2, function() {
+            server.storePacket(packet3, function() {
+              instance.streamOfflinePackets(client, function(err, p) {
+			
+                packets.push(p);
+
+                if(packets.length == 3){
+                  expect(packets[0]).to.eql(packet1);
+                  expect(packets[1]).to.eql(packet2);
+                  expect(packets[2]).to.eql(packet3);
+                  done();
+                }
+              });
+            });
+          });
+        });
+      });
+    });
+
+  });
+
+  describe("offline packets - not send is expired", function() {
+
+    var client = {
+      id : "my client id - 42",
+      clean : false,
+      subscriptions : {
+        "hello/#" : {
+          qos : 1
+        }
+      }
+    };
+ 
+    it("do not send expires packages", function(done) {
+      var instance = this.instance;
+
+      var packet = {
+        topic : "hello/42",
+        qos : 1,
+        retain : false,
+        payload : new Buffer("world"),
+        messageId : "42"
+      };
+
+      instance.storeSubscriptions(client, function() {
+        instance.storeOfflinePacket(packet, function() {
+          setTimeout(function() {
+            instance.streamOfflinePackets(client, function(err, p) {
+              done(new Error("this should never be called"));
+            }, done);
+          }, instance.options.ttl.packets + 500);
+        });
+      });
+    });
+
+    it("do not send expires packages - multiple", function(done) {
+      var instance = this.instance;
+
+      var packet1 = {
+        topic : "hello/42",
+        qos : 1,
+        retain : false,
+        payload : new Buffer("hello"),
+        messageId : "42"
+      };
+
+      var packet2 = {
+        topic : "hello/42",
+        qos : 1,
+        retain : false,
+        payload : new Buffer("my"),
+        messageId : "43"
+      };
+
+      var packet3 = {
+        topic : "hello/42",
+        qos : 1,
+        retain : false,
+        payload : new Buffer("world"),
+        messageId : "44"
+      };
+
+      instance.storeSubscriptions(client, function() {
+        instance.storeOfflinePacket(packet1, function() {
+          instance.storeOfflinePacket(packet2, function() {
+            instance.storeOfflinePacket(packet3, function() {
+              setTimeout(function() {
+                instance.streamOfflinePackets(client, function(err, p) {
+                  done(new Error("this should never be called"));
+                }, done);
+              }, instance.options.ttl.packets + 500);
+            });
+          });
+        });
+      });
+    });
+
+  });
+
 };
+

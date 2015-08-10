@@ -21,3 +21,4 @@ mosquitto.db
 coverage/
 public/*
 data/
+db

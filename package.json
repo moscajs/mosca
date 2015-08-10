@@ -1,6 +1,6 @@
 {
   "name": "mosca",
-  "version": "0.28.1",
+  "version": "0.31.1",
   "description": "MQTT broker as a module",
   "main": "index.js",
   "bin": {
@@ -15,7 +15,7 @@
     "jshint-test": "jshint test",
     "start": "./bin/mosca -v | bunyan",
     "bundle": "browserify -r mqtt -s mqtt | uglifyjs --screw-ie8 > public/mqtt.js",
-    "postinstall": "npm run bundle"
+    "prepublish": "npm run bundle"
   },
   "pre-commit": [
     "jshint-lib",
@@ -28,9 +28,6 @@
   },
   "bugs": {
     "url": "http://github.com/mcollina/mosca/issues"
-  },
-  "engines": {
-    "node": ">=0.10.10 <0.13"
   },
   "keywords": [
     "mqtt",
@@ -48,13 +45,13 @@
   "author": "Matteo Collina <hello@matteocollina.com>",
   "license": "MIT",
   "devDependencies": {
-    "async_bench": "~0.4.0",
+    "async_bench": "~0.5.0",
     "chai": "^1.10.0",
     "coveralls": "~2.11.1",
     "dox-foundation": "~0.5.4",
     "istanbul": "~0.3.0",
     "jshint": "~2.5.2",
-    "microtime": "~1.0.1",
+    "microtime": "~1.4.2",
     "mocha": "^2.0.1",
     "mongo-clean": "^0.1.0",
     "osenv": "^0.1.0",
@@ -64,42 +61,45 @@
     "sinon-chai": "~2.6.0",
     "supertest": "~0.15.0",
     "tmp": "0.0.24",
+    "browserify": "~8.1.1",
+    "uglify-js": "^2.4.16",
     "underscore": "^1.7.0"
   },
   "dependencies": {
-    "ascoltatori": "~0.20.0",
+    "ascoltatori": "~0.21.1",
     "async": "~0.9.0",
     "brfs": "1.3.0",
-    "browserify": "~8.1.1",
-    "bunyan": "~1.2.3",
+    "bunyan": "^1.4.0",
     "commander": "~2.3.0",
     "deepcopy": "^0.3.3",
     "extend": "^2.0.0",
     "json-buffer": "~2.0.7",
     "jsonschema": "^1.0.0",
-    "level-sublevel": "^6.3.15",
-    "levelup": "~0.19.0",
+    "level-sublevel": "^6.4.6",
+    "levelup": "^0.19.0",
     "lru-cache": "~2.5.0",
     "memdown": "~0.10.2",
     "minimatch": "~1.0.0",
     "moment": "~2.8.0",
     "moving-average": "0.0.5",
-    "mqtt": "~1.0.0",
+    "mqtt": "^1.0.0",
     "mqtt-connection": "^2.1.1",
     "msgpack5": "^1.3.0",
     "pbkdf2-password": "^1.0.0",
-    "qlobber": "~0.3.0",
+    "qlobber": "~0.5.0",
+    "retimer": "^1.0.1",
     "shortid": "^2.1.3",
     "st": "~0.5.1",
-    "uglify-js": "^2.4.16",
+    "uuid": "^2.0.1",
     "websocket-stream": "^1.3.2"
   },
   "optionalDependencies": {
     "leveldown": "~0.10.0",
-    "zmq": "~2.8.0",
-    "amqp": "~0.2.0",
+    "nan": "~1.8.4",
+    "zmq": "~2.11.0",
+    "amqp": "~0.2.4",
     "redis": "~0.12.1",
-    "hiredis": "^0.1.17",
-    "mongodb": "~1.4.18"
+    "hiredis": "^0.4.0",
+    "mongodb": "~2.0.33"
   }
 }
