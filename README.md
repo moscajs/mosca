@@ -15,7 +15,7 @@ Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.png
 
 ## Features
 
-* MQTT 3.1 compliant.
+* MQTT 3.1 and 3.1.1 compliant.
 * QoS 0 and QoS 1.
 * Various storage options for QoS 1 offline packets, and subscriptions.
 * As fast as it is possible.
