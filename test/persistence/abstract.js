@@ -1024,6 +1024,9 @@ module.exports = function(create, buildOpts) {
       server.persistClient(client, function() {
         server.storePacket(packet, function() {
           server.forwardRetained("hello/42", client);
+          instance.streamOfflinePackets(client, function(err, p) {
+            done(new Error("this should never be called"));
+          });
         });
       });
     });
