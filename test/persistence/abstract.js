@@ -884,7 +884,7 @@ module.exports = function(create, buildOpts) {
   describe("inflight packets", function() {
     var packet = {
       topic: "hello",
-      qos: 0,
+      qos: 1,
       payload: new Buffer("world"),
       messageId: "42"
     };
@@ -1011,12 +1011,21 @@ module.exports = function(create, buildOpts) {
         // TODO: if messageId is an integer then persist redis test fail !!!
         messageId : "42"
       };
-      
+
+      client.forward = function(topic, payload, options) {
+        expect(topic).to.eql(packet.topic);
+        expect(payload).to.eql(packet.payload);
+        expect(options.topic).to.eql(packet.topic);
+        expect(options.payload).to.eql(packet.payload);
+        expect(options.qos).to.eql(packet.qos);
+        done();
+      };
+
       server.persistClient(client, function() {
         server.storePacket(packet, function() {
+          server.forwardRetained("hello/42", client);
           instance.streamOfflinePackets(client, function(err, p) {
-            expect(p).to.eql(packet);
-            done();
+            done(new Error("this should never be called"));
           });
         });
       });
