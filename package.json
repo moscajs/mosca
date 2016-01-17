@@ -29,6 +29,10 @@
   "bugs": {
     "url": "http://github.com/mcollina/mosca/issues"
   },
+  "engines": {
+    "node": ">= 0.12",
+    "iojs": "< 3.0.0"
+  },
   "keywords": [
     "mqtt",
     "mqtt server",
