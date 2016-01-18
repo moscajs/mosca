@@ -7,10 +7,10 @@ addons:
     packages:
     - g++-4.8
 node_js:
+  - 0.10
   - 0.12
-  - iojs-v1
-  - iojs-v2
   - 4
+  - 5
 services:
   - redis-server
   - mongodb
