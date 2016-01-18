@@ -131,14 +131,6 @@ module.exports = function(moscaSettings, createConnection) {
       }
     }
 
-    instance.once("published", function(packet) {
-      expect(packet.topic).to.be.equal("$SYS/" + instance.id + "/new/subscribes");
-      var payload = JSON.parse( packet.payload.toString() );
-      publishedClientId = payload.clientId;
-      expect(payload.topic).to.be.equal('hello');
-      verify();
-    });
-
     buildAndConnect(d, function(client) {
       var messageId = Math.floor(65535 * Math.random());
       var subscriptions = [{
@@ -147,9 +139,14 @@ module.exports = function(moscaSettings, createConnection) {
         }
       ];
 
-      connectedClient = client;
+      connectedClient = client; 
 
-      client.on("suback", function(packet) {
+      instance.once("published", function(packet) {
+        expect(packet.topic).to.be.equal("$SYS/" + instance.id + "/new/subscribes");
+        var payload = JSON.parse( packet.payload.toString() );
+        publishedClientId = payload.clientId;
+        expect(payload.topic).to.be.equal('hello');
+        verify();
         client.disconnect();
       });
 
