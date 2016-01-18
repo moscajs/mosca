@@ -170,17 +170,6 @@ module.exports = function(moscaSettings, createConnection) {
       }
     }
 
-    instance.once("published", function(packet) {
-      expect(packet.topic).to.be.equal("$SYS/" + instance.id + "/new/subscribes");
-      instance.once("published", function(packet) {
-        expect(packet.topic).to.be.equal("$SYS/" + instance.id + "/new/unsubscribes");
-        var payload = JSON.parse( packet.payload.toString() );
-        expect(payload.topic).to.be.equal('hello');
-        publishedClientId = payload.clientId;
-        verify();
-      });
-    });
-
     buildAndConnect(d, function(client) {
       var messageId = Math.floor(65535 * Math.random());
       var subscriptions = [{
@@ -190,14 +179,24 @@ module.exports = function(moscaSettings, createConnection) {
 
       connectedClient = client;
 
-      client.on("unsuback", function(packet) {
-        client.disconnect();
-      });
+      instance.once("published", function(packet) {
 
-      client.on("suback", function(packet) {
+        expect(packet.topic).to.be.equal("$SYS/" + instance.id + "/new/subscribes");
+
         client.unsubscribe({
           unsubscriptions: ["hello"],
           messageId: messageId
+        });
+
+        instance.once("published", function(packet) {
+
+          expect(packet.topic).to.be.equal("$SYS/" + instance.id + "/new/unsubscribes");
+          var payload = JSON.parse( packet.payload.toString() );
+          expect(payload.topic).to.be.equal('hello');
+          publishedClientId = payload.clientId;
+          verify();
+
+          client.disconnect();
         });
       });
 
