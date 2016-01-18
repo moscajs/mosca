@@ -13,6 +13,8 @@ Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.png
 * <a href="https://github.com/mcollina/mosca/wiki/Mosca-as-a-standalone-service.">Standalone</a>
 * <a href="https://github.com/mcollina/mosca/wiki/Mosca-basic-usage">Embedded in another Node.js application</a>
 
+Version 1.0.0+ targets node v0.12, v4 and v5, with partial support for node v0.10.
+
 ## Features
 
 * MQTT 3.1 and 3.1.1 compliant.

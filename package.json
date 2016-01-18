@@ -1,6 +1,6 @@
 {
   "name": "mosca",
-  "version": "0.32.1",
+  "version": "1.0.0-pre1",
   "description": "MQTT broker as a module",
   "main": "index.js",
   "bin": {
@@ -31,7 +31,7 @@
   },
   "engines": {
     "node": ">= 0.12",
-    "iojs": "< 3.0.0"
+    "iojs": "< 4"
   },
   "keywords": [
     "mqtt",
@@ -99,7 +99,6 @@
   },
   "optionalDependencies": {
     "leveldown": "~1.4.3",
-    "nan": "~2.0.5",
     "zmq": "~2.14.0",
     "amqp": "~0.2.4",
     "redis": "~2.4.2",
