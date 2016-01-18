@@ -53,7 +53,7 @@ module.exports = function(create, buildOpts) {
       this.instance.storeRetained(packet, done);
     });
 
-    it("should lookup retain messages and not matching", function(done) {
+    it("should lookup retain messages and not match", function(done) {
       this.instance.lookupRetained("hello", function(err, results) {
         expect(results).to.eql([]);
         done();

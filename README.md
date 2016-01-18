@@ -17,11 +17,10 @@ Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.png
 
 * MQTT 3.1 and 3.1.1 compliant.
 * QoS 0 and QoS 1.
-* Various storage options for QoS 1 offline packets, and subscriptions.
+* Various storage options for QoS 1 offline packets and subscriptions.
 * As fast as it is possible.
 * Usable inside ANY other Node.js app.
-* Supports Node.js v0.10 and v0.12.
-* Supports io.js v1.x and v2.x and v3.x (please do not use v3.1.0)
+* Supports Node.js v0.12, v4 and v5
 
 ##Quickstart
 
