@@ -70,7 +70,7 @@
     "underscore": "^1.7.0"
   },
   "dependencies": {
-    "ascoltatori": "=2.0.0-pre1",
+    "ascoltatori": "^2.0.0",
     "async": "~1.5.2",
     "brfs": "~1.4.2",
     "bunyan": "^1.5.1",
