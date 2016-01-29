@@ -20,8 +20,7 @@ Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.png
 * Various storage options for QoS 1 offline packets, and subscriptions.
 * As fast as it is possible.
 * Usable inside ANY other Node.js app.
-* Supports Node.js v0.10 and v0.12.
-* Supports io.js v1.x and v2.x and v3.x (please do not use v3.1.0)
+* version 1.0.0+ targets node v5, v4 and v0.12, with partial support for node v0.10.
 
 ##Quickstart
 

@@ -1,6 +1,6 @@
 {
   "name": "mosca",
-  "version": "0.32.1",
+  "version": "1.0.2",
   "description": "MQTT broker as a module",
   "main": "index.js",
   "bin": {
@@ -28,6 +28,10 @@
   },
   "bugs": {
     "url": "http://github.com/mcollina/mosca/issues"
+  },
+  "engines": {
+    "node": ">= 0.12",
+    "iojs": "< 4"
   },
   "keywords": [
     "mqtt",
@@ -66,40 +70,39 @@
     "underscore": "^1.7.0"
   },
   "dependencies": {
-    "ascoltatori": "~0.21.1",
-    "async": "~0.9.0",
-    "brfs": "1.3.0",
-    "bunyan": "^1.4.0",
-    "commander": "~2.3.0",
+    "ascoltatori": "^2.0.0",
+    "async": "~1.5.2",
+    "brfs": "~1.4.2",
+    "bunyan": "^1.5.1",
+    "commander": "~2.9.0",
     "deepcopy": "^0.3.3",
     "extend": "^2.0.0",
-    "json-buffer": "~2.0.7",
-    "jsonschema": "^1.0.0",
-    "level-sublevel": "^6.4.6",
-    "levelup": "^1.2.1",
-    "lru-cache": "~2.5.0",
-    "memdown": "~0.10.2",
-    "minimatch": "~1.0.0",
+    "json-buffer": "~2.0.11",
+    "jsonschema": "^1.0.3",
+    "level-sublevel": "^6.5.2",
+    "levelup": "^1.3.1",
+    "lru-cache": "~4.0.0",
+    "memdown": "~1.1.1",
+    "minimatch": "~3.0.0",
     "moment": "~2.8.0",
     "moving-average": "0.0.5",
-    "mqtt": "^1.3.5",
+    "mqtt": "^1.6.3",
     "mqtt-connection": "^2.1.1",
-    "msgpack5": "^1.3.0",
-    "pbkdf2-password": "^1.0.0",
-    "qlobber": "~0.5.0",
+    "msgpack5": "^3.3.0",
+    "pbkdf2-password": "^1.1.0",
+    "qlobber": "~0.5.3",
     "retimer": "^1.0.1",
-    "shortid": "^2.1.3",
-    "st": "~0.5.1",
+    "shortid": "^2.2.4",
+    "st": "~1.1.0",
     "uuid": "^2.0.1",
     "websocket-stream": "~2.0.2"
   },
   "optionalDependencies": {
-    "leveldown": "~1.4.1",
-    "nan": "~2.0.5",
-    "zmq": "~2.12.0",
+    "leveldown": "~1.4.3",
+    "zmq": "~2.14.0",
     "amqp": "~0.2.4",
-    "redis": "~0.12.1",
+    "redis": "~2.4.2",
     "hiredis": "^0.4.1",
-    "mongodb": "~2.0.33"
+    "mongodb": "~2.1.4"
   }
 }
