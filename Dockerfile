@@ -1,8 +1,8 @@
 # Mosca
 #
-# VERSION 0.1.0
+# VERSION 0.2.0
 
-FROM node:0.10
+FROM mhart/alpine-node:5.7
 MAINTAINER Matteo Collina <hello@matteocollina.com>
 
 RUN mkdir -p /usr/src/app
