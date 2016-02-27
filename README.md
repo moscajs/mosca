@@ -8,6 +8,7 @@ Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.png
 [![NPM](https://nodei.co/npm-dl/mosca.png)](https://nodei.co/npm/mosca/)
 
 ##About
+
 ####Mosca is a node.js mqtt broker, which can be used:
 
 * <a href="https://github.com/mcollina/mosca/wiki/Mosca-as-a-standalone-service.">Standalone</a>
@@ -79,6 +80,7 @@ All the info to get you started is gathered [in this wiki page](https://github.c
 Also there is an example using [Redis](https://github.com/mcollina/mosca/wiki/Mosca-basic-usage#in-this-example-we-will-be-using-redis)
 
 ## How to's/Tutorials
+
 All to be found [on our repository wiki section.](https://github.com/mcollina/mosca/wiki)
 
 OR
@@ -87,18 +89,18 @@ read the [dox generated documentation](http://mcollina.github.io/mosca/docs).
 
 
 ### Learn more
+
 See the slides of my talk ["MQTT and Node.js - Messaging in the Internet
 of Things"](http://mcollina.github.io/mqtt_and_nodejs/).
 
 You can find a test version of mosca at test.mosca.io.
 You can use ws://test.mosca.io/ to connect to the WebSocket tunnel.
-This is powered by the [docker image](#docker-support).
+This is powered by the [docker image](https://github.com/mcollina/mosca/wiki/Docker-support).
 
+If you find Mosca useful, consider supporting the project by buying a support package
+from [me](http://twitter.com/matteocollina) by writing an email to hello@matteocollina.com.
 
-If you like Mosca, consider supporting the project by donating via
-[Gittip](https://www.gittip.com/mcollina/), or hire [me](http://twitter.com/matteocollina)
-to get you started and solve any issue you might find.
-Also, check out our [showcase](https://github.com/mcollina/mosca/wiki/Mosca-Showcase) wiki
+Check out our [showcase](https://github.com/mcollina/mosca/wiki/Mosca-Showcase) wiki
 page! Feel free to add yourself! :)
 
 ## Security Issues
