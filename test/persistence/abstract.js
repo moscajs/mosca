@@ -60,6 +60,13 @@ module.exports = function(create, buildOpts) {
       });
     });
 
+    it("should lookup invalid topic and not crash", function(done) {
+      this.instance.lookupRetained("\\", function(err, results) {
+        expect(results).to.eql([]);
+        done();
+      });
+    });
+
     it("should match and load a retained message", function(done) {
       var packet = {
         topic: "hello",
