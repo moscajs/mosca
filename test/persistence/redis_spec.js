@@ -69,6 +69,65 @@ describe("mosca.persistence.Redis", function() {
       });
     });
 
+    it("should support subscriptions for clients with id containing ':'", function(done) {
+      var client = {
+        id: "0e:40:08:ab:1d:a2",
+        clean: false,
+        subscriptions: {
+          "hello/#": {
+            qos: 1
+          }
+        }
+      };
+
+      var that = this;
+
+      this.instance.storeSubscriptions(client, function() {
+        that.instance.close(function() {
+          that.instance = new Redis(opts, function(err, second) {
+            second.lookupSubscriptions(client, function(err, subs) {
+              expect(subs).to.eql(client.subscriptions);
+              done();
+            });
+          });
+        });
+      });
+    });
+
+    it("should support restoring for clients with id containing ':'", function(done) {
+      var client = {
+        id: "0e:40:08:ab:1d:a3",
+        clean: false,
+        subscriptions: {
+          "hello/#": {
+            qos: 1
+          }
+        }
+      };
+
+      var packet = {
+        topic: "hello/43",
+        qos: 0,
+        payload: new Buffer("world"),
+        messageId: "43"
+      };
+
+      var that = this;
+
+      this.instance.storeSubscriptions(client, function() {
+        that.instance.close(function() {
+          that.instance = new Redis(opts, function(err, second) {
+            second.storeOfflinePacket(packet, function() {
+              second.streamOfflinePackets(client, function(err, p) {
+                expect(p).to.eql(packet);
+                done();
+              });
+            });
+          });
+        });
+      });
+    });
+
     it("should support synchronization", function(done) {
       var client = {
         id: "my client id - 42",
