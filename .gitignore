@@ -22,3 +22,6 @@ coverage/
 public/*
 data/
 db
+
+profile-*
+.__*
