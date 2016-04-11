@@ -1,3 +1,5 @@
+'use strict';
+
 var EventEmitter = require("events").EventEmitter;
 
 describe("mosca.Stats", function() {
@@ -150,7 +152,7 @@ describe("mosca.Stats", function() {
           it("should cover the last 15 minutes", function() {
             toBeCleared = buildTimer[event](15);
             clock.tick(15 * 60 * 1000 + 1);
-            expect(instance.load.m15[events[event]]).to.eql(2);
+            expect(instance.load.m15[events[event]]).to.eql(1.26);
           });
 
           it("should publish it", function(done) {
@@ -163,7 +165,7 @@ describe("mosca.Stats", function() {
                 count++;
 
                 if (count % (15 * 6) === 0) {
-                  expect(packet.payload).to.eql("2");
+                  expect(packet.payload).to.eql("1.26");
                   done();
                 }
               }
@@ -184,7 +186,7 @@ describe("mosca.Stats", function() {
           it("should cover the last 5 minutes", function() {
             toBeCleared = buildTimer[event](5);
             clock.tick(5 * 60 * 1000 + 1);
-            expect(instance.load.m5[events[event]]).to.eql(2);
+            expect(instance.load.m5[events[event]]).to.eql(1.24);
           });
 
           it("should publish it", function(done) {
@@ -197,7 +199,7 @@ describe("mosca.Stats", function() {
                 count++;
 
                 if (count % (5 * 6) === 0) {
-                  expect(packet.payload).to.eql("2");
+                  expect(packet.payload).to.eql("1.24");
                   done();
                 }
               }
@@ -218,7 +220,7 @@ describe("mosca.Stats", function() {
           it("should cover the last minute", function() {
             toBeCleared = buildTimer[event](1);
             clock.tick(60 * 1000 + 1);
-            expect(instance.load.m1[events[event]]).to.eql(2);
+            expect(instance.load.m1[events[event]]).to.eql(1.13);
           });
 
           it("should publish it", function(done) {
@@ -231,7 +233,7 @@ describe("mosca.Stats", function() {
                 count++;
 
                 if (count % 6 === 0) {
-                  expect(packet.payload).to.eql("2");
+                  expect(packet.payload).to.eql("1.13");
                   done();
                 }
               }

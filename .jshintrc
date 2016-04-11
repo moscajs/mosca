@@ -10,6 +10,7 @@
     "mosca": false,
     "expect": false,
     "before": false,
-    "globalLogger": false
+    "globalLogger": false,
+    "sinon": false
   }
 }
