@@ -551,6 +551,7 @@ describe("mosca.Server - MQTT backend", function() {
       protocolId: "MQTT",
       connectTimeout: 30000,
       reconnectPeriod: 1000,
+      reschedulePings: true,
       wildcardSome: "#",
       wildcardOne: "+",
       protocolVersion: 4
@@ -566,7 +567,6 @@ describe("mosca.Server - MQTT backend", function() {
 
       function(cb) {
         // because of a spurious "encoding" property in MQTT.js
-        delete spy.args[0][0].encoding;
         expect(spy).to.have.been.calledWith(newSettings.backend);
         cb();
       },
