@@ -56,7 +56,7 @@ describe("mocha.options", function () {
       expect(modern).to.have.property("interfaces");
       expect(modern.interfaces).to.be.deep.equal(
         [
-          { type: "mqtt", port: 1883 }
+          { type: "mqtt", port: 1883, maxConnections: 10000000 }
         ]
       );
     });
