@@ -247,7 +247,8 @@ module.exports = function(moscaSettings, createConnection) {
       async.series([
         function(cb) {
           serverOne = new mosca.Server(settingsOne, function(err, server) {
-            serverOne.on('clientDisconnected', function(serverClient) {
+            serverOne.on('clientDisconnected', function(serverClient, reason) {
+              expect(reason).to.be.equal('new connection request');
               expect(serverClient).not.to.be.equal(undefined);
               done();
             });
@@ -862,7 +863,8 @@ module.exports = function(moscaSettings, createConnection) {
   it("should emit an event when a client is disconnected", function(done) {
     var client = createConnection(settings.port, settings.host);
 
-    instance.on('clientDisconnected', function(serverClient) {
+    instance.on('clientDisconnected', function(serverClient, reason) {
+      expect(reason).to.be.equal('disconnect request');
       expect(serverClient).not.to.be.equal(undefined);
       done();
     });
@@ -899,7 +901,8 @@ module.exports = function(moscaSettings, createConnection) {
   it("should emit an event when a client is disconnected without a disconnect", function(done) {
     var client = createConnection(settings.port, settings.host);
 
-    instance.on('clientDisconnected', function(serverClient) {
+    instance.on('clientDisconnected', function(serverClient, reason) {
+      expect(reason).to.be.equal('close');
       expect(serverClient).not.to.be.equal(undefined);
       done();
     });
