@@ -2,7 +2,7 @@
 
 var abstract = require("./abstract");
 var Redis = require("../../").persistence.Redis;
-var redis = require("redis");
+var redis = require("ioredis");
 
 describe("mosca.persistence.Redis", function() {
 
