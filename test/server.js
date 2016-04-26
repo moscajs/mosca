@@ -154,7 +154,7 @@ describe("mosca.Server", function() {
 
     newSettings.persistence = {
       factory: mosca.persistence.Mongo,
-      url: "mongodb://localhost:27017"
+      url: "mongodb://someUrlCannotConnect"
     };
 
     var server = new mosca.Server(newSettings, function (err) {
