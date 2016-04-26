@@ -149,6 +149,23 @@ describe("mosca.Server", function() {
     });
   });
 
+  it("should fail if persistence can not connect", function (done) {
+    var newSettings = moscaSettings();
+
+    newSettings.persistence = {
+      factory: mosca.persistence.Mongo,
+      url: "mongodb://someUrlCannotConnect"
+    };
+
+    var server = new mosca.Server(newSettings, function (err) {
+      if (err instanceof Error) {
+        done();
+      } else {
+        expect().fail("new mosca.Server should fail");
+      }
+    });
+  });
+
   describe("timers", function() {
     var clock;
 
@@ -797,4 +814,6 @@ describe("mosca.Server - MQTT backend", function() {
       }
     });
   });
+
+
 });
