@@ -72,6 +72,27 @@ describe("mosca.Server", function() {
     });
   });
 
+  it("should emit \"pingreq\" of the corresponding client at a pingreq", function(done) {
+
+    var instance = this.instance;
+    buildClient(instance, done, function(client) {
+
+      var clientId = 'client';
+      var opts = buildOpts();
+      opts.clientId = clientId;
+
+      client.connect(opts);
+
+      instance.on('pingreq', function(c){
+        expect(c.id).to.equal(clientId);
+        client.disconnect();
+      });
+
+      client.pingreq();
+
+    });
+  });
+
   it("should pass mosca options to backend when publishing", function(done) {
     var instance = this.instance;
     buildClient(instance, done, function(client) {
