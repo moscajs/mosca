@@ -71,7 +71,7 @@
   },
   "dependencies": {
     "ascoltatori": "^2.0.0",
-    "async": "~1.5.2",
+    "async": "^2.0.0-rc.3",
     "brfs": "~1.4.2",
     "bunyan": "^1.5.1",
     "clone": "^1.0.2",
