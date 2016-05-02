@@ -2,7 +2,7 @@ var mqtt = require("mqtt");
 var async = require("async");
 var ascoltatori = require("ascoltatori");
 var abstractServerTests = require("./abstract_server");
-var redis = require("redis");
+var redis = require("ioredis");
 var createConnection = require("./helpers/createConnection");
 
 describe("mosca.Server with redis persistence", function() {
@@ -33,7 +33,7 @@ describe("mosca.Server with redis persistence", function() {
       },
       persistence : {
         factory: mosca.persistence.Redis
-      },
+      }
     };
   }
 
