@@ -187,6 +187,26 @@ describe("mosca.Server", function() {
     });
   });
 
+  it("should support subscribing via server.subscribe", function(done) {
+    var that = this;
+    buildAndConnect(done, this.instance, buildOpts(), function(client) {
+
+      that.instance.subscribe('a/+', function(topic, payload){
+        expect(topic).to.be.equal('a/b');
+        expect(payload.toString()).to.be.equal('some data');
+        client.disconnect();
+      }, function(){
+        var messageId = Math.floor(65535 * Math.random());
+        client.publish({
+          topic: "a/b",
+          payload: "some data",
+          messageId: messageId,
+          qos: 1
+        });
+      });
+    });
+  });
+
   describe("timers", function() {
     var clock;
 
