@@ -790,6 +790,12 @@ module.exports = function(moscaSettings, createConnection) {
         qos: 1
       }];
 
+      instance.on("forward", function(packet, serverClient) {
+        expect(packet.topic).to.be.equal("delivery");
+        expect(packet.payload.toString().toString()).to.be.equal("some data");
+        expect(serverClient.id).to.be.equal(clientId);
+      });
+
       instance.on("delivered", function(packet, serverClient) {
         expect(packet.topic).to.be.equal("delivery");
         expect(packet.payload.toString().toString()).to.be.equal("some data");
