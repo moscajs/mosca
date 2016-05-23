@@ -49,7 +49,6 @@
   "author": "Matteo Collina <hello@matteocollina.com>",
   "license": "MIT",
   "devDependencies": {
-    "async_bench": "~0.5.1",
     "chai": "^3.5.0",
     "coveralls": "~2.11.1",
     "dox-foundation": "~0.5.4",
