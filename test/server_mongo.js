@@ -35,8 +35,7 @@ describe("mosca.Server with mongo persistence", function() {
       publishNewClient: false,
       publishClientDisconnect: false,
       logger: {
-        childOf: globalLogger,
-        level: 60
+        level: "error"
       },
       backend : {
         type: "mongo"

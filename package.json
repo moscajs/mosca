@@ -71,7 +71,6 @@
     "array-from": "^2.1.1",
     "ascoltatori": "^3.0.0",
     "brfs": "~1.4.2",
-    "bunyan": "^1.5.1",
     "clone": "^1.0.2",
     "commander": "~2.9.0",
     "deepcopy": "^0.6.1",

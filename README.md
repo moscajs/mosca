@@ -28,8 +28,8 @@ Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.png
 ### Standalone
 
 ```bash
-npm install mosca bunyan -g
-mosca -v | bunyan
+npm install mosca pino -g
+mosca -v | pino
 ```
 
 ### Embedded
@@ -124,36 +124,9 @@ Chat with us on [Mosca's room](https://gitter.im/mcollina/mosca) on Gitter.
 * [MQTT protocol](http://mqtt.org)
 * [MQTT.js](http://github.com/adamvr/MQTT.js)
 
-
 ## Authors
 
 [Matteo Collina](http://twitter.com/matteocollina)
-
-## Contributors
-
-<table><tbody>
-<tr><th align="left">David Halls</th><td><a
-href="https://github.com/davedoesdev">GitHub/davedoesdev</a></td>
-</tr>
-<tr><th align="left">Andrea Reginato</th><td><a
-href="https://github.com/andreareginato">GitHub/andreareginato</a></td>
-</tr>
-<tr><th align="left">Chris Wiggins</th><td><a
-href="https://github.com/chriswiggins">GitHub/chriswiggins</a></td>
-</tr>
-<tr><th align="left">Samir Naik</th><td><a
-href="https://github.com/samirnaik">GitHub/samirnaik</a></td>
-</tr>
-<tr><th align="left">Leo Steiner</th><td><a
-href="https://github.com/ldstein">GitHub/ldstein</a></td>
-</tr>
-<tr><th align="left">John Kokkinidis</th><td><a
-href="https://github.com/SudoPlz">GitHub/SudoPlz</a></td>
-</tr>
-<tr><th align="left">Morgan Cheng</th><td><a
-href="https://github.com/mocheng">GitHub/mocheng</a></td>
-</tr>
-</tbody></table>
 
 ## Logo
 [Sam Beck](http://two-thirty.tumblr.com)

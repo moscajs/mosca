@@ -8,8 +8,7 @@ var moscaSettings = function() {
   var settings = {
     stats: false,
     logger: {
-      childOf: globalLogger,
-      level: 60
+      level: "error"
     },
     persistence: {
       factory: mosca.persistence.Memory

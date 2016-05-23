@@ -13,8 +13,7 @@ var moscaSettings = function() {
       factory: mosca.persistence.Memory
     },
     logger: {
-      childOf: globalLogger,
-      level: 60
+      level: "error"
     }
   };
 };

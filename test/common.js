@@ -45,13 +45,6 @@ global.rabbitSettings = function() {
   };
 };
 
-var bunyan = require("bunyan");
-
-global.globalLogger = bunyan.createLogger({
-  name: "moscaTests",
-  level: 60
-});
-
 var sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 

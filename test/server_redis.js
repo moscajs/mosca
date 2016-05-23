@@ -22,8 +22,7 @@ describe("mosca.Server with redis persistence", function() {
       stats: false,
       publishNewClient: false,
       logger: {
-        childOf: globalLogger,
-        level: 60
+        level: "error"
       },
       backend : {
         type: "redis"
