@@ -1,6 +1,6 @@
 "use strict";
 
-var async = require("async");
+var steed = require("steed");
 var EventEmitter = require("events").EventEmitter;
 
 module.exports = function(create, buildOpts) {
@@ -78,7 +78,7 @@ module.exports = function(create, buildOpts) {
 
       var instance = this.instance;
 
-      async.series([
+      steed.series([
         function(cb) {
           instance.storeRetained(packet, cb);
         },
@@ -111,7 +111,7 @@ module.exports = function(create, buildOpts) {
 
       var instance = this.instance;
 
-      async.parallel([
+      steed.parallel([
         function(cb) { instance.storeRetained(getPacket(), cb); },
         function(cb) { instance.storeRetained(getPacket(), cb); },
         function(cb) { instance.storeRetained(getPacket(), cb); },
@@ -144,7 +144,7 @@ module.exports = function(create, buildOpts) {
 
       var instance = this.instance;
 
-      async.series([
+      steed.series([
         instance.storeRetained.bind(instance, packet),
         instance.storeRetained.bind(instance, packet2),
         function(cb) {
@@ -176,7 +176,7 @@ module.exports = function(create, buildOpts) {
 
       var instance = this.instance;
 
-      async.series([
+      steed.series([
         instance.storeRetained.bind(instance, packet),
         instance.storeRetained.bind(instance, packet2),
         function(cb) {
@@ -207,7 +207,7 @@ module.exports = function(create, buildOpts) {
 
       var instance = this.instance;
 
-      async.series([
+      steed.series([
         function(cb) {
           instance.storeRetained(packet1, cb);
         },
@@ -245,7 +245,7 @@ module.exports = function(create, buildOpts) {
 
       var instance = this.instance;
 
-      async.series([
+      steed.series([
         function(cb) {
           instance.storeRetained(packet1, cb);
         },

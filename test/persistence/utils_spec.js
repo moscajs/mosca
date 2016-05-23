@@ -3,7 +3,7 @@
 var abstract = require("./abstract");
 var utilities = require("../../lib/persistence/utils");
 var topicPatterns = utilities.topicPatterns;
-var async = require("async");
+var steed = require("steed");
 
 describe("persistence utilities", function() {
 

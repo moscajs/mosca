@@ -1,4 +1,4 @@
-var async = require("async");
+var steed = require("steed");
 var ascoltatori = require("ascoltatori");
 var abstractServerTests = require("./abstract_server");
 var net = require("net");
@@ -530,7 +530,7 @@ describe("mosca.Server - MQTT backend", function() {
       instances = [secondInstance].concat(instances);
     }
 
-    async.parallel(instances.map(function(i) {
+    steed.parallel(instances.map(function(i) {
       return function(cb) {
         i.close(cb);
       };
@@ -597,7 +597,7 @@ describe("mosca.Server - MQTT backend", function() {
 
     var server = new mosca.Server(newSettings);
 
-    async.series([
+    steed.series([
 
       function(cb) {
         server.on("ready", cb);
@@ -618,7 +618,7 @@ describe("mosca.Server - MQTT backend", function() {
   it("should support subscribing correctly to wildcards in a tree-based topology", function(done) {
     var d = donner(3, done);
 
-    async.waterfall([
+    steed.waterfall([
 
       function(cb) {
         settings.backend = {
@@ -704,7 +704,7 @@ describe("mosca.Server - MQTT backend", function() {
   it("should not wrap messages with \"\" in a tree-based topology", function(done) {
     var d = donner(2, done);
 
-    async.waterfall([
+    steed.waterfall([
 
       function(cb) {
         buildAndConnect(d, function(client1) {
@@ -773,7 +773,7 @@ describe("mosca.Server - MQTT backend", function() {
 
     var server = new mosca.Server(newSettings);
 
-    async.series([
+    steed.series([
 
       function(cb) {
         server.on("ready", cb);
@@ -801,7 +801,7 @@ describe("mosca.Server - MQTT backend", function() {
 
     var server = new mosca.Server(newSettings);
 
-    async.series([
+    steed.series([
 
       function(cb) {
         server.on("ready", cb);

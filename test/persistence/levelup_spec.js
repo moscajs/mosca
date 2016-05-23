@@ -2,7 +2,7 @@
 
 var abstract = require("./abstract");
 var LevelUp = require("../../").persistence.LevelUp;
-var async = require("async");
+var steed = require("steed");
 var tmpdir = require("osenv").tmpdir();
 var path = require("path");
 var rimraf = require("rimraf");

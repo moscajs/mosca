@@ -1,4 +1,4 @@
-var async = require("async");
+var steed = require("steed");
 var tmp = require('tmp');
 var fs = require("fs");
 var mqtt = require("mqtt");
@@ -21,11 +21,11 @@ describe("mosca.cli", function() {
   });
 
   afterEach(function(done) {
-    async.parallel(servers.map(function(s) {
-      return function(cb) {
-        s.close(cb);
-      };
-    }), function() {
+    var count = 0;
+    steed.each(servers, function(s, cb) {
+      count++;
+      s.close(cb);
+    }, function() {
       done();
     });
   });
@@ -36,7 +36,7 @@ describe("mosca.cli", function() {
         servers.unshift(server);
         callback(server);
       }
-      async.setImmediate(done.bind(null, err));
+      setImmediate(done.bind(null, err));
     });
   };
 
@@ -263,7 +263,7 @@ describe("mosca.cli", function() {
   it("should support authorizing an authorized client", function(done) {
     args.push("--credentials");
     args.push("test/credentials.json");
-    async.waterfall([
+    steed.waterfall([
       function(cb) {
         mosca.cli(args, cb);
       },
@@ -293,7 +293,7 @@ describe("mosca.cli", function() {
   it("should support negating an unauthorized client", function(done) {
     args.push("--credentials");
     args.push("test/credentials.json");
-    async.waterfall([
+    steed.waterfall([
       function(cb) {
         mosca.cli(args, cb);
       },
@@ -330,7 +330,7 @@ describe("mosca.cli", function() {
 
     var cloned = null;
 
-    async.waterfall([
+    steed.waterfall([
       function(cb) {
         tmp.file(cb);
       },

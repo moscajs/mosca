@@ -1,5 +1,5 @@
 var mqtt = require("mqtt");
-var async = require("async");
+var steed = require("steed");
 var ascoltatori = require("ascoltatori");
 var abstractServerTests = require("./abstract_server");
 var redis = require("ioredis");
