@@ -55,7 +55,6 @@
     "dox-foundation": "~0.5.4",
     "istanbul": "~0.4.0",
     "jshint": "~2.9.1",
-    "microtime": "~2.0.0",
     "mocha": "^2.0.1",
     "mongo-clean": "^1.1.0",
     "osenv": "^0.1.0",
