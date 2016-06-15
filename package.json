@@ -69,7 +69,7 @@
   },
   "dependencies": {
     "ascoltatori": "^2.0.0",
-    "async": "~1.5.2",
+    "async": "^2.0.0-rc.3",
     "brfs": "~1.4.2",
     "bunyan": "^1.5.1",
     "clone": "^1.0.2",
@@ -89,7 +89,7 @@
     "mqtt-connection": "^2.1.1",
     "msgpack5": "^3.3.0",
     "pbkdf2-password": "^1.1.0",
-    "qlobber": "~0.6.0",
+    "qlobber": "^0.7.0",
     "retimer": "^1.0.1",
     "shortid": "^2.2.4",
     "st": "~1.1.0",
