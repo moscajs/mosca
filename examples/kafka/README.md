@@ -49,8 +49,8 @@ To run the mosca mqtt server connected to your own kafka, provide the ip address
 Credits
 -------
 
-[Matteo Collina](//twitter.com/matteocollina)
-[Robert Fuller](//github.com/fullergalway)
-[Adam Leadbetter](//twitter.com/adamleadbetter)
-[Damian Smyth](//ie.linkedin.com/in/damian-smyth-4b85563)
-[Eoin O'Grady](//ie.linkedin.com/in/eoin-o-grady-6177b)
+* [Matteo Collina](//twitter.com/matteocollina)
+* [Robert Fuller](//github.com/fullergalway)
+* [Adam Leadbetter](//twitter.com/adamleadbetter)
+* [Damian Smyth](//ie.linkedin.com/in/damian-smyth-4b85563)
+* [Eoin O'Grady](//ie.linkedin.com/in/eoin-o-grady-6177b)
