@@ -8,27 +8,27 @@ Quickstart
 
 1. To try out the example with no changes, start a kafka server:
 
-    docker run -d --env ADVERTISED_HOST=kafka01 --hostname=kafka01 --env ADVERTISED_PORT=9092 --name=kafka01 spotify/kafka
+        docker run -d --env ADVERTISED_HOST=kafka01 --hostname=kafka01 --env ADVERTISED_PORT=9092 --name=kafka01 spotify/kafka
 
 2. Once the kafka is running, use the console producer to create some expected topics.
 
-    for topic in spiddal-ctd \
-                 spiddal-fluorometer \
-                 airmar-rinville-1 \
-                 ais-rinville-1-geojson \
-                 spiddal-hydrophone
-      do docker exec -i -t kafka01 /bin/bash -c \
-              "date | /opt/kafka_*/bin/kafka-console-producer.sh \
-                        --broker-list kafka01:9092 --topic $topic"
-    done
+        for topic in spiddal-ctd \
+                     spiddal-fluorometer \
+                     airmar-rinville-1 \
+                     ais-rinville-1-geojson \
+                     spiddal-hydrophone
+          do docker exec -i -t kafka01 /bin/bash -c \
+                  "date | /opt/kafka_*/bin/kafka-console-producer.sh \
+                            --broker-list kafka01:9092 --topic $topic"
+        done
 
 3. Now start the kakfka mqtt bridge, linked to the kafka instance.
 
-    docker run -d -p 2298:80 --link kafka01:kafka01 --link kafka01:kafka02 --link kafka01:kafka03 fullergalway/kafkamqtt
+        docker run -d -p 2298:80 --link kafka01:kafka01 --link kafka01:kafka02 --link kafka01:kafka03 fullergalway/kafkamqtt
 
-4. Open up your browser and go to http://server:2298 for example http://localhost:2298
+4. Open up your browser and go to http://server:2298 for example [http://localhost:2298](http://localhost:2298)
 
-5. Finally, add publish some data to your kafka topics by repeating step 2 above, and watch the data appear in your browser.
+5. Finally, publish some data to your kafka topics by repeating step 2 above, and watch the data appear in your browser.
 
 Building
 --------
