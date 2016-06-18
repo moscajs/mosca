@@ -1,4 +1,4 @@
-Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.png)](https://travis-ci.org/mcollina/mosca)&nbsp;&nbsp;[![Coverage Status](https://coveralls.io/repos/mcollina/mosca/badge.png)](https://coveralls.io/r/mcollina/mosca)
+Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.svg)](https://travis-ci.org/mcollina/mosca)&nbsp;&nbsp;[![Coverage Status](https://coveralls.io/repos/mcollina/mosca/badge.svg)](https://coveralls.io/r/mcollina/mosca)
 ====================
 
 [![MOSCA](http://cloud.dynamatik.com/image/3I3I0q1M1x0E/mosca_small.png)](https://github.com/mcollina/mosca)
