@@ -19,9 +19,9 @@ Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.svg
 * MQTT 3.1 and 3.1.1 compliant.
 * QoS 0 and QoS 1.
 * Various storage options for QoS 1 offline packets, and subscriptions.
-* As fast as it is possible.
 * Usable inside ANY other Node.js app.
-* version 1.0.0+ targets node v5, v4 and v0.12, with partial support for node v0.10.
+* version 2.0.0+ targets node v6, v4 and v0.12
+* version 1.0.0+ targets node v6, v5, v4 and v0.12, with partial support for node v0.10.
 
 ##Quickstart
 
