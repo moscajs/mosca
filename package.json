@@ -1,6 +1,6 @@
 {
   "name": "mosca",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "MQTT broker as a module",
   "main": "index.js",
   "bin": {
@@ -30,8 +30,7 @@
     "url": "http://github.com/mcollina/mosca/issues"
   },
   "engines": {
-    "node": ">= 0.12",
-    "iojs": "< 4"
+    "node": ">= 0.12"
   },
   "keywords": [
     "mqtt",
