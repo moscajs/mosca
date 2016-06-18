@@ -6,8 +6,8 @@
     <title>Mosca by mcollina</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -29,7 +29,7 @@
       </header>
       <section>
         <h1>
-<a name="mosca" class="anchor" href="#mosca"><span class="octicon octicon-link"></span></a>Mosca   <a href="https://travis-ci.org/mcollina/mosca"><img src="https://travis-ci.org/mcollina/mosca.png" alt="Build Status"></a>  <a href="https://coveralls.io/r/mcollina/mosca"><img src="https://coveralls.io/repos/mcollina/mosca/badge.png" alt="Coverage Status"></a>
+<a id="mosca" class="anchor" href="#mosca" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Mosca   <a href="https://travis-ci.org/mcollina/mosca"><img src="https://travis-ci.org/mcollina/mosca.svg" alt="Build Status"></a>  <a href="https://coveralls.io/r/mcollina/mosca"><img src="https://coveralls.io/repos/mcollina/mosca/badge.svg" alt="Coverage Status"></a>
 </h1>
 
 <p><a href="https://github.com/mcollina/mosca"><img src="http://cloud.dynamatik.com/image/3I3I0q1M1x0E/mosca_small.png" alt="MOSCA"></a></p>
@@ -39,81 +39,83 @@
 <p><a href="https://nodei.co/npm/mosca/"><img src="https://nodei.co/npm-dl/mosca.png" alt="NPM"></a></p>
 
 <h2>
-<a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>About</h2>
+<a id="about" class="anchor" href="#about" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>About</h2>
 
 <h4>
-<a name="mosca-is-a-nodejs-mqtt-broker-which-can-be-used" class="anchor" href="#mosca-is-a-nodejs-mqtt-broker-which-can-be-used"><span class="octicon octicon-link"></span></a>Mosca is a node.js mqtt broker, which can be used:</h4>
+<a id="mosca-is-a-nodejs-mqtt-broker-which-can-be-used" class="anchor" href="#mosca-is-a-nodejs-mqtt-broker-which-can-be-used" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Mosca is a node.js mqtt broker, which can be used:</h4>
 
 <ul>
 <li><a href="https://github.com/mcollina/mosca/wiki/Mosca-as-a-standalone-service.">Standalone</a></li>
 <li><a href="https://github.com/mcollina/mosca/wiki/Mosca-basic-usage">Embedded in another Node.js application</a></li>
-</ul><h2>
-<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
+</ul>
+
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h2>
 
 <ul>
-<li>MQTT 3.1 compliant.</li>
+<li>MQTT 3.1 and 3.1.1 compliant.</li>
 <li>QoS 0 and QoS 1.</li>
 <li>Various storage options for QoS 1 offline packets, and subscriptions.</li>
-<li>As fast as it is possible.</li>
-<li>Usable inside ANY other node.js app.</li>
-<li>Supports node v0.10.</li>
-</ul><h2>
-<a name="quickstart" class="anchor" href="#quickstart"><span class="octicon octicon-link"></span></a>Quickstart</h2>
+<li>Usable inside ANY other Node.js app.</li>
+<li>version 2.0.0+ targets node v6, v4 and v0.12</li>
+<li>version 1.0.0+ targets node v6, v5, v4 and v0.12, with partial support for node v0.10.</li>
+</ul>
+
+<h2>
+<a id="quickstart" class="anchor" href="#quickstart" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Quickstart</h2>
 
 <h3>
-<a name="standalone" class="anchor" href="#standalone"><span class="octicon octicon-link"></span></a>Standalone</h3>
+<a id="standalone" class="anchor" href="#standalone" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Standalone</h3>
 
-<div class="highlight highlight-bash"><pre>npm install mosca bunyan -g
-mosca -v <span class="p">|</span> bunyan
-</pre></div>
+<div class="highlight highlight-source-shell"><pre>npm install mosca pino -g
+mosca -v <span class="pl-k">|</span> pino</pre></div>
 
 <h3>
-<a name="embedded" class="anchor" href="#embedded"><span class="octicon octicon-link"></span></a>Embedded</h3>
+<a id="embedded" class="anchor" href="#embedded" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Embedded</h3>
 
-<div class="highlight highlight-bash"><pre>npm install mosca --save
-</pre></div>
+<div class="highlight highlight-source-shell"><pre>npm install mosca --save</pre></div>
 
 <p>Show me some code:</p>
 
-<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">mosca</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'mosca'</span><span class="p">)</span>
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> mosca <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>mosca<span class="pl-pds">'</span></span>);
 
-<span class="kd">var</span> <span class="nx">ascoltatore</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="c1">//using ascoltatore</span>
-  <span class="nx">type</span><span class="o">:</span> <span class="s1">'mongo'</span><span class="p">,</span>
-  <span class="nx">url</span><span class="o">:</span> <span class="s1">'mongodb://localhost:27017/mqtt'</span><span class="p">,</span>
-  <span class="nx">pubsubCollection</span><span class="o">:</span> <span class="s1">'ascoltatori'</span><span class="p">,</span>
-  <span class="nx">mongo</span><span class="o">:</span> <span class="p">{}</span>
-<span class="p">};</span>
+<span class="pl-k">var</span> ascoltatore <span class="pl-k">=</span> {
+  <span class="pl-c">//using ascoltatore</span>
+  type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>mongo<span class="pl-pds">'</span></span>,
+  url<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>mongodb://localhost:27017/mqtt<span class="pl-pds">'</span></span>,
+  pubsubCollection<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>ascoltatori<span class="pl-pds">'</span></span>,
+  mongo<span class="pl-k">:</span> {}
+};
 
-<span class="kd">var</span> <span class="nx">settings</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="nx">port</span><span class="o">:</span> <span class="mi">1883</span><span class="p">,</span>
-  <span class="nx">backend</span><span class="o">:</span> <span class="nx">ascoltatore</span>
-<span class="p">};</span>
+<span class="pl-k">var</span> settings <span class="pl-k">=</span> {
+  port<span class="pl-k">:</span> <span class="pl-c1">1883</span>,
+  backend<span class="pl-k">:</span> ascoltatore
+};
 
-<span class="nx">server</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'clientConnected'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">client</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'client connected'</span><span class="p">,</span> <span class="nx">client</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
-<span class="p">});</span>
+<span class="pl-k">var</span> server <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">mosca.Server</span>(settings);
 
-<span class="c1">// fired when a message is received</span>
-<span class="nx">server</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'published'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">packet</span><span class="p">,</span> <span class="nx">client</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Published'</span><span class="p">,</span> <span class="nx">packet</span><span class="p">.</span><span class="nx">payload</span><span class="p">);</span>
-<span class="p">});</span>
+<span class="pl-smi">server</span>.<span class="pl-en">on</span>(<span class="pl-s"><span class="pl-pds">'</span>clientConnected<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">client</span>) {
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>client connected<span class="pl-pds">'</span></span>, <span class="pl-smi">client</span>.<span class="pl-c1">id</span>);
+});
 
-<span class="kd">var</span> <span class="nx">server</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mosca</span><span class="p">.</span><span class="nx">Server</span><span class="p">(</span><span class="nx">settings</span><span class="p">);</span>
-<span class="nx">server</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'ready'</span><span class="p">,</span> <span class="nx">setup</span><span class="p">);</span>
+<span class="pl-c">// fired when a message is received</span>
+<span class="pl-smi">server</span>.<span class="pl-en">on</span>(<span class="pl-s"><span class="pl-pds">'</span>published<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">packet</span>, <span class="pl-smi">client</span>) {
+  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>Published<span class="pl-pds">'</span></span>, <span class="pl-smi">packet</span>.<span class="pl-smi">payload</span>);
+});
 
-<span class="c1">// fired when the mqtt server is ready</span>
-<span class="kd">function</span> <span class="nx">setup</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Mosca server is up and running'</span><span class="p">)</span>
-<span class="p">}</span>
-</pre></div>
+<span class="pl-smi">server</span>.<span class="pl-en">on</span>(<span class="pl-s"><span class="pl-pds">'</span>ready<span class="pl-pds">'</span></span>, setup);
+
+<span class="pl-c">// fired when the mqtt server is ready</span>
+<span class="pl-k">function</span> <span class="pl-en">setup</span>() {
+  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>Mosca server is up and running<span class="pl-pds">'</span></span>);
+}</pre></div>
 
 <p>All the info to get you started is gathered <a href="https://github.com/mcollina/mosca/wiki/Mosca-basic-usage">in this wiki page</a></p>
 
 <p>Also there is an example using <a href="https://github.com/mcollina/mosca/wiki/Mosca-basic-usage#in-this-example-we-will-be-using-redis">Redis</a></p>
 
 <h2>
-<a name="how-tostutorials" class="anchor" href="#how-tostutorials"><span class="octicon octicon-link"></span></a>How to's/Tutorials</h2>
+<a id="how-tostutorials" class="anchor" href="#how-tostutorials" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to's/Tutorials</h2>
 
 <p>All to be found <a href="https://github.com/mcollina/mosca/wiki">on our repository wiki section.</a></p>
 
@@ -122,31 +124,36 @@ mosca -v <span class="p">|</span> bunyan
 <p>read the <a href="http://mcollina.github.io/mosca/docs">dox generated documentation</a>.</p>
 
 <h3>
-<a name="learn-more" class="anchor" href="#learn-more"><span class="octicon octicon-link"></span></a>Learn more</h3>
+<a id="learn-more" class="anchor" href="#learn-more" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Learn more</h3>
 
 <p>See the slides of my talk <a href="http://mcollina.github.io/mqtt_and_nodejs/">"MQTT and Node.js - Messaging in the Internet
 of Things"</a>.</p>
 
 <p>You can find a test version of mosca at test.mosca.io.
 You can use ws://test.mosca.io/ to connect to the WebSocket tunnel.
-This is powered by the <a href="#docker-support">docker image</a>.</p>
+This is powered by the <a href="https://github.com/mcollina/mosca/wiki/Docker-support">docker image</a>.</p>
 
-<p>If you like Mosca, consider supporting the project by donating via
-<a href="https://www.gittip.com/mcollina/">Gittip</a>, or hire <a href="http://twitter.com/matteocollina">me</a>
-to get you started and solve any issue you might find.
-Also, check out our <a href="https://github.com/mcollina/mosca/wiki/Usage-in-the-Wild">Usage in the
-Wild</a> wiki
+<p>If you find Mosca useful, consider supporting the project by buying a support package
+from <a href="http://twitter.com/matteocollina">me</a> by writing an email to <a href="mailto:hello@matteocollina.com">hello@matteocollina.com</a>.</p>
+
+<p>Check out our <a href="https://github.com/mcollina/mosca/wiki/Mosca-Showcase">showcase</a> wiki
 page! Feel free to add yourself! :)</p>
 
 <h2>
-<a name="feedback" class="anchor" href="#feedback"><span class="octicon octicon-link"></span></a>Feedback</h2>
+<a id="security-issues" class="anchor" href="#security-issues" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Security Issues</h2>
+
+<p><strong>Mosca</strong> sits between your system and the devices: this is though role, and we did our best to secure your systems.
+However, you might find a security issue: in that case, email <a href="https://github.com/mcollina" class="user-mention">@mcollina</a> at <a href="mailto:hello@matteocollina.com">hello@matteocollina.com</a>.</p>
+
+<h2>
+<a id="feedback" class="anchor" href="#feedback" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Feedback</h2>
 
 <p>Use the <a href="http://github.com/mcollina/mosca/issues">issue tracker</a> for bugs.
 <a href="http://twitter.com/matteocollina">Tweet</a> us for any idea that can improve the project.
 Chat with us on <a href="https://gitter.im/mcollina/mosca">Mosca's room</a> on Gitter.</p>
 
 <h2>
-<a name="links" class="anchor" href="#links"><span class="octicon octicon-link"></span></a>Links</h2>
+<a id="links" class="anchor" href="#links" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Links</h2>
 
 <ul>
 <li><a href="http://github.com/mcollina/mosca">GIT Repository</a></li>
@@ -154,52 +161,22 @@ Chat with us on <a href="https://gitter.im/mcollina/mosca">Mosca's room</a> on G
 <li><a href="http://github.com/mcollina/ascoltatori">Ascoltatori</a></li>
 <li><a href="http://mqtt.org">MQTT protocol</a></li>
 <li><a href="http://github.com/adamvr/MQTT.js">MQTT.js</a></li>
-</ul><h2>
-<a name="authors" class="anchor" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h2>
+</ul>
+
+<h2>
+<a id="authors" class="anchor" href="#authors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors</h2>
 
 <p><a href="http://twitter.com/matteocollina">Matteo Collina</a></p>
 
 <h2>
-<a name="contributors" class="anchor" href="#contributors"><span class="octicon octicon-link"></span></a>Contributors</h2>
-
-<table><tbody>
-<tr>
-<th align="left">David Halls</th>
-<td><a href="https://github.com/davedoesdev">GitHub/davedoesdev</a></td>
-</tr>
-<tr>
-<th align="left">Andrea Reginato</th>
-<td><a href="https://github.com/andreareginato">GitHub/andreareginato</a></td>
-</tr>
-<tr>
-<th align="left">Chris Wiggins</th>
-<td><a href="https://github.com/chriswiggins">GitHub/chriswiggins</a></td>
-</tr>
-<tr>
-<th align="left">Samir Naik</th>
-<td><a href="https://github.com/samirnaik">GitHub/samirnaik</a></td>
-</tr>
-<tr>
-<th align="left">Leo Steiner</th>
-<td><a href="https://github.com/ldstein">GitHub/ldstein</a></td>
-</tr>
-<tr>
-<th align="left">John Kokkinidis</th>
-<td><a href="https://github.com/SudoPlz">GitHub/SudoPlz</a></td>
-</tr>
-<tr>
-<th align="left">Morgan Cheng</th>
-<td><a href="https://github.com/mocheng">GitHub/mocheng</a></td>
-</tr>
-</tbody></table><h2>
-<a name="logo" class="anchor" href="#logo"><span class="octicon octicon-link"></span></a>Logo</h2>
+<a id="logo" class="anchor" href="#logo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Logo</h2>
 
 <p><a href="http://two-thirty.tumblr.com">Sam Beck</a></p>
 
 <h2>
-<a name="license---mit-license" class="anchor" href="#license---mit-license"><span class="octicon octicon-link"></span></a>LICENSE - "MIT License"</h2>
+<a id="license---mit-license" class="anchor" href="#license---mit-license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>LICENSE - "MIT License"</h2>
 
-<p>Copyright (c) 2013-2014 Matteo Collina, <a href="http://matteocollina.com">http://matteocollina.com</a></p>
+<p>Copyright (c) 2013-2016 Matteo Collina, <a href="http://matteocollina.com">http://matteocollina.com</a></p>
 
 <p>Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
