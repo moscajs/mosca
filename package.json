@@ -1,6 +1,6 @@
 {
   "name": "mosca",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "MQTT broker as a module",
   "main": "index.js",
   "bin": {
