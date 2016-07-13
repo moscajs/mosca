@@ -105,7 +105,7 @@ page! Feel free to add yourself! :)
 
 ## Security Issues
 
-__Mosca__ sits between your system and the devices: this is though role, and we did our best to secure your systems.
+__Mosca__ sits between your system and the devices: this is a tough role, and we did our best to secure your systems.
 However, you might find a security issue: in that case, email @mcollina at hello@matteocollina.com.
 
 
