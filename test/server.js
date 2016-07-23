@@ -206,6 +206,24 @@ describe("mosca.Server", function() {
     });
   });
 
+  it("should provide packet in publish callback", function(done) {
+    var messageId;
+
+    this.instance.once("published", function(packet) {
+      messageId = packet.messageId;
+    });
+	
+    this.instance.publish({
+      topic: "hello",
+      payload: "some data"
+    }, function(error, packet) {
+      expect(packet.topic).to.be.equal("hello");
+      expect(packet.payload.toString().toString()).to.be.equal("some data");
+      expect(packet.messageId.toString()).to.equal(messageId);
+      done();
+    });
+  });
+
   describe("timers", function() {
     var clock;
 
