@@ -33,14 +33,18 @@ module.exports = function(moscaSettings, createConnection) {
   function buildClient(done, callback) {
     var client = createConnection(settings.port, settings.host);
 
-    client.once('error', done);
-    client.stream.once('close', function() {
-      setImmediate(done);
-    });
+    client.once('error', finish);
+    client.stream.once('close', finish);
 
     client.on("connected", function() {
       callback(client);
     });
+
+    function finish (err) {
+      client.removeListener('error', finish)
+      client.stream.removeListener('close', finish)
+      done(err)
+    }
   }
 
   function buildAndConnect(done, opts, callback) {
