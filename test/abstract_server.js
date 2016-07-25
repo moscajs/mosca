@@ -40,10 +40,10 @@ module.exports = function(moscaSettings, createConnection) {
       callback(client);
     });
 
-    function finish (err) {
+    function finish () {
       client.removeListener('error', finish)
       client.stream.removeListener('close', finish)
-      done(err)
+      done()
     }
   }
 
