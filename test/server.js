@@ -169,6 +169,65 @@ describe("mosca.Server", function() {
     });
   });
 
+  it("should not receive the publish after unsubscription, while multi subscriptions with the same topic", function(done) {
+
+    // Simulate a situation that it takes same time to do authorizeSubscribe.
+    this.instance.authorizeSubscribe = function(client, topic, callback) {
+      setTimeout(function(){
+        callback(null, true)
+      }, 300);
+    };
+
+    buildAndConnect(function(){}, this.instance, function(client) {
+        function subAction(){
+          var messageId = Math.floor(65535 * Math.random());
+          client.subscribe({
+            subscriptions: [{topic: "hello", qos: 1 }],
+            messageId: messageId
+          });
+        }
+
+        var subCount = 3;  // subscribe the same topic for 3 times
+        for (var i = 0; i < subCount; ++i)
+          subAction();
+
+        var subackCount = 0;
+        client.on("suback", function() { // unsubscribe after subscriptions
+          subackCount++;
+          if (subackCount == subCount) { 
+            var messageId = Math.floor(65535 * Math.random());
+            client.unsubscribe({
+              unsubscriptions: ["hello"],
+              messageId: messageId
+            });
+          }
+        });
+
+        client.on("unsuback", function() { // publish message after unsubscription
+          var messageId = Math.floor(65535 * Math.random());
+          client.publish({
+            topic: "hello",
+            payload: "some data",
+            messageId: messageId,
+            qos: 1
+          });
+        });
+
+        var donePass = false;
+        client.on("publish", function(packet) { // should not receive the publish
+          client.disconnect();
+          donePass = true
+          done(new Error("unexpected publish"))
+        });
+
+        setTimeout(function(){
+          client.disconnect();
+          if (!donePass)
+            done()
+        }, 1000);
+    });
+  });
+
   it("should fail if persistence can not connect", function (done) {
     var newSettings = moscaSettings();
 
