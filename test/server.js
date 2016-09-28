@@ -213,18 +213,14 @@ describe("mosca.Server", function() {
           });
         });
 
-        var donePass = false;
         client.on("publish", function(packet) { // should not receive the publish
-          client.disconnect();
-          donePass = true
-          done(new Error("unexpected publish"))
+          done(new Error("unexpected publish"));
         });
 
-        setTimeout(function(){
+        client.on("puback", function(packet) { // close client when puback
           client.disconnect();
-          if (!donePass)
-            done()
-        }, 1000);
+          done();
+        });
     });
   });
 
