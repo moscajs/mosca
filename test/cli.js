@@ -248,10 +248,12 @@ describe("mosca.cli", function() {
         servers.unshift(server);
         var options = { port: 1883, username: "bad", password: "bad" };
         var client = mqtt.connect(options);
-        client.on("error", cb);
         client.on("connect", function() {
           cb(null, client);
         });
+        clien.once("disconnect", function () {
+          cb(new Error('disconnected'))
+        })
       },
       function(client, cb) {
         client.once("close", cb);
@@ -266,7 +268,7 @@ describe("mosca.cli", function() {
     });
   });
 
-  it("should reload the current config if killed with SIGHUP on a Linux-based OS", function(done) {
+  it("should reload the current config if killed with SIGHUP on a UNIX-based OS", function(done) {
 
     if(os.platform() === "win32") return done();
 
@@ -306,8 +308,14 @@ describe("mosca.cli", function() {
         var options = { port: 1883, username: "myuser", password: "mypass" };
         var client = mqtt.connect(options);
         client.once("error", cb);
+        client.once("disconnect", function() {
+          cb(new Error('disconnected'));
+        });
+        client.once("close", function() {
+          cb(new Error('disconnected'));
+        });
         client.once("connect", function() {
-          client.once("close", cb);
+          cb()
           client.end();
         });
       }
