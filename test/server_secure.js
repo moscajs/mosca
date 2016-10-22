@@ -55,7 +55,7 @@ describe("mosca.Server - Secure and non-secure Connection", function() {
     }
   });
 
-  it("should not allow non-secure connections with key and certificate as text (bis)", function(done) {
+  it("should not allow non-secure connections with key and certificate", function(done) {
     settings = moscaSettings();
     delete settings.secure;
     delete settings.port;
@@ -91,7 +91,7 @@ describe("mosca.Server - Secure and non-secure Connection", function() {
     });
   });
 
-  it("should not allow non-secure connections", function(done) {
+  it("should not allow non-secure connections with legacy configuration", function(done) {
     settings = moscaSettings();
     settings.secure.port = nextPort();
 
