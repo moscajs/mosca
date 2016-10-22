@@ -139,9 +139,10 @@ describe("mocha.options", function () {
 
       expect(modernized).to.not.have.property("secure");
       expect(modernized).to.have.property("credentials");
+
       expect(modernized.credentials).to.be.deep.equal({
-        keyPath: "modern/path",
-        certPath: "modern/path",
+        key: "modern/path",
+        cert: "modern/path",
       });
     });
 
@@ -165,8 +166,8 @@ describe("mocha.options", function () {
 
     it("should not override custom host, ports and credentials", function () {
       var credentials = {
-        keyPath: "path/to/key",
-        certPath: "path/to/cert",
+        key: "path/to/key",
+        cert: "path/to/cert",
       };
 
       var modern = {
@@ -213,8 +214,8 @@ describe("mocha.options", function () {
 
       it("should correctly modernize mqtts configuration", function () {
         var credentials = {
-          keyPath: "path/to/key",
-          certPath: "path/to/cert",
+          key: "path/to/key",
+          cert: "path/to/cert",
         };
 
         var legacy = {
@@ -245,8 +246,8 @@ describe("mocha.options", function () {
 
       it("should correctly modernize mqtt+mqtts configuration", function () {
         var credentials = {
-          keyPath: "path/to/key",
-          certPath: "path/to/cert"
+          key: "path/to/key",
+          cert: "path/to/cert"
         };
 
         var legacy = {
@@ -308,8 +309,8 @@ describe("mocha.options", function () {
 
       it("should correctly modernize mqtts+https configuration", function () {
         var credentials = {
-          keyPath: "path/to/key",
-          certPath: "path/to/cert"
+          key: "path/to/key",
+          cert: "path/to/cert"
         };
 
         var legacy = {
@@ -379,8 +380,8 @@ describe("mocha.options", function () {
 
       it("should correctly modernize https-only configuration", function () {
         var credentials = {
-          keyPath: "path/to/key",
-          certPath: "path/to/cert"
+          key: "path/to/key",
+          cert: "path/to/cert"
         };
 
         var legacy = {
@@ -422,8 +423,8 @@ describe("mocha.options", function () {
 
       it("should correctly modernize http+https configuration", function () {
         var credentials = {
-          keyPath: "path/to/key",
-          certPath: "path/to/cert"
+          key: "path/to/key",
+          cert: "path/to/cert"
         };
 
         var legacy = {
@@ -475,8 +476,8 @@ describe("mocha.options", function () {
 
       it("should correctly modernize complex configuration", function () {
         var credentials = {
-          keyPath: "path/to/key",
-          certPath: "path/to/cert"
+          key: "path/to/key",
+          cert: "path/to/cert"
         };
 
         var legacy = {
