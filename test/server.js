@@ -174,7 +174,7 @@ describe("mosca.Server", function() {
     // Simulate a situation that it takes same time to do authorizeSubscribe.
     this.instance.authorizeSubscribe = function(client, topic, callback) {
       setTimeout(function(){
-        callback(null, true)
+        callback(null, true);
       }, 300);
     };
 
