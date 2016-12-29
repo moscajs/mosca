@@ -1,8 +1,8 @@
 # Mosca
 #
-# VERSION 0.2.1
+# VERSION 0.3.0
 
-FROM hypriot/rpi-node:4
+FROM hypriot/rpi-node:6
 MAINTAINER Matteo Collina <hello@matteocollina.com>
 
 RUN mkdir -p /usr/src/app
