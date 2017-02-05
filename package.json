@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "array-from": "^2.1.1",
-    "ascoltatori": "^3.0.0",
+    "ascoltatori": "^4.0.0",
     "brfs": "~1.4.2",
     "clone": "^2.1.0",
     "commander": "~2.9.0",
