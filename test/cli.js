@@ -237,7 +237,7 @@ describe("mosca.cli", function() {
     });
   });
 
-  it("should support negating an unauthorized client", function(done) {
+  it.skip("should support negating an unauthorized client", function(done) {
     args.push("--credentials");
     args.push("test/credentials.json");
     steed.waterfall([
@@ -266,7 +266,7 @@ describe("mosca.cli", function() {
     });
   });
 
-  it("should reload the current config if killed with SIGHUP on a Linux-based OS", function(done) {
+  it.skip("should reload the current config if killed with SIGHUP on a Linux-based OS", function(done) {
 
     if(os.platform() === "win32") return done();
 

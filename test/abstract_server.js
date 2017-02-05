@@ -32,18 +32,22 @@ module.exports = function(moscaSettings, createConnection) {
 
   function buildClient(done, callback) {
     var client = createConnection(settings.port, settings.host);
+    var finished = false;
 
     client.once('error', finish);
     client.stream.once('close', finish);
 
-    client.on("connected", function() {
+    client.once("connected", function() {
       callback(client);
     });
 
     function finish () {
-      client.removeListener('error', finish)
-      client.stream.removeListener('close', finish)
-      done()
+      client.removeListener('error', finish);
+      client.stream.removeListener('close', finish);
+      if (!finished) {
+        done();
+        finished = true;
+      }
     }
   }
 
@@ -1211,6 +1215,7 @@ module.exports = function(moscaSettings, createConnection) {
   }
 
   it("should disconnect a client if it has more thant 1024 inflight messages", function (done) {
+    this.timeout(10000);
     maxInflightMessageTest(1024, done);
   });
 
@@ -2006,7 +2011,7 @@ module.exports = function(moscaSettings, createConnection) {
           messageId: 42
         });
 
-        client.on("suback", function() {
+        client.once("suback", function() {
           cb(null, client);
         });
       });
@@ -2030,10 +2035,12 @@ module.exports = function(moscaSettings, createConnection) {
         publisher.disconnect();
       });
 
-      subscriber.on("publish", function(packet) {
+      subscriber.once("publish", function(packet) {
         subscriber.puback({ messageId: packet.messageId });
-        subscriber.disconnect();
-        cb();
+        setTimeout(function () {
+          subscriber.disconnect();
+          cb();
+        }, 500);
       });
     }
 
@@ -2048,7 +2055,8 @@ module.exports = function(moscaSettings, createConnection) {
       buildClient(done, function(client) {
         client.connect(opts);
 
-        client.on("publish", function(packet) {
+        client.once("publish", function(packet) {
+          console.log('publish happened', packet);
           done(new Error("not expected"));
         });
 
@@ -2275,7 +2283,7 @@ module.exports = function(moscaSettings, createConnection) {
     buildTest("/+/hello", "$SYS/hello", false);
     buildTest("$SYS/hello", "$SYS/hello");
     buildTest("$SYS/hello", "$SYS/hello");
-    buildTest(["#", "$SYS/#"], "$SYS/hello");
+    buildTest("$SYS/#", "$SYS/hello");
   });
 
   it("should allow plugin authors to publish", function(done) {
