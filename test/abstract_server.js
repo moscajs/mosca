@@ -41,9 +41,9 @@ module.exports = function(moscaSettings, createConnection) {
     });
 
     function finish () {
-      client.removeListener('error', finish)
-      client.stream.removeListener('close', finish)
-      done()
+      client.removeListener('error', finish);
+      client.stream.removeListener('close', finish);
+      done();
     }
   }
 
