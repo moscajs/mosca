@@ -280,8 +280,9 @@ describe("mosca.Server", function() {
   });
 
   it("should emit \"clientError\" when client error occurs due to unexpected disconnection", function(done) {
+    var instance = this.instance;
     // listen to a client error event
-    this.instance.once("clientError", function(error, client) {
+    instance.once("clientError", function(error, client) {
       expect(error).to.be.an('error');
       done();
     });
