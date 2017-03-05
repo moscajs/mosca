@@ -279,6 +279,32 @@ describe("mosca.Server", function() {
     });
   });
 
+  it("should emit \"clientError\" when client error occurs due to unexpected disconnection", function(done) {
+    // listen to a client error event
+    this.instance.once("clientError", function(error, client) {
+      expect(error).to.be.instanceof(Error);
+      done();
+    });
+    // cause a connection error between client and server, leading to a socket hang up
+    require('child_process').spawn('sh', [ '-c',
+        'node -e ' +
+          '"var createConnection = require(\'' + __dirname.replace(/\\/g, "/") + '/helpers/createConnection\');' +
+          'var client = createConnection(' + instance.opts.port + ');' +
+          'client.on(\'connected\', function() {' +
+            'client.connect({' +
+              'keepalive: 1000,' +
+              'clientId: \'mosca_' + require("crypto").randomBytes(8).toString('hex') + '\',' +
+              'protocolId: \'MQIsdp\',' +
+              'protocolVersion: 3' +
+            '});' +
+            'client.on(\'connack\', function(packet) {' +
+              'throw new Error();' +
+            '});' +
+          '});"'
+      ]
+    );
+  });
+
   describe("timers", function() {
     var clock;
 
