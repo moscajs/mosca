@@ -289,7 +289,16 @@ describe("mosca.Server", function() {
     // cause a connection error between client and server, leading to a socket hang up
     require('child_process').spawn('sh', [ '-c',
         'node -e ' +
-          '"var createConnection = require(\'' + __dirname.replace(/\\/g, "/") + '/helpers/createConnection\');' +
+          '"var Connection = require(\'mqtt-connection\');' +
+          'var net = require(\'net\');' +
+          'function createConnection(port) {' +
+            'var stream = net.createConnection(port);' +
+            'var conn = new Connection(stream);' +
+            'stream.on(\'connect\', function() {' +
+              'conn.emit(\'connected\');' +
+            '});' +
+            'return conn;' +
+          '}' +
           'var client = createConnection(' + instance.opts.port + ');' +
           'client.on(\'connected\', function() {' +
             'client.connect({' +
