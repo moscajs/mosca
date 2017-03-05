@@ -282,7 +282,7 @@ describe("mosca.Server", function() {
   it("should emit \"clientError\" when client error occurs due to unexpected disconnection", function(done) {
     // listen to a client error event
     this.instance.once("clientError", function(error, client) {
-      expect(error).to.be.instanceof(Error);
+      expect(error).to.be.an('error');
       done();
     });
     // cause a connection error between client and server, leading to a socket hang up
