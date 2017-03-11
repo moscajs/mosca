@@ -286,33 +286,10 @@ describe("mosca.Server", function() {
       expect(error).to.be.an('error');
       done();
     });
-    // cause a connection error between client and server, leading to a socket hang up
-    require('child_process').spawn('sh', [ '-c',
-        'node -e ' +
-          '"var Connection = require(\'mqtt-connection\');' +
-          'var net = require(\'net\');' +
-          'function createConnection(port) {' +
-            'var stream = net.createConnection(port);' +
-            'var conn = new Connection(stream);' +
-            'stream.on(\'connect\', function() {' +
-              'conn.emit(\'connected\');' +
-            '});' +
-            'return conn;' +
-          '}' +
-          'var client = createConnection(' + instance.opts.port + ');' +
-          'client.on(\'connected\', function() {' +
-            'client.connect({' +
-              'keepalive: 1000,' +
-              'clientId: \'mosca_' + require("crypto").randomBytes(8).toString('hex') + '\',' +
-              'protocolId: \'MQIsdp\',' +
-              'protocolVersion: 3' +
-            '});' +
-            'client.on(\'connack\', function(packet) {' +
-              'throw new Error();' +
-            '});' +
-          '});"'
-      ]
-    );
+    // cause a connection error between client and server
+    buildAndConnect(function () {}, instance, function(client) {
+      instance.clients[client.opts.clientId]['connection'].emit("error", new Error());
+    });
   });
 
   describe("timers", function() {
