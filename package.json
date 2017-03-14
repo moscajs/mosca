@@ -48,6 +48,7 @@
   "author": "Matteo Collina <hello@matteocollina.com>",
   "license": "MIT",
   "devDependencies": {
+    "browserify": "~13.0.0",
     "chai": "^3.5.0",
     "coveralls": "~2.11.1",
     "dox-foundation": "~0.5.4",
@@ -62,9 +63,9 @@
     "sinon-chai": "~2.8.0",
     "supertest": "~1.2.0",
     "tmp": "0.0.24",
-    "browserify": "~13.0.0",
     "uglify-js": "^2.4.16",
-    "underscore": "^1.7.0"
+    "underscore": "^1.7.0",
+    "ws": "^1.0.1"
   },
   "dependencies": {
     "array-from": "^2.1.1",
