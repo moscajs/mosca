@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+  <head>
+<style>
+.button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 5px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+}
+.error {
+    color: #D8000C;
+    background-color: #FFBABA;
+}
+.hidden {
+   visibility: hidden;
+   display: none
+}
+</style>
+    <script src="/mqtt.js"></script>
+    <title>Marine Institute MQTT live demo</title>
+  </head>
+  <body>
+   <div id="errors" class="error"></div>
+   <h1>CTD</h1>
+   <pre id="spiddal-ctd"></pre>
+   <h1>Fluorometer</h1>
+   <pre id="spiddal-fluorometer"></pre>
+   <h1>Weather</h1>
+   <pre id="airmar-rinville-1"></pre>
+   <h1>AIS</h1>
+   <pre id="ais-rinville-1-geojson"></pre>
+   <h1>Hydrophone</h1>
+   <pre id="spiddal-hydrophone"></pre>
+   <div id="login" class="hidden">
+       <input class="username" placeholder="username">
+       <input class="password" type="password" placeholder="password">
+       <input class="login-button button" type="button" value="Login">
+   </div>
+    <script>
+      var showlogin = function(){
+       var el = document.getElementById("ais-rinville-1-geojson");
+         if(el.innerHTML !== ""){
+            // already done.
+            return;
+         }
+         el.innerHTML = document.getElementById("login").innerHTML;
+         document.querySelector(".login-button").addEventListener('click',function(){
+             var username = document.querySelector('.username').value;
+             var password = document.querySelector('.password').value;
+             document.getElementById("ais-rinville-1-geojson").innerHTML = "";
+             document.getElementById("errors").textContent = "";
+             doconnect(["spiddal-ctd",
+                  "spiddal-fluorometer",
+                  "spiddal-hydrophone",
+                   "airmar-rinville-1",
+                  "ais-rinville-1-geojson"],username,password);
+         });
+      }
+      var client;
+      var doconnect = function(topics,username,password){
+         if(client){
+            client.end(true);
+            client = null;
+         }
+         if(username){
+            client = mqtt.connect({username: username, password: password});
+         }else{
+            client = mqtt.connect();
+         }
+         client.on("message", function(topic, payload) {
+           document.getElementById("errors").textContent = "";
+           document.getElementById(topic).textContent = payload;
+          });
+         client.on('connect', function(err) {
+           document.getElementById("errors").textContent = "";
+         });
+         client.on('error', function(err) {
+           document.getElementById("errors").textContent = err.toString();
+           showlogin();
+         });
+         for(var i=0;i<topics.length;i++){
+            client.subscribe(topics[i]);
+         }
+      }
+      showlogin();
+
+      doconnect(["spiddal-ctd",
+                 "spiddal-fluorometer",
+                 "spiddal-hydrophone",
+                  "airmar-rinville-1"]);
+    </script>
+  </body>
+</html>

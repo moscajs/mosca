@@ -1,4 +1,4 @@
-var async = require("async");
+var steed = require("steed");
 var ascoltatori = require("ascoltatori");
 var abstractServerTests = require("./abstract_server");
 var net = require("net");
@@ -13,8 +13,7 @@ var moscaSettings = function() {
       factory: mosca.persistence.Memory
     },
     logger: {
-      childOf: globalLogger,
-      level: 60
+      level: "error"
     }
   };
 };
@@ -170,6 +169,61 @@ describe("mosca.Server", function() {
     });
   });
 
+  it("should not receive the publish after unsubscription, while multi subscriptions with the same topic", function(done) {
+
+    // Simulate a situation that it takes same time to do authorizeSubscribe.
+    this.instance.authorizeSubscribe = function(client, topic, callback) {
+      setTimeout(function(){
+        callback(null, true);
+      }, 300);
+    };
+
+    buildAndConnect(function(){}, this.instance, function(client) {
+        function subAction(){
+          var messageId = Math.floor(65535 * Math.random());
+          client.subscribe({
+            subscriptions: [{topic: "hello", qos: 1 }],
+            messageId: messageId
+          });
+        }
+
+        var subCount = 3;  // subscribe the same topic for 3 times
+        for (var i = 0; i < subCount; ++i)
+          subAction();
+
+        var subackCount = 0;
+        client.on("suback", function() { // unsubscribe after subscriptions
+          subackCount++;
+          if (subackCount == subCount) { 
+            var messageId = Math.floor(65535 * Math.random());
+            client.unsubscribe({
+              unsubscriptions: ["hello"],
+              messageId: messageId
+            });
+          }
+        });
+
+        client.on("unsuback", function() { // publish message after unsubscription
+          var messageId = Math.floor(65535 * Math.random());
+          client.publish({
+            topic: "hello",
+            payload: "some data",
+            messageId: messageId,
+            qos: 1
+          });
+        });
+
+        client.on("publish", function(packet) { // should not receive the publish
+          done(new Error("unexpected publish"));
+        });
+
+        client.on("puback", function(packet) { // close client when puback
+          client.disconnect();
+          done();
+        });
+    });
+  });
+
   it("should fail if persistence can not connect", function (done) {
     var newSettings = moscaSettings();
 
@@ -204,6 +258,24 @@ describe("mosca.Server", function() {
           qos: 1
         });
       });
+    });
+  });
+
+  it("should provide packet in publish callback", function(done) {
+    var messageId;
+
+    this.instance.once("published", function(packet) {
+      messageId = packet.messageId;
+    });
+	
+    this.instance.publish({
+      topic: "hello",
+      payload: "some data"
+    }, function(error, packet) {
+      expect(packet.topic).to.be.equal("hello");
+      expect(packet.payload.toString().toString()).to.be.equal("some data");
+      expect(packet.messageId.toString()).to.equal(messageId);
+      done();
     });
   });
 
@@ -550,7 +622,7 @@ describe("mosca.Server - MQTT backend", function() {
       instances = [secondInstance].concat(instances);
     }
 
-    async.parallel(instances.map(function(i) {
+    steed.parallel(instances.map(function(i) {
       return function(cb) {
         i.close(cb);
       };
@@ -617,7 +689,7 @@ describe("mosca.Server - MQTT backend", function() {
 
     var server = new mosca.Server(newSettings);
 
-    async.series([
+    steed.series([
 
       function(cb) {
         server.on("ready", cb);
@@ -638,7 +710,7 @@ describe("mosca.Server - MQTT backend", function() {
   it("should support subscribing correctly to wildcards in a tree-based topology", function(done) {
     var d = donner(3, done);
 
-    async.waterfall([
+    steed.waterfall([
 
       function(cb) {
         settings.backend = {
@@ -724,7 +796,7 @@ describe("mosca.Server - MQTT backend", function() {
   it("should not wrap messages with \"\" in a tree-based topology", function(done) {
     var d = donner(2, done);
 
-    async.waterfall([
+    steed.waterfall([
 
       function(cb) {
         buildAndConnect(d, function(client1) {
@@ -793,7 +865,7 @@ describe("mosca.Server - MQTT backend", function() {
 
     var server = new mosca.Server(newSettings);
 
-    async.series([
+    steed.series([
 
       function(cb) {
         server.on("ready", cb);
@@ -821,7 +893,7 @@ describe("mosca.Server - MQTT backend", function() {
 
     var server = new mosca.Server(newSettings);
 
-    async.series([
+    steed.series([
 
       function(cb) {
         server.on("ready", cb);

@@ -1,7 +1,7 @@
 "use strict";
 
 var hasher = require("pbkdf2-password")();
-var async = require("async");
+var steed = require("steed");
 
 describe("mosca.Authorizer", function() {
 
@@ -75,7 +75,7 @@ describe("mosca.Authorizer", function() {
     });
 
     it("it should not authenticate a removed user", function(done) {
-      async.waterfall([
+      steed.waterfall([
         authorizer.addUser.bind(authorizer, "matteo", "collina"),
         authorizer.rmUser.bind(authorizer, "matteo"),
         instance.bind(null, client, "matteo", "collina")

@@ -1,6 +1,7 @@
 "use strict";
 
-var async = require("async");
+var steed = require("steed");
+var pino = require("pino");
 var EventEmitter = require("events").EventEmitter;
 
 module.exports = function(create, buildOpts) {
@@ -78,7 +79,7 @@ module.exports = function(create, buildOpts) {
 
       var instance = this.instance;
 
-      async.series([
+      steed.series([
         function(cb) {
           instance.storeRetained(packet, cb);
         },
@@ -111,7 +112,7 @@ module.exports = function(create, buildOpts) {
 
       var instance = this.instance;
 
-      async.parallel([
+      steed.parallel([
         function(cb) { instance.storeRetained(getPacket(), cb); },
         function(cb) { instance.storeRetained(getPacket(), cb); },
         function(cb) { instance.storeRetained(getPacket(), cb); },
@@ -144,7 +145,7 @@ module.exports = function(create, buildOpts) {
 
       var instance = this.instance;
 
-      async.series([
+      steed.series([
         instance.storeRetained.bind(instance, packet),
         instance.storeRetained.bind(instance, packet2),
         function(cb) {
@@ -176,7 +177,7 @@ module.exports = function(create, buildOpts) {
 
       var instance = this.instance;
 
-      async.series([
+      steed.series([
         instance.storeRetained.bind(instance, packet),
         instance.storeRetained.bind(instance, packet2),
         function(cb) {
@@ -207,7 +208,7 @@ module.exports = function(create, buildOpts) {
 
       var instance = this.instance;
 
-      async.series([
+      steed.series([
         function(cb) {
           instance.storeRetained(packet1, cb);
         },
@@ -245,7 +246,7 @@ module.exports = function(create, buildOpts) {
 
       var instance = this.instance;
 
-      async.series([
+      steed.series([
         function(cb) {
           instance.storeRetained(packet1, cb);
         },
@@ -297,7 +298,7 @@ module.exports = function(create, buildOpts) {
       };
 
       var client = {
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         forward: function(topic, payload, options, pattern) {
           expect(topic).to.eql(packet1.topic);
           expect(payload).to.eql(packet1.payload);
@@ -323,7 +324,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: false,
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           hello: {
             qos: 1
@@ -337,7 +338,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: false,
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           hello: {
             qos: 1
@@ -355,7 +356,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: false,
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           hello: {
             qos: 1
@@ -376,7 +377,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: true,
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           hello: {
             qos: 1
@@ -397,7 +398,7 @@ module.exports = function(create, buildOpts) {
       var instance = this.instance;
       var client = {
         id: "my client id - 42",
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           hello: {
             qos: 1
@@ -420,7 +421,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: true,
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           hello: {
             qos: 1
@@ -439,7 +440,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: false,
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           hello: {
             qos: 1
@@ -461,7 +462,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: false,
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           hello: {
             qos: 1
@@ -488,7 +489,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: false,
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           hello: {
             qos: 1
@@ -516,7 +517,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: false,
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           hello: {
             qos: 1
@@ -539,7 +540,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: false,
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           hello: {
             qos: 1
@@ -562,7 +563,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: false,
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           hello: {
             qos: 0
@@ -583,7 +584,7 @@ module.exports = function(create, buildOpts) {
     var client = {
       id: "my client id - 42",
       clean: false,
-      logger: globalLogger,
+      logger: pino({ level: "error" }),
       subscriptions: {
         hello: {
           qos: 1
@@ -607,7 +608,7 @@ module.exports = function(create, buildOpts) {
     });
 
     it("should not stream any offline packet", function(done) {
-      // ensure persistence engine call 'done'
+      // ensure persistence engine call "done"
       this.instance.streamOfflinePackets(client, function(err, packet) {
         done(new Error("this should never be called"));
       }, done);
@@ -680,7 +681,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: false,
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           hello: {
             qos: 1
@@ -705,7 +706,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: false,
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           hello: 1
         }
@@ -728,7 +729,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: false,
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           hello: 1
         }
@@ -752,7 +753,7 @@ module.exports = function(create, buildOpts) {
       var client = {
         id: "my client id - 42",
         clean: false,
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           hello: {
             qos: 1
@@ -808,7 +809,7 @@ module.exports = function(create, buildOpts) {
     var client = {
       id: "my client id",
       clean: false,
-      logger: globalLogger,
+      logger: pino({ level: "error" }),
       subscriptions: {
         hello: {
           qos: 1
@@ -858,7 +859,7 @@ module.exports = function(create, buildOpts) {
     var client = {
       id: "my client id - 42",
       clean: false,
-      logger: globalLogger,
+      logger: pino({ level: "error" }),
       subscriptions: {
         "hello/#": {
           qos: 1
@@ -898,7 +899,7 @@ module.exports = function(create, buildOpts) {
     var client = {
       id: "my client id - 42",
       clean: false,
-      logger: globalLogger,
+      logger: pino({ level: "error" }),
       subscriptions: {
         hello: {
           qos: 1

@@ -1,4 +1,4 @@
-var async = require("async");
+var steed = require("steed");
 var ascoltatori = require("ascoltatori");
 var abstractServerTests = require("./abstract_server");
 var request = require('supertest');
@@ -10,8 +10,7 @@ var moscaSettings = function() {
   var settings = {
     stats: false,
     logger: {
-      childOf: globalLogger,
-      level: 60
+      level: "error"
     },
     persistence: {
       factory: mosca.persistence.Memory

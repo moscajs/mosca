@@ -1,4 +1,4 @@
-var async = require("async");
+var steed = require("steed");
 var ascoltatori = require("ascoltatori");
 
 module.exports = function(moscaSettings, createConnection) {
@@ -23,7 +23,7 @@ module.exports = function(moscaSettings, createConnection) {
       instances.push(secondInstance);
     }
 
-    async.each(instances, function(instance, cb) {
+    steed.each(instances, function(instance, cb) {
       instance.close(cb);
     }, function() {
       setImmediate(done);
@@ -33,14 +33,18 @@ module.exports = function(moscaSettings, createConnection) {
   function buildClient(done, callback) {
     var client = createConnection(settings.port, settings.host);
 
-    client.once('error', done);
-    client.stream.once('close', function() {
-      setImmediate(done);
-    });
+    client.once('error', finish);
+    client.stream.once('close', finish);
 
     client.on("connected", function() {
       callback(client);
     });
+
+    function finish () {
+      client.removeListener('error', finish);
+      client.stream.removeListener('close', finish);
+      done();
+    }
   }
 
   function buildAndConnect(done, opts, callback) {
@@ -120,9 +124,9 @@ module.exports = function(moscaSettings, createConnection) {
   });
 
   it("should publish each subscribe to '$SYS/{broker-id}/new/subscribes'", function(done) {
-    var d = donner(2, done),
-      connectedClient = null,
-      publishedClientId = null;
+    var d = donner(2, done);
+    var connectedClient = null;
+    var publishedClientId = null;
 
     function verify() {
       if (connectedClient && publishedClientId) {
@@ -139,7 +143,7 @@ module.exports = function(moscaSettings, createConnection) {
         }
       ];
 
-      connectedClient = client; 
+      connectedClient = client;
 
       instance.once("published", function(packet) {
         expect(packet.topic).to.be.equal("$SYS/" + instance.id + "/new/subscribes");
@@ -217,7 +221,7 @@ module.exports = function(moscaSettings, createConnection) {
       instances.push(serverOne);
       instances.push(serverTwo);
 
-      async.each(instances, function(instance, cb) {
+      steed.each(instances, function(instance, cb) {
         if (instance) {
           instance.close(cb);
         } else {
@@ -244,10 +248,11 @@ module.exports = function(moscaSettings, createConnection) {
 
       settingsOne.backend = settingsTwo.backend = settings.backend;
 
-      async.series([
+      steed.series([
         function(cb) {
           serverOne = new mosca.Server(settingsOne, function(err, server) {
-            serverOne.on('clientDisconnected', function(serverClient) {
+            serverOne.on('clientDisconnected', function(serverClient, reason) {
+              expect(reason).to.be.equal('new connection request');
               expect(serverClient).not.to.be.equal(undefined);
               done();
             });
@@ -381,7 +386,7 @@ module.exports = function(moscaSettings, createConnection) {
     var d = donner(2, done);
     var opts = buildOpts(), clientId = "123456789";
     opts.clientId = clientId;
-    async.waterfall([
+    steed.waterfall([
       function(cb) {
         buildAndConnect(d, opts, function(client1) {
           cb(null, client1);
@@ -862,7 +867,8 @@ module.exports = function(moscaSettings, createConnection) {
   it("should emit an event when a client is disconnected", function(done) {
     var client = createConnection(settings.port, settings.host);
 
-    instance.on('clientDisconnected', function(serverClient) {
+    instance.on('clientDisconnected', function(serverClient, reason) {
+      expect(reason).to.be.equal('disconnect request');
       expect(serverClient).not.to.be.equal(undefined);
       done();
     });
@@ -888,7 +894,7 @@ module.exports = function(moscaSettings, createConnection) {
     client.on('connack', function() {
       client.disconnect();
       client.disconnect();
-      async.setImmediate(function() {
+      setImmediate(function() {
         client.stream.end();
       });
     });
@@ -899,7 +905,8 @@ module.exports = function(moscaSettings, createConnection) {
   it("should emit an event when a client is disconnected without a disconnect", function(done) {
     var client = createConnection(settings.port, settings.host);
 
-    instance.on('clientDisconnected', function(serverClient) {
+    instance.on('clientDisconnected', function(serverClient, reason) {
+      expect(reason).to.be.equal('close');
       expect(serverClient).not.to.be.equal(undefined);
       done();
     });
@@ -915,7 +922,7 @@ module.exports = function(moscaSettings, createConnection) {
 
   it("should emit a ready and closed events", function(done) {
     var server = new mosca.Server(moscaSettings());
-    async.series([
+    steed.series([
 
       function(cb) {
         server.on("ready", cb);
@@ -1029,7 +1036,7 @@ module.exports = function(moscaSettings, createConnection) {
   it("should support unsubscribing a single client", function(done) {
     var d = donner(3, done);
 
-    async.waterfall([
+    steed.waterfall([
 
       function(cb) {
         buildAndConnect(d, function(client1) {
@@ -1246,7 +1253,7 @@ module.exports = function(moscaSettings, createConnection) {
 
   it("should support will message", function(done) {
 
-    async.waterfall([
+    steed.waterfall([
 
       function(cb) {
         var client = createConnection(settings.port, settings.host);
@@ -1651,7 +1658,7 @@ module.exports = function(moscaSettings, createConnection) {
 
   it("should support retained messages", function(done) {
 
-    async.waterfall([
+    steed.waterfall([
 
       function(cb) {
         var client = createConnection(settings.port, settings.host);
@@ -1714,7 +1721,7 @@ module.exports = function(moscaSettings, createConnection) {
 
   it("should return only a single retained message", function(done) {
 
-    async.waterfall([
+    steed.waterfall([
 
       function(cb) {
         buildClient(cb, function(client) {
@@ -1801,14 +1808,14 @@ module.exports = function(moscaSettings, createConnection) {
     opts.clientId = "mosca-unclean-clients-test";
     opts.clean = false;
 
-    async.series([
+    steed.series([
 
       function(cb) {
         buildAndConnect(cb, opts, function(client, connack) {
-        	
+
           // sessionPresent must be false
           expect(connack.sessionPresent).to.be.eql(false);
-        	
+
           var subscriptions = [{
             topic: "hello",
             qos: 1
@@ -1827,10 +1834,10 @@ module.exports = function(moscaSettings, createConnection) {
 
       function(cb) {
         buildAndConnect(cb, opts, function(client, connack) {
-        
+
           // reconnection sessionPresent must be true
           expect(connack.sessionPresent).to.be.eql(true);
-        	
+
           client.publish({
             topic: "hello",
             qos: 1,
@@ -1855,7 +1862,7 @@ module.exports = function(moscaSettings, createConnection) {
     opts.clientId = "mosca-unclean-client-test";
     opts.clean = false;
 
-    async.series([
+    steed.series([
 
       function(cb) {
         buildAndConnect(cb, opts, function(client, connack) {
@@ -1918,7 +1925,7 @@ module.exports = function(moscaSettings, createConnection) {
 
     opts.clientId = "mosca-unclean-client-test";
 
-    async.series([
+    steed.series([
 
       function(cb) {
         opts.clean = false;
@@ -1967,7 +1974,7 @@ module.exports = function(moscaSettings, createConnection) {
 
           // reconnection sessionPresent must be false, it is clean
           expect(connack.sessionPresent).to.be.eql(false);
-          
+
           client.on("publish", function(packet) {
             cb(new Error("unexpected publish"));
           });
@@ -2030,7 +2037,7 @@ module.exports = function(moscaSettings, createConnection) {
       });
     }
 
-    async.waterfall([
+    steed.waterfall([
       step1, step2, step3,
       // two times!
       step1, step2, step3
@@ -2059,7 +2066,7 @@ module.exports = function(moscaSettings, createConnection) {
     opts.clean = false;
     opts.keepalive = 0;
 
-    async.series([
+    steed.series([
 
       function(cb) {
         buildAndConnect(cb, opts, function(client) {
@@ -2119,7 +2126,7 @@ module.exports = function(moscaSettings, createConnection) {
     opts.clean = false;
     opts.keepalive = 0;
 
-    async.series([
+    steed.series([
 
       function(cb) {
         buildAndConnect(cb, opts, function(client) {

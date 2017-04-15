@@ -1,5 +1,5 @@
 var mqtt = require("mqtt");
-var async = require("async");
+var steed = require("steed");
 var ascoltatori = require("ascoltatori");
 var abstractServerTests = require("./abstract_server");
 var MongoClient = require("mongodb").MongoClient;
@@ -35,8 +35,7 @@ describe("mosca.Server with mongo persistence", function() {
       publishNewClient: false,
       publishClientDisconnect: false,
       logger: {
-        childOf: globalLogger,
-        level: 60
+        level: "error"
       },
       backend : {
         type: "mongo"

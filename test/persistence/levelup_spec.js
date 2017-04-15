@@ -1,8 +1,9 @@
 "use strict";
 
 var abstract = require("./abstract");
+var pino = require("pino");
 var LevelUp = require("../../").persistence.LevelUp;
-var async = require("async");
+var steed = require("steed");
 var tmpdir = require("osenv").tmpdir();
 var path = require("path");
 var rimraf = require("rimraf");
@@ -33,7 +34,7 @@ describe("mosca.persistence.LevelUp", function() {
       var client = { 
         id: "my client id - 42",
         clean: false,
-        logger: globalLogger,
+        logger: pino({ level: "error" }),
         subscriptions: {
           "hello/#": {
             qos: 1

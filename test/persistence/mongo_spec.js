@@ -4,7 +4,7 @@ var abstract = require("./abstract");
 var Mongo = require("../../").persistence.Mongo;
 var MongoClient = require('mongodb').MongoClient;
 var clean = require("mongo-clean");
-var async = require("async");
+var steed = require("steed");
 
 describe("mosca.persistence.Mongo", function() {
 
