@@ -7,9 +7,9 @@ Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.svg
 
 [![NPM](https://nodei.co/npm-dl/mosca.png)](https://nodei.co/npm/mosca/)
 
-##About
+## About
 
-####Mosca is a node.js mqtt broker, which can be used:
+#### Mosca is a node.js mqtt broker, which can be used:
 
 * <a href="https://github.com/mcollina/mosca/wiki/Mosca-as-a-standalone-service.">Standalone</a>
 * <a href="https://github.com/mcollina/mosca/wiki/Mosca-basic-usage">Embedded in another Node.js application</a>
