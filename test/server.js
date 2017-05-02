@@ -279,6 +279,19 @@ describe("mosca.Server", function() {
     });
   });
 
+  it("should emit \"clientError\" when client error occurs due to unexpected disconnection", function(done) {
+    var instance = this.instance;
+    // listen to a client error event
+    instance.once("clientError", function(error, client) {
+      expect(error).to.be.an('error');
+      done();
+    });
+    // cause a connection error between client and server
+    buildAndConnect(function () {}, instance, function(client) {
+      instance.clients[client.opts.clientId]['connection'].emit("error", new Error());
+    });
+  });
+
   describe("timers", function() {
     var clock;
 
