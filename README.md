@@ -23,7 +23,7 @@ Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.svg
 * version 2.0.0+ targets node v6, v4 and v0.12
 * version 1.0.0+ targets node v6, v5, v4 and v0.12, with partial support for node v0.10.
 
-##Quickstart
+## Quickstart
 
 ### Standalone
 
