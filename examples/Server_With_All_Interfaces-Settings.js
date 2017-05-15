@@ -37,8 +37,8 @@ var authenticate = function (client, username, password, callback) {
 var authorizePublish = function (client, topic, payload, callback) {
     var auth = true;
     // set auth to :
-    //  true to allow, 
-    //  false to deny and disconnect, 
+    //  true to allow 
+    //  false to deny and disconnect
     //  'ignore' to puback but not publish msg.
     callback(null, auth);
 }
@@ -46,8 +46,8 @@ var authorizePublish = function (client, topic, payload, callback) {
 var authorizeSubscribe = function (client, topic, callback) {
     var auth = true;
     // set auth to :
-    //  true to allow, 
-    //  false to deny, 
+    //  true to allow
+    //  false to deny 
     callback(null, auth);
 }
 
