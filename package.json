@@ -82,7 +82,6 @@
     "lru-cache": "~4.0.0",
     "memdown": "~1.1.1",
     "minimatch": "~3.0.0",
-    "moment": "~2.13.0",
     "moving-average": "0.1.1",
     "mqtt": "^1.6.3",
     "mqtt-connection": "^2.1.1",
