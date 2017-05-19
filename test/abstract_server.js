@@ -1004,7 +1004,7 @@ module.exports = function(moscaSettings, createConnection) {
     var count = 0;
     var timer;
 
-    instance.onQoS2publish = 'droptoQoS1';
+    instance.onQoS2publish = 'dropToQoS1';
     instance.published = function(packet, serverClient, callback) {
       onPublishedCalled = true;
       expect(packet.topic).to.be.equal("testQOS2");
