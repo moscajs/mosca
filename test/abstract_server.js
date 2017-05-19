@@ -998,7 +998,7 @@ module.exports = function(moscaSettings, createConnection) {
   });
 
   
-  it("should optionally (onQoS2publish='droptoQoS1') puback client publish to QOS 2", function(done) {
+  it("should optionally (onQoS2publish='dropToQoS1') puback client publish to QOS 2", function(done) {
     var onPublishedCalled = false;
     var clientId;
     var count = 0;
@@ -1060,7 +1060,7 @@ it("should optionally (onQoS2publish='disconnect') disconnect client on publish 
         messageId: 42,
         topic: "QOS2Test",
         payload: "some data to cause close",
-        qos: 1
+        qos: 2
       });
 
       // if after 2 seconds, we've not closed
