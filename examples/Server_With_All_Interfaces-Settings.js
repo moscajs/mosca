@@ -19,6 +19,7 @@ var moscaSetting = {
         { type: "https", port: 3001, bundle: true, credentials: { keyPath: SECURE_KEY, certPath: SECURE_CERT } }
     ],
     stats: false,
+    onQoS2publish: 'noack', // can set to 'disconnect', or to 'dropToQoS1' if using a client which will eat puback for QOS 2; e.g. mqtt.js
 
     logger: { name: 'MoscaServer', level: 'debug' },
 

@@ -956,6 +956,139 @@ module.exports = function(moscaSettings, createConnection) {
     });
   });
 
+  it("should by default not puback client publish to QOS 2", function(done) {
+    var onPublishedCalled = false;
+    var clientId;
+    var count = 0;
+    var timer;
+
+    instance.published = function(packet, serverClient, callback) {
+      onPublishedCalled = true;
+      expect(packet.topic).to.be.equal("testQOS2");
+      callback();
+    };
+
+    buildAndConnect(done, function(client) {
+      clientId = client.opts.clientId;
+
+      client.publish({
+        messageId: 42,
+        topic: "testQOS2",
+        payload: "publish expected",
+        qos: 2
+      });
+
+      // allow 1 second to hear puback
+      timer = setTimeout(function(){
+        client.disconnect();
+      }, 1000);
+      
+      // default QOS 2 should NOT puback
+      client.on("puback", function() {
+        count++;
+        //expect(count).to.eql(1);
+        client.disconnect();
+      });
+      client.on("close", function() {
+        expect(count).to.eql(0);
+        client.disconnect();
+        clearTimeout(timer);
+      });
+    });
+  });
+
+  
+  it("should optionally (onQoS2publish='dropToQoS1') puback client publish to QOS 2", function(done) {
+    var onPublishedCalled = false;
+    var clientId;
+    var count = 0;
+    var timer;
+
+    instance.onQoS2publish = 'dropToQoS1';
+    instance.published = function(packet, serverClient, callback) {
+      onPublishedCalled = true;
+      expect(packet.topic).to.be.equal("testQOS2");
+      callback();
+    };
+
+    buildAndConnect(done, function(client) {
+      clientId = client.opts.clientId;
+
+      client.publish({
+        messageId: 42,
+        topic: "testQOS2",
+        payload: "publish expected",
+        qos: 2
+      });
+
+      // allow 1 second to hear puback
+      timer = setTimeout(function(){
+        client.disconnect();
+      }, 1000);
+      
+      // with maxqos=1, QOS 2 should puback
+      client.on("puback", function() {
+        count++;
+        expect(count).to.eql(1);
+        client.disconnect();
+      });
+      client.on("close", function() {
+        expect(count).to.eql(1);
+        client.disconnect();
+        clearTimeout(timer);
+      });
+    });
+  });
+
+it("should optionally (onQoS2publish='disconnect') disconnect client on publish of QOS2 message", function(done) {
+    var onPublishedCalled = false;
+    var clientId;
+    var count = 0;
+    var timer;
+
+    instance.onQoS2publish = 'disconnect';
+    instance.published = function(packet, serverClient, callback) {
+      onPublishedCalled = true;
+      expect(packet.topic).to.be.equal("should not have published");
+      callback();
+    };
+
+    buildAndConnect(done, function(client) {
+      clientId = client.opts.clientId;
+
+      client.publish({
+        messageId: 42,
+        topic: "QOS2Test",
+        payload: "some data to cause close",
+        qos: 2
+      });
+
+      // if after 2 seconds, we've not closed
+      timer = setTimeout(function(){
+        var test = false;
+        expect(count).to.eql(0);
+        expect(test).to.eql(true);
+        client.disconnect();
+      }, 2000);
+      
+      // onQoS2publish = 'disconnect' should NOT puback
+      client.on("puback", function() {
+        expect(onPublishedCalled).to.eql(false);
+        count++;
+        expect(count).to.eql(0);
+        client.disconnect();
+      });
+      client.on("close", function() {
+        expect(onPublishedCalled).to.eql(false);
+        expect(count).to.eql(0);
+        client.disconnect();
+        clearTimeout(timer);
+      });
+    });
+  });
+
+
+  
   it("should emit an event when a new client is connected", function(done) {
     buildClient(done, function(client) {
 
