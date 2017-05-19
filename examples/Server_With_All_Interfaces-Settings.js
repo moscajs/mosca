@@ -35,11 +35,20 @@ var authenticate = function (client, username, password, callback) {
 }
 
 var authorizePublish = function (client, topic, payload, callback) {
-    callback(null, true);
+    var auth = true;
+    // set auth to :
+    //  true to allow 
+    //  false to deny and disconnect
+    //  'ignore' to puback but not publish msg.
+    callback(null, auth);
 }
 
 var authorizeSubscribe = function (client, topic, callback) {
-    callback(null, true);
+    var auth = true;
+    // set auth to :
+    //  true to allow
+    //  false to deny 
+    callback(null, auth);
 }
 
 var server = new mosca.Server(moscaSetting);
