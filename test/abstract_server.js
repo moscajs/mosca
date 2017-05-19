@@ -998,13 +998,13 @@ module.exports = function(moscaSettings, createConnection) {
   });
 
   
-  it("should optionally (.qos2Puback) puback client publish to QOS 2", function(done) {
+  it("should optionally (onQoS2publish='droptoQoS1') puback client publish to QOS 2", function(done) {
     var onPublishedCalled = false;
     var clientId;
     var count = 0;
     var timer;
 
-    instance.qos2Puback = true;
+    instance.onQoS2publish = 'droptoQoS1';
     instance.published = function(packet, serverClient, callback) {
       onPublishedCalled = true;
       expect(packet.topic).to.be.equal("testQOS2");
@@ -1039,6 +1039,55 @@ module.exports = function(moscaSettings, createConnection) {
       });
     });
   });
+
+it("should optionally (onQoS2publish='disconnect') disconnect client on publish of QOS2 message", function(done) {
+    var onPublishedCalled = false;
+    var clientId;
+    var count = 0;
+    var timer;
+
+    instance.onQoS2publish = 'disconnect';
+    instance.published = function(packet, serverClient, callback) {
+      onPublishedCalled = true;
+      expect(packet.topic).to.be.equal("should not have published");
+      callback();
+    };
+
+    buildAndConnect(done, function(client) {
+      clientId = client.opts.clientId;
+
+      client.publish({
+        messageId: 42,
+        topic: "QOS2Test",
+        payload: "some data to cause close",
+        qos: 1
+      });
+
+      // if after 2 seconds, we've not closed
+      timer = setTimeout(function(){
+        var test = false;
+        expect(count).to.eql(0);
+        expect(test).to.eql(true);
+        client.disconnect();
+      }, 2000);
+      
+      // onQoS2publish = 'disconnect' should NOT puback
+      client.on("puback", function() {
+        expect(onPublishedCalled).to.eql(false);
+        count++;
+        expect(count).to.eql(0);
+        client.disconnect();
+      });
+      client.on("close", function() {
+        expect(onPublishedCalled).to.eql(false);
+        expect(count).to.eql(0);
+        client.disconnect();
+        clearTimeout(timer);
+      });
+    });
+  });
+
+
   
   it("should emit an event when a new client is connected", function(done) {
     buildClient(done, function(client) {
