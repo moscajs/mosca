@@ -281,7 +281,7 @@ describe("mosca.Stats", function() {
   it("should publish the uptime every 10s", function(done) {
     server.on("testPublished", function(packet) {
       if (packet.topic === "$SYS/42/uptime") {
-        expect(packet.payload).to.eql("a few seconds");
+        expect(packet.payload).to.eql("10 seconds");
         done();
       }
     });
@@ -294,7 +294,7 @@ describe("mosca.Stats", function() {
 
     server.on("testPublished", function func(packet) {
       if (packet.topic === "$SYS/42/uptime" &&
-         packet.payload === "3 minutes") {
+         packet.payload === "180 seconds") {
         server.removeListener("testPublished", func);
         done();
       }
