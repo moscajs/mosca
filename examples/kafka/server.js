@@ -102,14 +102,14 @@ var authorizeSubscribe = function (client, topic, callback) {
     callback(null, answer);
 }
 
-var authorizePublish = function (client, topic, callback) {
+var authorizePublish = function (client, topic, payload, callback) {
     var answer = false;
     if(auth["*"] !== undefined && auth["*"].publish.indexOf(topic)>=0){
        answer = true;
     }else if(client.user !== undefined && auth[client.user].publish.indexOf(topic)>=0){
           answer = true;
     }
-    callback(null, answer);
+    callback(null, answer, payload);
 }
 
 var server = new Server(moscaSettings);
