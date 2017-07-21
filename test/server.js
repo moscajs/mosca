@@ -288,7 +288,7 @@ describe("mosca.Server", function() {
     });
     // cause a connection error between client and server
     buildAndConnect(function () {}, instance, function(client) {
-      instance.clients[client.opts.clientId]['connection'].emit("error", new Error());
+      instance.clients[client.opts.clientId].connection.emit("error", new Error());
     });
   });
 
