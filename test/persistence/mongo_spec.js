@@ -74,6 +74,41 @@ describe("mosca.persistence.Mongo", function() {
       });
     });
 
+    it("should support restoring when a string was sent", function(done) {
+      var client = {
+        id: "my client id - 42",
+        clean: false,
+        subscriptions: {
+          "hello/#": {
+            qos: 1
+          }
+        }
+      };
+
+      var packet = {
+        topic: "hello/42",
+        qos: 0,
+        payload: 'someStringToTest', // not a buffer
+        messageId: 42
+      };
+
+      var that = this;
+
+      this.instance.storeSubscriptions(client, function() {
+        that.instance.close(function() {
+          that.instance = new Mongo(opts);
+          setTimeout(function() {
+            that.instance.storeOfflinePacket(packet, function() {
+              that.instance.streamOfflinePackets(client, function(err, p) {
+                expect(p).to.eql(packet);
+                done();
+              });
+            });
+          }, 10);
+        });
+      });
+    });
+
     it("should support synchronization", function(done) {
       var client = { 
         id: "my client id - 42",

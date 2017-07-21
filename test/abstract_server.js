@@ -864,7 +864,7 @@ module.exports = function(moscaSettings, createConnection) {
     }
     
     callback(null, auth);
-  }
+  };
   
   it("should not call onPublished on publish to topic where auth='ignore'", function(done) {
     var onPublishedCalled = false;
@@ -899,7 +899,7 @@ module.exports = function(moscaSettings, createConnection) {
 
       // auth='ignore' should puback, but not publish
       client.on("puback", function() {
-        count++
+        count++;
         // on second call, onPublished should be true
         if(count === 2){
             expect(onPublishedCalled).to.eql(true);
