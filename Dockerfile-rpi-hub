@@ -1,6 +1,6 @@
 # Mosca
 #
-# VERSION 0.2.1
+# VERSION 2.5.2
 
 FROM ma314smith/rpi2-node-qemu:4
 MAINTAINER Matteo Collina <hello@matteocollina.com>
@@ -13,9 +13,10 @@ WORKDIR /usr/src/app/
 COPY ./ /usr/src/app/
 
 RUN apt-get update && \
-    apt-get install make gcc g++ python git && \
+    apt-get install make gcc g++ python git libzmq3-dev libkrb5-dev && \
     npm install --unsafe-perm --production && \
-    apt-get remove make gcc g++ python git
+    apt-get remove make gcc g++ python git && \
+    apt-get autoremove
 
 EXPOSE 80
 EXPOSE 1883
