@@ -2,7 +2,7 @@ FROM mhart/alpine-node:4
 MAINTAINER Robert Fuller <fullergalway@gmail.com>
 
 RUN apk update && \
-    apk add make gcc g++ python git 
+    apk add make gcc g++ python git zeromq-dev krb5-dev
 
 RUN mkdir -p /usr/src/app
 RUN mkdir -p /app/db
