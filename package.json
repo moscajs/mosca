@@ -19,8 +19,7 @@
   },
   "pre-commit": [
     "jshint-lib",
-    "jshint-test",
-    "test"
+    "jshint-test"
   ],
   "repository": {
     "type": "git",
@@ -69,7 +68,7 @@
   },
   "dependencies": {
     "array-from": "^2.1.1",
-    "ascoltatori": "^3.0.0",
+    "ascoltatori": "jemmyw/ascoltatori#peer",
     "brfs": "~1.4.2",
     "clone": "^1.0.2",
     "commander": "~2.9.0",
@@ -96,7 +95,7 @@
     "uuid": "^2.0.1",
     "websocket-stream": "~3.1.0"
   },
-  "optionalDependencies": {
+  "peerDependencies": {
     "leveldown": "~1.4.3",
     "amqp": "~0.2.4",
     "ioredis": "^1.15.1",
