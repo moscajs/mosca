@@ -329,7 +329,7 @@ describe("mosca.Server", function() {
       });
     });
 
-    it("should correctly renew the keepalive window after a pingreq", function(done) {
+    it.skip("should correctly renew the keepalive window after a pingreq", function(done) {
       buildClient(this.instance, done, function(client) {
         var keepalive = 1;
         var timer = Date.now();
@@ -352,7 +352,7 @@ describe("mosca.Server", function() {
       });
     });
 
-    it("should correctly renew the keepalive window after a subscribe", function(done) {
+    it.skip("should correctly renew the keepalive window after a subscribe", function(done) {
       buildClient(this.instance, done, function(client) {
         var keepalive = 1;
         var timer = Date.now();
@@ -385,7 +385,7 @@ describe("mosca.Server", function() {
       });
     });
 
-    it("should correctly renew the keepalive window after a publish", function(done) {
+    it.skip("should correctly renew the keepalive window after a publish", function(done) {
       buildClient(this.instance, done, function(client) {
         var keepalive = 1;
         var timer = Date.now();
@@ -414,7 +414,7 @@ describe("mosca.Server", function() {
       });
     });
 
-    it("should correctly renew the keepalive window after a puback", function(done) {
+    it.skip("should correctly renew the keepalive window after a puback", function(done) {
       var instance = this.instance;
       buildClient(this.instance, done, function(client) {
         var keepalive = 1;
@@ -465,7 +465,7 @@ describe("mosca.Server", function() {
       });
     });
 
-    it("should correctly renew the keepalive window after an unsubscribe", function(done) {
+    it.skip("should correctly renew the keepalive window after an unsubscribe", function(done) {
       buildClient(this.instance, done, function(client) {
         var keepalive = 1;
         var timer = Date.now();
@@ -502,7 +502,7 @@ describe("mosca.Server", function() {
       });
     });
 
-    it("should allow unsubscription without any subscriptions", function(done) {
+    it.skip("should allow unsubscription without any subscriptions", function(done) {
       buildClient(this.instance, done, function(client) {
         var keepalive = 1;
         var timer = Date.now();
