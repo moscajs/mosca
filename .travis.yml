@@ -15,7 +15,7 @@ env:
   global:
     - CC=gcc-4.8
     - CXX=g++-4.8
-    - MONGODB_VERSION="3.2.5"
+    - MONGODB_VERSION="3.4.9"
 addons:
   apt:
     sources:
