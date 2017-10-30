@@ -88,7 +88,7 @@ describe("mosca.persistence.Mongo", function() {
       var packet = {
         topic: "hello/42",
         qos: 0,
-        payload: 'someStringToTest', // not a buffer
+        payload: 'someStringToTest', // not a Buffer
         messageId: 42
       };
 

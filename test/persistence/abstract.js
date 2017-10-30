@@ -558,7 +558,7 @@ module.exports = function(create, buildOpts) {
       });
     });
 
-    it("should not store a QoS 0 subscription", function(done) {
+    it("should store a QoS 0 subscription", function(done) {
       var instance = this.instance;
       var client = {
         id: "my client id - 42",
@@ -573,7 +573,7 @@ module.exports = function(create, buildOpts) {
 
       instance.storeSubscriptions(client, function() {
         instance.lookupSubscriptions(client, function(err, results) {
-          expect(results).to.eql({});
+          expect(results).to.eql(client.subscriptions);
           done();
         });
       });
