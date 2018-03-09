@@ -1,22 +1,33 @@
 language: node_js
 sudo: false
 node_js:
+  - 0.12
+  - 4
+  - 6
   - 8
 services:
   - redis-server
-  - mongodb  
 script:
   - npm run coverage
 after_success:
   - npm run publish-coverage
 env:
-  - CXX=g++-4.8
+  global:
+    - CC=gcc-4.8
+    - CXX=g++-4.8
+    - MONGODB_VERSION="3.4.9"
 addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
     packages:
+      - gcc-4.8
       - g++-4.8
       - libzmq3-dev
 before_install:
+  - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-$MONGODB_VERSION.tgz
+  - tar xfz mongodb-linux-x86_64-$MONGODB_VERSION.tgz
+  - export PATH=`pwd`/mongodb-linux-x86_64-$MONGODB_VERSION/bin:$PATH
+  - mkdir -p data/db
+  - mongod --dbpath=data/db > /dev/null &
   - sleep 5
