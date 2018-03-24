@@ -43,7 +43,7 @@ describe('mosca.Server.error', function () {
       setImmediate(done);
     });
   });
-  it('should get MQTT port Error: listen EADDRINUSE :::1883', function (done) {
+  it('should get MQTT port Error: listen EADDRINUSE', function (done) {
     this.timeout(10000); // have to wait for the inject with delay of two seconds
     instance = new mosca.Server(moscaSettings(), function (err, server) {
       expect(server === instance).to.be.true;
@@ -52,11 +52,11 @@ describe('mosca.Server.error', function () {
       expect(server === secondInstance).to.be.true;
     });
     secondInstance.on('error', function (err) {
-      expect(err.toString()).to.be.equal('Error: listen EADDRINUSE :::1883');
+      expect(err.toString().substr(0, 24)).to.be.equal('Error: listen EADDRINUSE');
       done();
     });
   });
-  it('should get HTTP port Error: listen EADDRINUSE :::8000', function (done) {
+  it('should get HTTP port Error: listen EADDRINUSE', function (done) {
     this.timeout(10000); // have to wait for the inject with delay of two seconds
     instance = new mosca.Server(moscaSettings(), function (err, server) {
       expect(server === instance).to.be.true;
@@ -65,7 +65,7 @@ describe('mosca.Server.error', function () {
       expect(server === secondInstance).to.be.true;
     });
     secondInstance.on('error', function (err) {
-      expect(err.toString()).to.be.equal('Error: listen EADDRINUSE :::8000');
+      expect(err.toString().substr(0, 24)).to.be.equal('Error: listen EADDRINUSE');
       done();
     });
   });
