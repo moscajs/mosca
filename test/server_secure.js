@@ -1,8 +1,13 @@
+var fs = require("fs");
 var abstractServerTests = require("./abstract_server");
 var createConnection = require("./helpers/createConnection");
+var createSecureConnection = require("./helpers/createSecureConnection");
 
 var SECURE_KEY = __dirname + "/secure/tls-key.pem";
+var SECURE_KEY_TEXT = fs.readFileSync(SECURE_KEY);
+
 var SECURE_CERT = __dirname + "/secure/tls-cert.pem";
+var SECURE_CERT_TEXT = fs.readFileSync(SECURE_CERT);
 
 var moscaSettings = function() {
   var port = nextPort();
@@ -50,7 +55,43 @@ describe("mosca.Server - Secure and non-secure Connection", function() {
     }
   });
 
-  it("should not allow non-secure connections", function(done) {
+  it("should not allow non-secure connections with key and certificate", function(done) {
+    settings = moscaSettings();
+    delete settings.secure;
+    delete settings.port;
+    var port = nextPort();
+
+    settings.interfaces = [
+      { type: "mqtts", port: port, credentials: { keyPath: SECURE_KEY, certPath: SECURE_CERT } }
+    ];
+
+    instance = new mosca.Server(settings, function() {
+      createSecureConnection(port, 'localhost', function(empty, mqtt_conn) {
+        mqtt_conn.stream.end();
+        done();
+      });
+    });
+  });
+
+  it("should not allow non-secure connections with key and certificate as text", function(done) {
+    settings = moscaSettings();
+    delete settings.secure;
+    delete settings.port;
+    var port = nextPort();
+
+    settings.interfaces = [
+      { type: "mqtts", port: port, credentials: { keyPath: SECURE_KEY_TEXT, certPath: SECURE_CERT_TEXT } }
+    ];
+
+    instance = new mosca.Server(settings, function() {
+      createSecureConnection(port, 'localhost', function(empty, mqtt_conn) {
+        mqtt_conn.stream.end();
+        done();
+      });
+    });
+  });
+
+  it("should not allow non-secure connections with legacy configuration", function(done) {
     settings = moscaSettings();
     settings.secure.port = nextPort();
 
