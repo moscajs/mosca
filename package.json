@@ -74,6 +74,7 @@
     "clone": "^1.0.2",
     "commander": "~2.9.0",
     "deepcopy": "^0.6.1",
+    "escape-string-regexp": "^1.0.5",
     "extend": "^3.0.0",
     "json-buffer": "~2.0.11",
     "jsonschema": "^1.0.3",
