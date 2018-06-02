@@ -26,3 +26,5 @@ db
 profile-*
 .__*
 .idea
+
+package-lock.json
