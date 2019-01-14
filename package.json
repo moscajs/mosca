@@ -14,7 +14,7 @@
     "jshint-lib": "jshint lib",
     "jshint-test": "jshint test",
     "start": "./bin/mosca -v | bunyan",
-    "bundle": "browserify -r mqtt -s mqtt | uglifyjs --screw-ie8 > public/mqtt.js",
+    "bundle": "browserify -r mqtt -s mqtt | uglifyjs --ie8 > public/mqtt.js",
     "prepublish": "npm run bundle"
   },
   "pre-commit": [
