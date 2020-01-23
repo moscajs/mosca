@@ -7,6 +7,8 @@ Mosca&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mosca.svg
 
 [![NPM](https://nodei.co/npm-dl/mosca.png)](https://nodei.co/npm/mosca/)
 
+## This project is UNMAINTAINED. Please move to [Aedes](https://github.com/moscajs/aedes)
+
 ## About
 
 #### Mosca is a node.js mqtt broker, which can be used:
