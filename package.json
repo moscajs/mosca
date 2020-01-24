@@ -98,9 +98,9 @@
     "websocket-stream": "~3.1.0"
   },
   "optionalDependencies": {
-    "leveldown": "~1.4.3",
     "amqp": "~0.2.4",
     "ioredis": "^1.15.1",
-    "mongodb": "~2.1.4"
+    "leveldown": "^1.1.0",
+    "mongodb": "^3.1.13"
   }
 }
